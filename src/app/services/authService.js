@@ -1,4 +1,5 @@
 import axios from "axios";
+import { format } from "date-fns";
 
 // export const LOGIN_URL = "api/auth/login";
 // export const REGISTER_URL = "api/auth/register";
@@ -17,6 +18,17 @@ const config = {
   headers: {
     'Content-Type': 'multipart/form-data'
   }
+}
+
+//This function data convert into formData
+function convertToFormData(data){
+  const formData = new FormData();
+  const keys = Object.keys(data);
+  keys.forEach(key => {
+    formData.append(key, data[key]);
+  })
+
+  return formData;
 }
 
 export function login(email, password) {
@@ -44,15 +56,38 @@ export function getRoles() {
 // custom mock Services
 
 export function updateUser(user){
-  return axios.post("api/auth/updateUser",{user});
+
+  //Set static data beacuse api required these all fields,
+  user["password"] ="admin"  
+  user["phone_code"] = "91"
+
+  const updateData = convertToFormData(user)
+  console.log("Update Data: ",updateData )
+  return axios.post(API_URL + "/user/edit",updateData);
+
 }
 
-// export function deleteUserById(userId){
-//   return axios.post("api/auth/deleteUser",{userId});
-// }
+export function deleteUserById(userId){
+
+  console.log("deleteUserId: ", userId)
+
+  const deleteUserId = convertToFormData({"user_id":userId});  
+
+  return axios.post(API_URL + "/user/delete",{deleteUserId});
+}
 
 export function saveUser(user){
-  return axios.post("api/auth/saveUser",{user});
+
+  //Set static data beacuse api required these all fields,
+  user["password"] ="admin"
+  user["role_id"] ="1"
+  user["role_type_id"] ="1"
+  user["user_type"] ="A"
+  user["phone_code"] = "91"
+
+  const createUserData = convertToFormData(user)
+  console.log(createUserData, "jgdsahfshaf")
+  return axios.post(API_URL + "/user/create",createUserData);
 }
 
 // export function saveRole(roleTitle) {

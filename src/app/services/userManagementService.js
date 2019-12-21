@@ -12,13 +12,27 @@ const API_URL = "http://23.96.87.60:3000/user";
 
 export const ME_URL = "api/me";
 
+function convertToFormData(data){
+  const formData = new FormData();
+  const keys = Object.keys(data);
+  keys.forEach(key => {
+    formData.append(key, data[key]);
+  })
+
+  return formData;
+}
+
 export function updateUser(userid,first_name,last_name,phone) {
   return axios.post(API_URL+"/editprofile",{userid,first_name,last_name,phone});
 }
 
-export function getUsersList(offset,limit) {
+
+export function getUsersList(offset, limit) {
   debugger
-  return axios.post(API_URL+"/listing",{offset,limit});
+  const userList = convertToFormData({offset,limit} )
+
+  // return axios.post(API_URL+"/listing",{offset,limit});
+  return axios.post(API_URL+"/listing",userList);
 }
 
 export function getUserById(id){
@@ -35,6 +49,7 @@ export function getUserById(id){
 // }
 
 // export function updateUser(user){
+//   console.log("delete user id: ", user)
 //   return axios.post("api/auth/updateUser",{user});
 // }
 

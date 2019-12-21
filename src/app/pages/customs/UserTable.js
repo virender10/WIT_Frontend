@@ -19,6 +19,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {getUsersList} from '../../services/userManagementService';
+import { deleteUserById } from "../../services/authService";
 
 const deleteIdArray = [];
 
@@ -211,7 +212,9 @@ export default function EnhancedUserTable(props) {
     React.useEffect(() => {
         //console.log('useEffect has been called!');
             getUsersList(page,rowsPerPage).then((data) => {
-                debugger
+                // debugger
+
+                console.log("user list: ", data)
                 if(data.status == 200){
                     //const userArray = Object.keys(data.data).map(i => data.data[i]);
                     if(data.data.data.total_count > 0){
@@ -278,14 +281,15 @@ export default function EnhancedUserTable(props) {
 
     //custom delete methods
     const handleClickDelete = (event, userid) => {
-        console.log(userid);
+        console.log("delete user id: ", userid);
         deleteIdArray.push(userid);
 
-        // deleteUserById(deleteIdArray).then((data)=>{
-        //     setRows([]);
-        //     const userArray = Object.keys(data.data).map(i => data.data[i]);
-        //     setRows(userArray);
-        // })
+        deleteUserById(userid).then((data)=>{
+            console.log("after delete data: ", data)
+            // setRows([]);
+            // const userArray = Object.keys(data.data).map(i => data.data[i]);
+            // setRows(userArray);
+        })
     }
 
     const handleChangePage = (event, newPage) => {

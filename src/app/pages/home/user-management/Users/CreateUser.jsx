@@ -98,6 +98,9 @@ const CreateNewUser = ({
   const [snackmsg, setSnackmsg] = React.useState('');
 
   useEffect(() => {
+    //     getRoles().then(({data}) => {
+    // debugger
+    //     });
     if (id)
       getUserById(id)
         .then(({ data }) => {
@@ -187,15 +190,18 @@ const CreateNewUser = ({
                   errors.email = "Invalid Field";
                 }
                 //Australian Phone Number Regex
-                if (!/^(?:\+?(61))? ?(?:\((?=.*\)))?(0?[2-57-8])\)? ?(\d\d(?:[- ](?=\d{3})|(?!\d\d[- ]?\d[- ]))\d\d[- ]?\d[- ]?\d{3})$/i.test(values.phone)) {
-                  errors.phone = "Invalid Phone Number";
-                }
+                // if (!/^(?:\+?(61))? ?(?:\((?=.*\)))?(0?[2-57-8])\)? ?(\d\d(?:[- ](?=\d{3})|(?!\d\d[- ]?\d[- ]))\d\d[- ]?\d[- ]?\d{3})$/i.test(values.phone)) {
+                //   errors.phone = "Invalid Phone Number";
+                // }
 
                 return errors;
               }}
               onSubmit={values => {
+                console.log(values, "hgdgtdfd")
                 userMutation(values)
                   .then(data => {
+
+                    console.log("user create data: ", data)
                     debugger
                     console.log(id);
                     //id? handleClick(): alert("successfull registration");

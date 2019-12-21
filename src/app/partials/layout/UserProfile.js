@@ -75,7 +75,45 @@ class UserProfile extends React.Component {
                 </div>
               </div>
               </Link>
-            {}
+            {/* <a className="kt-notification__item">
+              <div className="kt-notification__item-icon">
+                <i className="flaticon2-mail kt-font-warning" />
+              </div>
+              <div className="kt-notification__item-details">
+                <div className="kt-notification__item-title kt-font-bold">
+                  My Messages
+                </div>
+                <div className="kt-notification__item-time">
+                  Inbox and tasks
+                </div>
+              </div>
+            </a>
+            <a className="kt-notification__item">
+              <div className="kt-notification__item-icon">
+                <i className="flaticon2-rocket-1 kt-font-danger" />
+              </div>
+              <div className="kt-notification__item-details">
+                <div className="kt-notification__item-title kt-font-bold">
+                  My Activities
+                </div>
+                <div className="kt-notification__item-time">
+                  Logs and notifications
+                </div>
+              </div>
+            </a>
+            <a className="kt-notification__item">
+              <div className="kt-notification__item-icon">
+                <i className="flaticon2-hourglass kt-font-brand" />
+              </div>
+              <div className="kt-notification__item-details">
+                <div className="kt-notification__item-title kt-font-bold">
+                  My Tasks
+                </div>
+                <div className="kt-notification__item-time">
+                  latest tasks and projects
+                </div>
+              </div>
+            </a> */}
             <div className="kt-notification__custom">
               <Link
                 to="/logout"

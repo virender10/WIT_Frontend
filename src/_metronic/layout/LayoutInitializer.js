@@ -59,7 +59,6 @@ export default function LayoutInitializer({
     }
 
     const anchor = document.getElementById("layout-styles-anchor");
-
     Promise.all([...styles].reverse().map(href => loadCss(href, anchor))).then(
       () => {
         setLoadedStyles(styles);
@@ -76,7 +75,7 @@ export default function LayoutInitializer({
       });
     };
   }, [styles]);
-
+  console.log(children, "hjgahagf")
   return loadedStyles === styles &&
     htmlClassService === builderState.htmlClassServiceObjects ? (
     // Render content when `htmlClassService` synchronized with redux store.
