@@ -16,6 +16,9 @@ export function setupAxios(axios, store) {
         auth: { authToken }
       } = store.getState();
 
+      console.log("authtoken: ", authToken);
+      
+
       if (authToken) {
         config.headers.authorization = `Bearer ${authToken}`;
         config.headers.common.Accept = "multipart/form-data"; 

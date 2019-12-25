@@ -33,6 +33,8 @@ export function getUsersList(offset, limit) {
 }
 
 export function getUserById(id){
-  return axios.post(API_URL+"/getprofile",{id});
+  console.log("id: ", id);
+  
+  return axios.get(API_URL+"/getprofile?userid=" +id);
 }
 

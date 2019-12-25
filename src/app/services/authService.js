@@ -16,7 +16,7 @@ export const ME_URL = "/user/token_details";
 
 const config = {
   headers: {
-    'Content-Type': 'multipart/form-data'
+    'Content-Type': 'application/x-www-form-urlencoded'
   }
 }
 
@@ -57,23 +57,18 @@ export function getRoles() {
 
 export function updateUser(user){
 
-  //Set static data beacuse api required these all fields,
+  //Set static data beacuse api required these all fields,  
   user["password"] ="admin"  
   user["phone_code"] = "91"
 
   const updateData = convertToFormData(user)
-  console.log("Update Data: ",updateData )
-  return axios.post(API_URL + "/user/edit",updateData);
+ 
+  return axios.put(API_URL + "/user/editprofile?userid=" + user.id,updateData);
 
 }
 
 export function deleteUserById(userId){
-
-  console.log("deleteUserId: ", userId)
-
-  const deleteUserId = convertToFormData({"user_id":userId});  
-
-  return axios.post(API_URL + "/user/delete",{deleteUserId});
+  return axios.delete(API_URL + "/user/delete",{data: {'userid':userId}});
 }
 
 export function saveUser(user){
