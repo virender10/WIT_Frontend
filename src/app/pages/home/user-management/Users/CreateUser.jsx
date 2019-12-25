@@ -9,10 +9,6 @@ import Thumb from '../../../customs/ImageUploader';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-// import Stepper from "@material-ui/core/Stepper";
-// import Step from "@material-ui/core/Step";
-// import StepLabel from "@material-ui/core/StepLabel";
-// import Typography from "@material-ui/core/Typography";
 import { Formik } from "formik";
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackBarContentWrapper from "../../../customs/SnackBar";
@@ -98,15 +94,12 @@ const CreateNewUser = ({
   const [snackmsg, setSnackmsg] = React.useState('');
 
   useEffect(() => {
-    //     getRoles().then(({data}) => {
-    // debugger
-    //     });
     if (id)
       getUserById(id)
         .then(({ data }) => {
-          debugger
           if (data.status == 200) {
             setValue(data.userdata)
+            handleClick(true);
           } else {
             alert(data.status + ' ' + data.response);
           }
@@ -118,17 +111,14 @@ const CreateNewUser = ({
   //snackbar Handlers
   const handleClick = () => {
     setOpen(true);
-    //snackmsg(content)
   };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
-  //snackbar Handler Close
 
   if (error) return null;
   const userMutation = id ? updateUser : saveUser;
@@ -158,15 +148,6 @@ const CreateNewUser = ({
                 </Button>
               </Tooltip>
             </Link>
-
-            {/* <Tooltip TransitionComponent={Zoom} title="Reset Changes" placement="bottom">
-                            <Button type="reset" size="large" variant="contained" style={{marginRight : "8px"}}>Reset</Button>
-                        </Tooltip> */}
-            {/* <Tooltip TransitionComponent={Zoom} title="Save User" placement="bottom">
-                            <Button size="large" variant="contained" style={{ backgroundColor: '#5d78ff' }} color="primary" href="#save">
-                                Save
-                        </Button>
-                        </Tooltip> */}
           </div>
         </div>
         <div className="kt-portlet__body">
@@ -189,28 +170,12 @@ const CreateNewUser = ({
                 ) {
                   errors.email = "Invalid Field";
                 }
-                //Australian Phone Number Regex
-                // if (!/^(?:\+?(61))? ?(?:\((?=.*\)))?(0?[2-57-8])\)? ?(\d\d(?:[- ](?=\d{3})|(?!\d\d[- ]?\d[- ]))\d\d[- ]?\d[- ]?\d{3})$/i.test(values.phone)) {
-                //   errors.phone = "Invalid Phone Number";
-                // }
-
                 return errors;
               }}
               onSubmit={values => {
-                console.log(values, "hgdgtdfd")
                 userMutation(values)
                   .then(data => {
-
-                    console.log("user create data: ", data)
-                    debugger
-                    console.log(id);
-                    //id? handleClick(): alert("successfull registration");
-                    //handleClick();
-                    // if (data.status == 200) {
-
-                    // } else {
-                    //   alert("something went wrong");
-                    // }
+                
                   })
                   .catch(() => {
                     alert("something went wrong");

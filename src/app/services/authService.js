@@ -45,7 +45,7 @@ export function requestPassword(email) {
 
 export function getUserByToken() {
   // Authorization head should be fulfilled in interceptor.
-  return axios.post(API_URL + ME_URL);
+  return axios.get(API_URL + ME_URL);
 }
 
 //API service

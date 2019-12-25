@@ -28,44 +28,11 @@ export function updateUser(userid,first_name,last_name,phone) {
 
 
 export function getUsersList(offset, limit) {
-  debugger
-  const userList = convertToFormData({offset,limit} )
-
-  // return axios.post(API_URL+"/listing",{offset,limit});
-  return axios.post(API_URL+"/listing",userList);
+//  const userList = convertToFormData({offset,limit} )
+  return axios.get(API_URL+`/listing?limit=${10}&offset=${0}`);
 }
 
 export function getUserById(id){
-  debugger
   return axios.post(API_URL+"/getprofile",{id});
 }
 
-// export function getUsers() {
-//   return axios.get("api/auth/getusers");
-// }
-
-// export function getUserById(userId){
-//   return axios.post("api/auth/getusersById",{userId});
-// }
-
-// export function updateUser(user){
-//   console.log("delete user id: ", user)
-//   return axios.post("api/auth/updateUser",{user});
-// }
-
-// export function deleteUserById(userId){
-//   return axios.post("api/auth/deleteUser",{userId});
-// }
-
-// export function saveUser(user){
-//   return axios.post("api/auth/saveUser",{user});
-// }
-
-// export function requestPassword(email) {
-//   return axios.post(REQUEST_PASSWORD_URL, { email });
-// }
-
-// export function getUserByToken() {
-//   // Authorization head should be fulfilled in interceptor.
-//   return axios.get('kkk');
-// }
