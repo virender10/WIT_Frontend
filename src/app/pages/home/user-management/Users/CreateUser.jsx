@@ -90,7 +90,6 @@ const CreateNewUser = ({
         .then(({ data }) => {
           if (data.status == 200) {
             setValue(data.userdata)
-            handleClick(true);
           } else {
             
           }
@@ -166,9 +165,10 @@ const CreateNewUser = ({
               onSubmit={values => {
                 userMutation(values)
                   .then(data => {
-                
+                    
                   })
                   .catch(() => {
+                    setOpen(true);
                     history.push('/user-management/Users/UserList');
                   });
               }}

@@ -199,7 +199,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function EnhancedUserTable(props) {
     const classes = useStyles();
-    //const {rows} = props;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('email');
     const [selected, setSelected] = React.useState([]);
@@ -210,13 +209,8 @@ export default function EnhancedUserTable(props) {
     
 
     React.useEffect(() => {
-        //console.log('useEffect has been called!');
             getUsersList(page,rowsPerPage).then((data) => {
-                // debugger
-
-                console.log("user list: ", data)
                 if(data.status == 200){
-                    //const userArray = Object.keys(data.data).map(i => data.data[i]);
                     if(data.data.data.total_count > 0){
                         setRows(data.data.data.items);
                     }
@@ -267,28 +261,11 @@ export default function EnhancedUserTable(props) {
         setSelected(newSelected);
     };
 
-    //custom edit methods
-    const handleClickEdit = (event, userid) => {
-        //console.log(userid);
-        // getUserById(userid).then((data) => {
-        //     const roleArray = Object.keys(data.data).map(i => data.data[i]);
-        //     //setRows(roleArray);
-        //   })
-        //   .catch(() => {
-        //       console.log('error');
-        //   });
-    }
-
     //custom delete methods
     const handleClickDelete = (event, userid) => {
-        console.log("delete user id: ", userid);
         deleteIdArray.push(userid);
-
         deleteUserById(userid).then((data)=>{
-            console.log("after delete data: ", data)
-            // setRows([]);
-            // const userArray = Object.keys(data.data).map(i => data.data[i]);
-            // setRows(userArray);
+            window.location.reload();
         })
     }
 
