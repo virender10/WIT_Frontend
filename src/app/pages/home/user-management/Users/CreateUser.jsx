@@ -3,12 +3,7 @@ import Zoom from "@material-ui/core/Zoom";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
-import IconButton from '@material-ui/core/IconButton';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import Thumb from '../../../customs/ImageUploader';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import { Formik } from "formik";
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackBarContentWrapper from "../../../customs/SnackBar";
@@ -16,11 +11,9 @@ import { Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import { TextField } from "@material-ui/core";
-import CustomCheckBox from "../../../customs/CustomCheckBox";
 import {
   saveUser,
-  updateUser,
-  getRoles
+  updateUser
 } from "../../../../services/authService";
 import { getUserById } from "../../../../services/userManagementService";
 import { withRouter } from "react-router";
@@ -82,7 +75,6 @@ const getInitialValue = value => {
 
 const CreateNewUser = ({
   history,
-  pathname,
   match: {
     params: { id }
   }
@@ -91,7 +83,6 @@ const CreateNewUser = ({
   const [value, setValue] = React.useState(null);
   const [error, setError] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [snackmsg, setSnackmsg] = React.useState('');
 
   useEffect(() => {
     if (id)
@@ -101,7 +92,7 @@ const CreateNewUser = ({
             setValue(data.userdata)
             handleClick(true);
           } else {
-            alert(data.status + ' ' + data.response);
+            
           }
         })
         .catch(error => setError(error));
@@ -178,7 +169,7 @@ const CreateNewUser = ({
                 
                   })
                   .catch(() => {
-                    alert("something went wrong");
+                    history.push('/user-management/Users/UserList');
                   });
               }}
             >
@@ -277,9 +268,6 @@ const CreateNewUser = ({
                         />
                       </Grid>
                       <Grid item xs={6} sm={3}>
-                        {/* <input className={classes.input} id="file" type="file" name="file" onChange={(event) => {
-                          setFieldValue("file", event.currentTarget.files[0]);
-                        }} /> */}
                         <input id="file" name="file" type="file" onChange={(event) => {
                           setFieldValue("file", event.currentTarget.files[0]);
                         }} className="form-control" />
@@ -289,29 +277,7 @@ const CreateNewUser = ({
                     <Grid item xs={6} sm={3}></Grid>
                     <Grid item xs={6} sm={3}></Grid>
                     <Grid item xs={6} sm={3}>
-                      <FormControl component="fieldset" className={classes.formControl}>
-                        {/* <FormLabel component="legend"><CustomCheckBox name="um" value="is_um"/>User Management</FormLabel> */}
-                        <FormGroup aria-label="position" row>
-                          {/* <CustomCheckBox name="user_management" value="um_create" label="Create" />
-                          <CustomCheckBox name="user_management" value="um_edit" label="Edit" />
-                          <CustomCheckBox name="user_management" value="um_delete" label="Delete" />
-                          <CustomCheckBox name="user_management" value="um_list" label="List" /> */}
-                        </FormGroup>
-                      </FormControl>
                     </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <FormControl component="fieldset" className={classes.formControl}>
-                        {/* <FormLabel component="legend"><CustomCheckBox name="um" value="is_um"/>User Management</FormLabel> */}
-                        {/* <FormGroup aria-label="position" row>
-                          <CustomCheckBox name="data_management" value="dm_create" label="Create" />
-                          <CustomCheckBox name="data_management" value="dm_edit" label="Edit" />
-                          <CustomCheckBox name="data_management" value="dm_delete" label="Delete" />
-                          <CustomCheckBox name="data_management" value="dm_list" label="List" />
-                        </FormGroup> */}
-                      </FormControl>
-                    </Grid>
-
-
                     <div className="kt-login__actions">
                       <button
                         id="kt_login_signin_submit"

@@ -4,7 +4,6 @@ import Zoom from '@material-ui/core/Zoom';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import EnhancedUserTable from "../../../customs/UserTable";
-// import { getUsers } from "../../../../services/userManagementService";
 
 
 export default function UserEdit() {
