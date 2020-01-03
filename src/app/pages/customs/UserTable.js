@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect, useDispatch } from "react-redux"
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -18,8 +19,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import {getUsersList} from '../../services/userManagementService';
+import {getUsersList } from '../../services/userManagementService';
 import { deleteUserById } from "../../services/authService";
+import { actions } from "../../store/ducks/user.duck"
 
 const deleteIdArray = [];
 
@@ -197,34 +199,39 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function EnhancedUserTable(props) {
+function EnhancedUserTable(props) {
     const classes = useStyles();
+    const { users } = props;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('email');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [rows, setRows] = React.useState([]);
+    const allUsers = users && users.length > 0 ? users : [];
+    const dispatch = useDispatch();
+    React.useEffect(() => {
+        dispatch(actions.getUserList());
+    }, [])
     
 
     React.useEffect(() => {
-            getUsersList(page,rowsPerPage).then((data) => {
-                if(data.status == 200){
-                    if(data.data.data.total_count > 0){
-                        setRows(data.data.data.items);
-                    }
-                    else {
-                        alert("No data Found");
-                    }
-                }
-                else{
-                    alert("Something went wrong");
-                }
-              })
-              .catch(() => {
-                  console.log('error');
-              });
+            // getUsersList(page,rowsPerPage).then((data) => {
+            //     if(data.status == 200){
+            //         if(data.data.data.total_count > 0){
+            //             setRows(data.data.data.items);
+            //         }
+            //         else {
+            //             alert("No data Found");
+            //         }
+            //     }
+            //     else{
+            //         alert("Something went wrong");
+            //     }
+            //   })
+            //   .catch(() => {
+            //       console.log('error');
+            //   });
       },[]);
 
     const handleRequestSort = (event, property) => {
@@ -235,7 +242,7 @@ export default function EnhancedUserTable(props) {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelecteds = rows.map(n => n.userid);
+            const newSelecteds = allUsers.map(n => n.userid);
             setSelected(newSelecteds);
             return;
         }
@@ -263,10 +270,11 @@ export default function EnhancedUserTable(props) {
 
     //custom delete methods
     const handleClickDelete = (event, userid) => {
-        deleteIdArray.push(userid);
-        deleteUserById(userid).then((data)=>{
-            window.location.reload();
-        })
+        // deleteIdArray.push(userid);
+        // deleteUserById(userid).then((data)=>{
+        //     window.location.reload();
+        // })
+        dispatch(actions.deleteUser(userid))
     }
 
     const handleChangePage = (event, newPage) => {
@@ -281,7 +289,7 @@ export default function EnhancedUserTable(props) {
 
     const isSelected = userid => selected.indexOf(userid) !== -1;
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, allUsers.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
@@ -300,10 +308,10 @@ export default function EnhancedUserTable(props) {
                         orderBy={orderBy}
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
-                        rowCount={rows.length}
+                        rowCount={allUsers.length}
                     />
                     <TableBody>
-                        {stableSort(rows, getSorting(order, orderBy))
+                        {stableSort(allUsers, getSorting(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
                                 const isItemSelected = isSelected(row.userid);
@@ -353,7 +361,7 @@ export default function EnhancedUserTable(props) {
             <TablePagination
                 rowsPerPageOptions={[2, 4, 10]}
                 component="div"
-                count={rows.length}
+                count={allUsers.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
@@ -362,3 +370,9 @@ export default function EnhancedUserTable(props) {
         </div>
     );
 }
+
+const mapStateToProps = store => ({
+    users: store.users.userList
+});
+
+export default connect(mapStateToProps)(EnhancedUserTable);

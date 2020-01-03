@@ -1,13 +1,14 @@
-import axios from "axios";
-
+// import axios from "axios";
 export const LOGIN_URL = "api/auth/login";
 export const REGISTER_URL = "api/auth/register";
 export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
 
 export const ME_URL = "api/me";
+import config from "./index"
+
 
 export function getRoles() {
-  return axios.get("api/auth/getroles");
+  return axios.get(config.baseUrl, "role/getroles");
 }
 
 export function saveRole(roleTitle) {

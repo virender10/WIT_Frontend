@@ -6,7 +6,7 @@ import { format } from "date-fns";
 // export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
 // export const ME_URL = "api/me";
 // const API_URL = process.env.API_HOST_URL || '';
-export const LOGIN_URL = "/user/login";
+export const LOGIN_URL = "/login";
 export const REGISTER_URL = "api/auth/register";
 export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
 
@@ -50,7 +50,7 @@ export function getUserByToken() {
 
 //API service
 export function getRoles() {
-  return axios.post(API_URL + "/role/getroles",{});
+  return axios.get(API_URL + "/role/getroles");
 }
 
 // custom mock Services
@@ -68,7 +68,7 @@ export function updateUser(user){
 }
 
 export function deleteUserById(userId){
-  return axios.delete(API_URL + "/user/delete",{data: {'userid':userId}});
+  return axios.delete(API_URL + "/admin/deleteUser",{ data: { userId } });
 }
 
 export function saveUser(user){
@@ -82,7 +82,7 @@ export function saveUser(user){
 
   const createUserData = convertToFormData(user)
   console.log(createUserData, "jgdsahfshaf")
-  return axios.post(API_URL + "/user/create",createUserData);
+  // return axios.post(API_URL + "/user/create",createUserData);
 }
 
 // export function saveRole(roleTitle) {

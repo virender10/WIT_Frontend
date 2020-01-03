@@ -84,7 +84,7 @@ function Login(props) {
                     disableLoading();
                     console.log(userdata);
                     // accessToken
-                    props.login(userdata.token);
+                    props.login(userdata);
                   })
                   .catch(() => {
                     disableLoading();

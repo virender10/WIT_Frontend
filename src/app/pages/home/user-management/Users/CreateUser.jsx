@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
+import { compose } from "redux";
+import { useDispatch } from "react-redux"
 import Zoom from "@material-ui/core/Zoom";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
+import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Thumb from '../../../customs/ImageUploader';
 import { Formik } from "formik";
@@ -13,8 +16,10 @@ import Grid from "@material-ui/core/Grid";
 import { TextField } from "@material-ui/core";
 import {
   saveUser,
-  updateUser
+  updateUser,
+  getRoles
 } from "../../../../services/authService";
+import { actions } from "../../../../store/ducks/user.duck"
 import { getUserById } from "../../../../services/userManagementService";
 import { withRouter } from "react-router";
 
@@ -63,6 +68,7 @@ const getInitialValue = value => {
     first_name: "",
     last_name: "",
     email: "",
+    password: "",
     companyName: "",
     phone: "",
     role: "",
@@ -77,26 +83,49 @@ const CreateNewUser = ({
   history,
   match: {
     params: { id }
-  }
+  },
+  users,
+  currentUser
 }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [value, setValue] = React.useState(null);
   const [error, setError] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [roles, setRoles] = React.useState([]);
+
+  React.useEffect(() => {
+    //console.log('useEffect has been called!');
+    getRoles()
+      .then(response => {
+        const roleArray = response.data.data;
+        setRoles(roleArray);
+      })
+      .catch(() => {
+        console.log("error");
+      });
+  }, []);
 
   useEffect(() => {
-    if (id)
-      getUserById(id)
-        .then(({ data }) => {
-          if (data.status == 200) {
-            setValue(data.userdata)
-          } else {
-            
-          }
-        })
-        .catch(error => setError(error));
+    if (id) {
+      const selectedUser = users.find(user => user.userid === Number(id));
+        if (selectedUser) setValue({...selectedUser, role: selectedUser.role_id})
+    } else if (currentUser) {
+      console.log(currentUser, "asdkjadjahdjhagdjahgd")
+      setValue(currentUser)
+    }
 
-  }, [id]);
+      // getUserById(id)
+      //   .then(({ data }) => {
+      //     if (data.status == 200) {
+      //       setValue(data.userdata)
+      //     } else {
+            
+      //     }
+      //   })
+      //   .catch(error => setError(error));
+
+  }, [id, currentUser]);
 
   //snackbar Handlers
   const handleClick = () => {
@@ -112,7 +141,6 @@ const CreateNewUser = ({
 
   if (error) return null;
   const userMutation = id ? updateUser : saveUser;
-
   return (
     <>
       <div className="kt-portlet kt-portlet--height-fluid">
@@ -147,12 +175,16 @@ const CreateNewUser = ({
               enableReinitialize
               validate={values => {
                 const errors = {};
+                dispatch(actions.setCurrentUser(values));
                 if (!values.first_name) {
                   errors.first_name = "Required Field";
                 }
                 if (!values.last_name) {
                   errors.last_name = "Required Field";
                 }
+                // if (!values.password) {
+                //   errors.password = "Required Field";
+                // }
                 if (!values.email) {
                   errors.email = "Required Field";
                 } else if (
@@ -163,14 +195,19 @@ const CreateNewUser = ({
                 return errors;
               }}
               onSubmit={values => {
-                userMutation(values)
-                  .then(data => {
+                const functionToCall = id ? "editUser" : "createUser";
+                if (id) {
+                  values["userid"] = id
+                }
+                dispatch(actions[functionToCall]({ values, callback: () => history.push('/user-management/Users/UserList')}));
+                // userMutation(values)
+                //   .then(data => {
                     
-                  })
-                  .catch(() => {
-                    setOpen(true);
-                    history.push('/user-management/Users/UserList');
-                  });
+                //   })
+                //   .catch(() => {
+                //     setOpen(true);
+                //     history.push('/user-management/Users/UserList');
+                //   });
               }}
             >
               {({
@@ -206,7 +243,7 @@ const CreateNewUser = ({
                       </Grid>
                       <Grid item xs={6} sm={3}>
                         <TextField
-                          label="LastName"
+                          label="Last Name"
                           margin="normal"
                           name="last_name"
                           onBlur={handleBlur}
@@ -229,6 +266,19 @@ const CreateNewUser = ({
                           error={Boolean(touched.email && errors.email)}
                         />
                       </Grid>
+                      {!id && <Grid item xs={6} sm={3}>
+                        <TextField
+                          type="password"
+                          label="Password"
+                          margin="normal"
+                          name="password"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.password}
+                          helperText={touched.password && errors.password}
+                          error={Boolean(touched.password && errors.password)}
+                        />
+                      </Grid>}
                       <Grid item xs={6} sm={3}>
                         <TextField
                           id="select-role"
@@ -248,8 +298,8 @@ const CreateNewUser = ({
                           margin="normal"
                         >
                           {roles.map(option => (
-                            <MenuItem key={option.value} value={option.label}>
-                              {option.label}
+                            <MenuItem key={option.id} value={option.id}>
+                              {option.name}
                             </MenuItem>
                           ))}
                         </TextField>
@@ -269,6 +319,8 @@ const CreateNewUser = ({
                       </Grid>
                       <Grid item xs={6} sm={3}>
                         <input id="file" name="file" type="file" onChange={(event) => {
+                          values.file = event.currentTarget.files[0];
+                          dispatch(actions.setCurrentUser(values));
                           setFieldValue("file", event.currentTarget.files[0]);
                         }} className="form-control" />
                         <Thumb file={values.file} />
@@ -316,4 +368,9 @@ const CreateNewUser = ({
   );
 };
 
-export default withRouter(CreateNewUser);
+const mapStateToProps = store => ({
+  users: store.users.userList,
+  currentUser: store.users.currentUser
+});
+
+export default compose(connect( mapStateToProps), withRouter)(CreateNewUser);
