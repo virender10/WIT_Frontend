@@ -8,26 +8,9 @@ import { toAbsoluteUrl } from "../../../_metronic";
 import "../../../_metronic/_assets/sass/pages/login/login-1.scss";
 
 export default function AuthPage() {
+  const today = new Date().getFullYear();
   return (
     <>
-      {/* https://github.com/nfl/react-helmet */}
-      <Helmet>
-        {/* <link
-            type="text/css"
-            rel="stylesheet"
-            href={toAbsoluteUrl(
-                "/assets/css/demo1/style.bundle.css"
-            )}
-        />
-        <link
-          type="text/css"
-          rel="stylesheet"
-          href={toAbsoluteUrl(
-            "/assets/css/demo1/pages/login/login-1.css"
-          )}
-        /> */}
-      </Helmet>
-
       <div className="kt-grid kt-grid--ver kt-grid--root">
         <div
           id="kt_login"
@@ -44,9 +27,9 @@ export default function AuthPage() {
                 <Link to="/" className="kt-login__logo">
 
                 {/* WelTechLogo */}
-                <img
-                    alt="Logo"
-                    src={toAbsoluteUrl("/media/logos/logo-4.png")}
+                <img height={100} width = {450}
+                    alt="Logo" 
+                    src={toAbsoluteUrl("/media/logos/WIT-Logo2.png")}
                   />
                 </Link>
               </div>
@@ -54,15 +37,15 @@ export default function AuthPage() {
                 <div className="kt-grid__item kt-grid__item--middle">
                   <h3 className="kt-login__title">Welcome to Well Information Technologies</h3>
                   <h4 className="kt-login__subtitle">
-                    The ultimate Bootstrap & Angular 6 admin theme framework for
-                    next generation web apps.
+                    {/* The ultimate Bootstrap & Angular 6 admin theme framework for
+                    next generation web apps. */}
                   </h4>
                 </div>
               </div>
               <div className="kt-grid__item">
                 <div className="kt-login__info">
                   <div className="kt-login__copyright">
-                    &copy; 2019 WellTech Info
+                     &nbsp;&copy;&nbsp;{today.toString()}&nbsp; Well Information Technology
                   </div>
                   <div className="kt-login__menu">
                     <Link to="/terms" className="kt-link">

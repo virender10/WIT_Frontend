@@ -121,10 +121,7 @@ function Login(props) {
                 ) : (
                   // <div role="alert" className="alert alert-info">
                   <div role="alert">
-                    {/* <div className="alert-text">
-                      Use account <strong>admin@demo.com</strong> and password{" "}
-                      <strong>demo</strong> to continue.
-                    </div> */}
+                   
                   </div>
                 )}
 
@@ -193,14 +190,6 @@ function Login(props) {
           </div>
 
           <div className="kt-login__options">
-            <Link to="http://facebook.com" className="btn btn-primary kt-btn">
-              <i className="fab fa-facebook-f" />
-              Facebook
-            </Link>
-            <Link to="http://twitter.com" className="btn btn-info kt-btn">
-              <i className="fab fa-twitter" />
-              Twitter
-            </Link>
             <Link to="google.com" className="btn btn-danger kt-btn">
               <i className="fab fa-google" />
               Google
