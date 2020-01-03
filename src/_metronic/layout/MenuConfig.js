@@ -508,7 +508,8 @@ export default {
         icon: "flaticon2-architecture-and-city",
         page: "dashboard",
         translate: "MENU.DASHBOARD",
-        bullet: "dot"
+        bullet: "dot",
+        isShownTo: []
       },
       {
         title: "User Management",
@@ -527,7 +528,8 @@ export default {
             allowedToPermission: 'canViewRoles',
             page: "user-management/Roles/RoleList"
           }
-        ]
+        ],
+        isShownTo: ["admin", "superadmin"]
       },
       {
         title: "Data Management",
@@ -545,7 +547,8 @@ export default {
           //   title: "Roles",
           //   page: "user-management/Roles/RoleList"
           // }
-        ]
+        ],
+        isShownTo: []
       }
       // {
       //   title: "Layout Builder",

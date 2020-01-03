@@ -144,9 +144,9 @@ class AsideLeft extends React.Component {
       menuConfig,
       layoutConfig,
       asideClassesFromConfig,
-      location: { pathname }
+      location: { pathname },
+      user
     } = this.props;
-
     return (
       <>
         <div
@@ -168,6 +168,7 @@ class AsideLeft extends React.Component {
           )}
           <ul className={clsx("kt-menu__nav", ulClasses)}>
             <MenuList
+              userRole={!!user && user.role_name}
               currentUrl={pathname}
               menuConfig={menuConfig}
               layoutConfig={layoutConfig}
@@ -194,7 +195,8 @@ const mapStateToProps = store => ({
   asideClassesFromConfig: builder.selectors.getClasses(store, {
     path: "aside_menu",
     toString: true
-  })
+  }),
+  user: store.auth.user
 });
 
 export default withRouter(connect(mapStateToProps)(AsideLeft));

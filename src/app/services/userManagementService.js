@@ -27,6 +27,7 @@ export function updateUser(user) {
   restData["phone_code"] = "91"
   restData["phone"] = "1234567890"
   restData["password"] = "admin"
+  restData["status"] = 1
   const createUserData = convertToFormData(restData)
   return axios.put(API_URL+`admin/editUser?userid=${userid}`, createUserData);
 }

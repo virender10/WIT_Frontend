@@ -48,7 +48,7 @@ export const reducer = persistReducer(
                     ...restData
                 })
             }
-            return { ...state, userList: users };
+            return { ...state,currentUser: undefined,  userList: users };
       }
 
       case actionTypes.DeleteUserSuccess: {
