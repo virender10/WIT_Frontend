@@ -35,7 +35,8 @@ export const reducer = persistReducer(
       }
       case actionTypes.SetCurrentUser: {
         const { values } = action.payload;
-        return { ...state,  currentUser: { ...state.currentUser, ...values, file: values.file }};
+        const obj = { ...state.currentUser, ...values, file: values.file }
+        return { ...state, currentUser: obj };
       }
 
       case actionTypes.EditUserSuccess: {
@@ -48,7 +49,7 @@ export const reducer = persistReducer(
                     ...restData
                 })
             }
-            return { ...state,currentUser: undefined,  userList: users };
+            return { ...state,  userList: users };
       }
 
       case actionTypes.DeleteUserSuccess: {

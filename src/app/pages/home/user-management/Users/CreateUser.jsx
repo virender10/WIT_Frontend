@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import { TextField } from "@material-ui/core";
+import _ from "lodash";
 import {
   saveUser,
   updateUser,
@@ -71,6 +72,7 @@ const getInitialValue = value => {
     password: "",
     companyName: "",
     phone: "",
+    filename: "",
     role: "",
     file: null,
     user_management:[],
@@ -109,9 +111,8 @@ const CreateNewUser = ({
   useEffect(() => {
     if (id) {
       const selectedUser = users.find(user => user.userid === Number(id));
-        if (selectedUser) setValue({...selectedUser, role: selectedUser.role_id})
+        if (selectedUser) setValue({...selectedUser, role: selectedUser.role_id, file: { data: selectedUser.image } })
     } else if (currentUser) {
-      console.log(currentUser, "asdkjadjahdjhagdjahgd")
       setValue(currentUser)
     }
 
@@ -175,7 +176,7 @@ const CreateNewUser = ({
               enableReinitialize
               validate={values => {
                 const errors = {};
-                dispatch(actions.setCurrentUser(values));
+                if (!id) dispatch(actions.setCurrentUser(values));
                 if (!values.first_name) {
                   errors.first_name = "Required Field";
                 }
@@ -284,7 +285,7 @@ const CreateNewUser = ({
                           id="select-role"
                           select
                           label="Select Role"
-                          value={values.role}
+                          value={values.role || ""}
                           className={classes.textField}
                           name="role"
                           onBlur={handleBlur}
@@ -319,11 +320,10 @@ const CreateNewUser = ({
                       </Grid>
                       <Grid item xs={6} sm={3}>
                         <input id="file" name="file" type="file" onChange={(event) => {
-                          values.file = event.currentTarget.files[0];
-                          dispatch(actions.setCurrentUser(values));
-                          setFieldValue("file", event.currentTarget.files[0]);
+                          const filename = event.target.value;
+                          setFieldValue("file", { data: event.currentTarget.files[0], filename });
                         }} className="form-control" />
-                        <Thumb file={values.file} />
+                        <Thumb id={id} actions={actions} values={values} filename={values.file && values.file.filename} currentUser={currentUser || {}} file={values.file && values.file.data} />
                       </Grid>
                     </Grid>
                     <Grid item xs={6} sm={3}></Grid>
