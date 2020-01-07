@@ -14,7 +14,7 @@ import SalesBarChart from "../../widgets/SalesBarChart";
 import PortletHeaderDropdown from "../../partials/content/CustomDropdowns/PortletHeaderDropdown";
 
 export default function Dashboard() {
-  const { brandColor, dangerColor, successColor, primaryColor } = useSelector(
+  const { brandColor, dangerColor, successColor, primaryColor, user } = useSelector(
     state => ({
       brandColor: metronic.builder.selectors.getConfig(
         state,
@@ -31,7 +31,8 @@ export default function Dashboard() {
       primaryColor: metronic.builder.selectors.getConfig(
         state,
         "colors.state.primary"
-      )
+      ),
+      user: state.auth.user
     })
   );
 
@@ -63,7 +64,11 @@ export default function Dashboard() {
     }),
     [brandColor, dangerColor, primaryColor, successColor]
   );
-
+  const roles = ["admin", "superadmin"];
+  const isNotUser = roles.find(r => r === user.role_name.toLowerCase());
+  if (!isNotUser) {
+    return null;
+  }
   return (
     <>
       <div className="row">

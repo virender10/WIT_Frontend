@@ -27,7 +27,7 @@ export const Routes = withRouter(({ Layout, history }) => {
         {!isAuthorized ? (
           <Route path="/auth/login" component={AuthPage} />
         ) : (
-          <Redirect from="/auth" to={userLastLocation} />
+          <Redirect from="/auth" to={"/dashboard"} />
         )}
 
         <Route path="/error" component={ErrorsPage} />
