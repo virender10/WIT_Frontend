@@ -3,9 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import objectPath from "object-path";
 import { withRouter } from "react-router-dom";
-import { QuickActions } from "./quick-actions/QuickActions";
 import { LayoutContextConsumer } from "../LayoutContext";
-import { ReactComponent as SortNum1Icon } from "../../../_metronic/layout/assets/layout-svg-icons/SortNum1.svg";
 
 class SubHeader extends React.Component {
   subheaderCssClasses = this.props.htmlClassService.classes.subheader;

@@ -42,21 +42,18 @@ function Login(props) {
         <div className="kt-login__form">
           <div className="kt-login__title">
             <h3>
-              {/* https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage */}
               <FormattedMessage id="AUTH.LOGIN.TITLE" />
             </h3>
           </div>
 
           <Formik
             initialValues={{
-              email: "admin@demo.com",
-              password: "demo"
+              email: "",
+              password: ""
             }}
             validate={values => {
               const errors = {};
-
               if (!values.email) {
-                // https://github.com/formatjs/react-intl/blob/master/docs/API.md#injection-api
                 errors.email = intl.formatMessage({
                   id: "AUTH.VALIDATION.REQUIRED_FIELD"
                 });

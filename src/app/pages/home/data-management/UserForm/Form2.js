@@ -132,6 +132,14 @@ const cleanInput = values => {
     return data;
 }
 
+const checkBoxStyle = {
+
+}
+
+const labelStyle = {
+    paddingRight: '20px'
+}
+
 const EntryForm2 = ({ onSubmit, value }) => {
     const classes = useStyles();
     var csvFields = [];
@@ -175,21 +183,6 @@ const EntryForm2 = ({ onSubmit, value }) => {
                             initialValues={getInitialValue(value)}
                             validate={values => {
                                 const errors = {};
-                                // if (!values.eve_well_id) {
-                                //     errors.eve_well_id = "Required Field"
-                                // }
-                                // if (!values.eve_id) {
-                                //     errors.eve_id = "Required Field"
-                                // }
-                                // if (!values.eve_status) {
-                                //     errors.eve_status = "Required Field"
-                                // }
-                                // if (!values.eve_shut) {
-                                //     errors.eve_shut = "Required Field"
-                                // }
-                                // if (!values.eve_flowing) {
-                                //     errors.eve_flowing = "Required Field"
-                                // }
                                 return errors;
                             }}
                             onSubmit={values => {
@@ -244,17 +237,6 @@ const EntryForm2 = ({ onSubmit, value }) => {
                                                     </Grid>
                                                     <Grid item xs={6} sm={3}>
                                                         <DatePickerEx label="Event Date" name="eve_date" value={values.eve_date} />
-                                                        {/* <TextField
-                                                            label="Event Date"
-                                                            margin="normal"
-                                                            name="eve_date"
-                                                            onBlur={handleBlur}
-                                                            onChange={handleChange}
-                                                            value={values.eve_date}
-                                                            className={classes.textField}
-                                                            helperText={touched.eve_date && errors.eve_date}
-                                                            error={Boolean(touched.eve_date && errors.eve_date)}
-                                                        /> */}
                                                     </Grid>
                                                     <Grid item xs={6} sm={3}>
                                                         <TextField
@@ -300,13 +282,34 @@ const EntryForm2 = ({ onSubmit, value }) => {
                                                         <FormControl component="fieldset" className={classes.formControl}>
                                                             <FormLabel component="legend">On Artificial Lift</FormLabel>
                                                             <FormGroup aria-label="position" row>
-                                                                <CustomCheckBox name="artificial_lift" value="rodpump" label="Rod Pump"/>
-                                                                <CustomCheckBox name="artificial_lift" value="elec_sub" label="Electric Submersible Pump"/>
-                                                                <CustomCheckBox name="artificial_lift" value="pcp" label="Progressive Cavity Pump"/>
-                                                                <CustomCheckBox name="artificial_lift" value="gaslift" label="Gas Lift"/>
-                                                                <CustomCheckBox name="artificial_lift" value="jet" label="Jet Pump"/>
-                                                                <CustomCheckBox name="artificial_lift" value="plunger" label="Plunger Lift"/>
-                                                                <CustomCheckBox name="artificial_lift" value="pagl" label="Plunger Assisted Gas"/>
+                                                                    <div style={checkBoxStyle} >
+                                                                    <CustomCheckBox name="artificial_lift" className="checkBoxClass" value="rodpump"/> 
+                                                                    <label style={labelStyle} className="label-class"> Rod Pump</label>
+                                                                    </div>
+                                                                    <div style={checkBoxStyle} >
+                                                                    <CustomCheckBox name="artificial_lift" className="checkBoxClass" value="rodpump"/> 
+                                                                    <label style={labelStyle} className="label-class"> Electric Submersible Pump</label>
+                                                                    </div>
+                                                                    <div style={checkBoxStyle} >
+                                                                    <CustomCheckBox name="artificial_lift" className="checkBoxClass" value="rodpump"/> 
+                                                                    <label style={labelStyle} className="label-class"> Progressive Cavity Pump</label>
+                                                                    </div>
+                                                                    <div style={checkBoxStyle} >
+                                                                    <CustomCheckBox name="artificial_lift" className="checkBoxClass" value="rodpump"/> 
+                                                                    <label style={labelStyle} className="label-class">Gas Lift</label>
+                                                                    </div>
+                                                                    <div style={checkBoxStyle} >
+                                                                    <CustomCheckBox name="artificial_lift" className="checkBoxClass" value="rodpump"/> 
+                                                                    <label style={labelStyle} className="label-class"> Jet Pump</label>
+                                                                    </div>
+                                                                    <div style={checkBoxStyle} >
+                                                                    <CustomCheckBox name="artificial_lift" className="checkBoxClass" value="rodpump"/> 
+                                                                    <label style={labelStyle} className="label-class"> Plunger Lift</label>
+                                                                    </div>
+                                                                    <div style={checkBoxStyle} >
+                                                                    <CustomCheckBox name="artificial_lift" className="checkBoxClass" value="rodpump"/> 
+                                                                    <label style={labelStyle} className="label-class"> Plunger Assisted Gas</label>
+                                                                    </div>
                                                             </FormGroup>
                                                         </FormControl>
                                                     </Grid>

@@ -34,7 +34,6 @@ export default function HomePage() {
         <Route path="/admin-management/" component={AdminProfile}/>
         <Route path="/data-management/UserForm" component={DataRoutes}/>
         <Redirect to="/error/error-v6" />
-        {/* <Redirect to="/error/error-v3" /> */}
       </Switch>
     </Suspense>
   );

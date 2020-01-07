@@ -40,7 +40,7 @@ const AdminProfile = (props) => {
 
   return (
     <>
-      <div className={`kt-container kt-container--fluid kt-grid__item kt-grid__item--fluid ${classes.customroot}`}>
+      <div className={`kt-container kt-container--fluid kt-grid__item kt-grid__item--fluid ${classes.customroot}`}></div>
         <div className="kt-portlet kt-portlet--height-fluid">
           <div className="kt-portlet__head">
             <div className="kt-portlet__head-label">
@@ -148,14 +148,6 @@ const AdminProfile = (props) => {
                           />
                         </Grid>
                         <Grid item xs={6} sm={3}>
-                        <Avatar alt="Remy Sharp" src={values.image} className={classes.bigAvatar} />
-                          {/* <img src={thumb}
-                            alt={file.name}
-                            className="img-thumbnail mt-2"
-                            height={200}
-                            width={200} /> */}
-                        </Grid>
-                        <Grid item xs={6} sm={3}>
                           <TextField
                             label="Phone"
                             margin="normal"
@@ -198,7 +190,7 @@ const AdminProfile = (props) => {
             </div>
           </div>
         </div>
-      </div>
+      
 
     </>
   );
