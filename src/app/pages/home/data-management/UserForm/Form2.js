@@ -147,7 +147,8 @@ const checkBoxStyle = {
 }
 
 const labelStyle = {
-    paddingRight: '20px'
+    paddingRight: '20px',
+    paddingLeft: '5px'
 }
 
 const EntryForm2 = ({ onSubmit, value }) => {
@@ -298,8 +299,7 @@ const EntryForm2 = ({ onSubmit, value }) => {
                                                             <div style={checkBoxStyle} >
                                                             {artificialLiftKeys.map((a, index) =>
                                                                 <>
-                                                                <CustomCheckBox className="checkBoxClass" key={index} issingle="true" name="artificial_lift" value={a} label={artificialLift[a]} />
-                                                                
+                                                                <CustomCheckBox className="checkBoxClass" key={index} issingle="true" name="artificial_lift" value={a} />
                                                                 <label style={labelStyle} className="label-class"> {artificialLift[a]}</label></>)}</div>
                                                                 {/* <CustomCheckBox name="artificial_lift" value="elec_sub" label="Electric Submersible Pump"/>
                                                                 <CustomCheckBox name="artificial_lift" value="pcp" label="Progressive Cavity Pump"/>
