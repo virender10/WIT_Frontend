@@ -20,7 +20,7 @@ class Footer extends React.Component {
               rel="noopener noreferrer"
               className="kt-link"
             >
-              Well Information Technology
+              Well Information Technologies
             </a>
           </div>
         </div>

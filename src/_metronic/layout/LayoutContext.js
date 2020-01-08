@@ -78,23 +78,24 @@ function findPageConfig(currentPage, items) {
 /**
  * Used to lazily create initial layout state.
  */
-function init({ pathname, menuConfig }) {
+function init({ pathname, menuConfig, user }) {
   const currentPage = pathname.slice(1 /* Remove leading slash. */);
   const pageConfig =
     findPageConfig(currentPage, menuConfig.aside.items) ||
     findPageConfig(currentPage, menuConfig.header.items);
-
   const state = { subheader: {}, splashScreen: { refs: {} } };
-
   if (pageConfig) {
-    state.subheader.title = pageConfig.title;
+    const roles = ["admin", "superadmin"];
+    if (user) {
+      const isAdmin = roles.includes(user.role_name.toLowerCase());
+      state.subheader.title = !isAdmin && pageConfig.title === "Dashboard" ? `${user.role_name} ${pageConfig.title}` : pageConfig.title ;
+    }
   }
 
   return state;
 }
 
 function reducer(state, { type, payload }) {
-  debugger
   if (type === actionTypes.INIT) {
     const nextState = init(payload);
 
@@ -131,21 +132,20 @@ function reducer(state, { type, payload }) {
 /**
  * Creates layout reducer and provides it's `state` and ` dispatch`.
  */
-export function LayoutContextProvider({ history, children, menuConfig }) {
+export function LayoutContextProvider({ history, children, menuConfig, user }) {
   const [state, dispatch] = useReducer(
     reducer,
-    { menuConfig, pathname: history.location.pathname },
+    { menuConfig, pathname: history.location.pathname, user },
     // See https://reactjs.org/docs/hooks-reference.html#lazy-initialization
     init
   );
-
   // Subscribe to history changes and reinitialize on each change.
   useEffect(
     () =>
       history.listen(({ pathname }) => {
         dispatch({
           type: actionTypes.INIT,
-          payload: { pathname, menuConfig }
+          payload: { pathname, menuConfig, user }
         });
       }),
 
@@ -156,7 +156,7 @@ export function LayoutContextProvider({ history, children, menuConfig }) {
      *
      * @see https://reactjs.org/docs/hooks-reference.html#conditionally-firing-an-effect
      */
-    [history, menuConfig]
+    [history, menuConfig, user]
   );
 
   const { refs: splashScreenRefs } = state.splashScreen;

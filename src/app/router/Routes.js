@@ -12,17 +12,18 @@ import * as routerHelpers from "../router/RouterHelpers";
 export const Routes = withRouter(({ Layout, history }) => {
   const lastLocation = useLastLocation();
   routerHelpers.saveLastLocation(lastLocation);
-  const { isAuthorized, menuConfig, userLastLocation } = useSelector(
+  const { isAuthorized, menuConfig, userLastLocation, auth } = useSelector(
     ({ auth, urls, builder: { menuConfig } }) => ({
       menuConfig,
       isAuthorized: auth.user != null,
-      userLastLocation: routerHelpers.getLastLocation()
+      userLastLocation: routerHelpers.getLastLocation(),
+      auth
     }),
     shallowEqual
   );
 
   return (
-    <LayoutContextProvider history={history} menuConfig={menuConfig}>
+    <LayoutContextProvider user={auth.user} history={history} menuConfig={menuConfig}>
       <Switch>
         {!isAuthorized ? (
           <Route path="/auth/login" component={AuthPage} />

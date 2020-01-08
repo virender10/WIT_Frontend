@@ -45,7 +45,7 @@ export default function AuthPage() {
               <div className="kt-grid__item">
                 <div className="kt-login__info">
                   <div className="kt-login__copyright">
-                     &nbsp;&copy;&nbsp;{today.toString()}&nbsp; Well Information Technology
+                     &nbsp;&copy;&nbsp;{today.toString()}&nbsp; Well Information Technologies
                   </div>
                   <div className="kt-login__menu">
                     <Link to="/terms" className="kt-link">
