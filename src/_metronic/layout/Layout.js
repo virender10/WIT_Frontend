@@ -75,10 +75,7 @@ function Layout({
               id="kt_content"
               className={`kt-content ${contentCssClasses} kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor`}
             >
-              {/* <!-- begin:: Content Head --> */}
-              {subheaderDisplay && (
-                <SubHeader htmlClassService={htmlClassService} />
-              )}
+              
               {/* <!-- end:: Content Head --> */}
 
               {/* <!-- begin:: Content Body --> */}

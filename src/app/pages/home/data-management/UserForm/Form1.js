@@ -204,63 +204,6 @@ const EntryForm = ({ onSubmit, value }) => {
                                 // enableReinitialize
                                 validate={values => {
                                     const errors = {};
-
-                                    // if (!values.invoiceto) {
-                                    //     errors.invoiceto = "Required Field"
-                                    // }
-                                    // if(!values.lease) {
-                                    //     errors.lease = "Required Field"
-                                    // }
-                                    // if(!values.well_no){
-                                    //     errors.well_no="Required Field";
-                                    // } else if(!/@^\d$/.test(values.well_no)){
-                                    //     errors.well_no="Invalid! Please enter numbers";
-                                    // }
-                                    // if(!values.well_id) {
-                                    //     errors.well_id = "Required Field"
-                                    // }
-                                    // if(!values.well_api1) {
-                                    //     errors.well_api1 = "Required Field"
-                                    // }
-                                    // if(!values.well_api2) {
-                                    //     errors.well_api2 = "Required Field"
-                                    // }
-                                    // if(!values.well_name) {
-                                    //     errors.well_name = "Required Field"
-                                    // }
-                                    // if(!values.well_tmd) {
-                                    //     errors.well_tmd = "Required Field"
-                                    // }
-                                    // if(!values.well_tvd) {
-                                    //     errors.well_tvd = "Required Field"
-                                    // }
-                                    // if(!values.well_lateral_length) {
-                                    //     errors.well_lateral_length = "Required Field"
-                                    // }
-                                    // if(!values.well_toc) {
-                                    //     errors.well_toc = "Required Field"
-                                    // }
-                                    // if(!values.well_kbe) {
-                                    //     errors.well_kbe = "Required Field"
-                                    // }
-                                    // if(!values.well_gle) {
-                                    //     errors.well_gle = "Required Field"
-                                    // }
-                                    // if(!values.well_dsu_id) {
-                                    //     errors.well_dsu_id = "Required Field"
-                                    // }
-                                    // if(!values.well_shl_lati) {
-                                    //     errors.well_shl_lati = "Required Field"
-                                    // }
-                                    // if(!values.well_shl_longi) {
-                                    //     errors.well_shl_longi = "Required Field"
-                                    // }
-                                    // if(!values.well_bhl_lati) {
-                                    //     errors.well_bhl_lati = "Required Field"
-                                    // }
-                                    // if(!values.well_bhl_longi) {
-                                    //     errors.well_bhl_longi = "Required Field"
-                                    // }
                                     return errors;
                                 }}
                                 onSubmit={values => {
@@ -303,7 +246,6 @@ const EntryForm = ({ onSubmit, value }) => {
                                                             />
                                                         </Grid>
                                                         <Grid item xs={6} sm={3}>
-                                                            {/* <Field component={FormikDatePicker} name="date" /> */}
                                                             <DatePickerEx label="Date" name="date" value={values.date} />
                                                         </Grid>
                                                         <Grid item xs={6} sm={3}>

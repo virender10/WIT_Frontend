@@ -20,14 +20,14 @@ export default function AuthPage() {
             <div
               className="kt-grid__item kt-grid__item--order-tablet-and-mobile-2 kt-grid kt-grid--hor kt-login__aside"
               style={{
-                backgroundImage: `url(${toAbsoluteUrl("/media/bg/bg-4.jpg")})`
+                backgroundImage: `url(${toAbsoluteUrl("/media/bg/bg-7.jpg")})`
               }}
             >
               <div className="kt-grid__item">
                 <Link to="/" className="kt-login__logo">
 
                 {/* WelTechLogo */}
-                <img height={100} width = {450}
+                <img height={50}
                     alt="Logo" 
                     src={toAbsoluteUrl("/media/logos/WIT-Logo2.png")}
                   />

@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import Thumb from '../../../customs/ImageUploader';
 import { Formik } from "formik";
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackBarContentWrapper from "../../../customs/SnackBar";
@@ -21,7 +20,6 @@ import {
   getRoles
 } from "../../../../services/authService";
 import { actions } from "../../../../store/ducks/user.duck"
-import { getUserById } from "../../../../services/userManagementService";
 import { withRouter } from "react-router";
 
 const useStyles = makeStyles(theme => ({
@@ -44,24 +42,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const roles = [
-  {
-    value: "1",
-    label: "Administrator"
-  },
-  {
-    value: "2",
-    label: "Guest"
-  },
-  {
-    value: "3",
-    label: "Manager"
-  },
-  {
-    value: "4",
-    label: "Field Offices"
-  }
-];
 
 const getInitialValue = value => {
   if (value) return value;
@@ -92,7 +72,7 @@ const CreateNewUser = ({
   const classes = useStyles();
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(null);
-  const [error, setError] = React.useState(false);
+  const [error] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [roles, setRoles] = React.useState([]);
 
@@ -128,10 +108,6 @@ const CreateNewUser = ({
 
   }, [id, currentUser]);
 
-  //snackbar Handlers
-  const handleClick = () => {
-    setOpen(true);
-  };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -141,7 +117,6 @@ const CreateNewUser = ({
   };
 
   if (error) return null;
-  const userMutation = id ? updateUser : saveUser;
   return (
     <>
       <div className="kt-portlet kt-portlet--height-fluid">
@@ -183,9 +158,6 @@ const CreateNewUser = ({
                 if (!values.last_name) {
                   errors.last_name = "Required Field";
                 }
-                // if (!values.password) {
-                //   errors.password = "Required Field";
-                // }
                 if (!values.email) {
                   errors.email = "Required Field";
                 } else if (
@@ -201,27 +173,16 @@ const CreateNewUser = ({
                   values["userid"] = id
                 }
                 dispatch(actions[functionToCall]({ values, callback: () => history.push('/user-management/Users/UserList')}));
-                // userMutation(values)
-                //   .then(data => {
-                    
-                //   })
-                //   .catch(() => {
-                //     setOpen(true);
-                //     history.push('/user-management/Users/UserList');
-                //   });
               }}
             >
               {({
                 values,
-                status,
                 errors,
                 touched,
                 handleChange,
                 handleBlur,
                 handleSubmit,
-                isSubmitting,
-                setFieldValue
-              }) => {
+                isSubmitting              }) => {
                 return (
                   <form
                     noValidate={true}
@@ -318,13 +279,13 @@ const CreateNewUser = ({
                           error={Boolean(touched.phone && errors.phone)}
                         />
                       </Grid>
-                      <Grid item xs={6} sm={3}>
+                      {/* <Grid item xs={6} sm={3}>
                         <input id="file" name="file" type="file" onChange={(event) => {
                           const filename = event.target.value;
                           setFieldValue("file", { data: event.currentTarget.files[0], filename });
                         }} className="form-control" />
                         <Thumb id={id} actions={actions} values={values} filename={values.file && values.file.filename} currentUser={currentUser || {}} file={values.file && values.file.data} />
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                     <Grid item xs={6} sm={3}></Grid>
                     <Grid item xs={6} sm={3}></Grid>

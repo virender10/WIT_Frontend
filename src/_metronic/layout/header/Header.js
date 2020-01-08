@@ -6,6 +6,7 @@ import HMenu from "./HMenu/HMenu";
 import AnimateLoading from "../../../app/partials/layout/AnimateLoading";
 import KTHeader from "../../_assets/js/header";
 import * as builder from "../../ducks/builder";
+import { LayoutContextConsumer } from "../LayoutContext";
 
 class Header extends React.Component {
   headerCommonRef = React.createRef();
@@ -25,6 +26,10 @@ class Header extends React.Component {
   }
 
   render() {
+    const headerStyle = {
+      margin: "auto",
+      marginRight:"919px" 
+    }
     const { htmlClassService, menuHeaderDisplay } = this.props;
     const headerAttributes = htmlClassService.attributes.header;
     return (
@@ -41,6 +46,12 @@ class Header extends React.Component {
         {/* <!-- begin:: Header Topbar --> */}
         {/* <!-- empty div to fix topbar to stay on the right when menu-horizontal is hidden --> */}
         {!menuHeaderDisplay && <div />}
+        <LayoutContextConsumer >
+              {({ subheader: { title } }) => (
+                <h3 style={headerStyle} className="kt-subheader__title">{title}</h3>
+              )}
+        </LayoutContextConsumer>
+
         <Topbar htmlClassService={htmlClassService} />
         {/* <!-- end:: Header Topbar --> */}
       </div>
