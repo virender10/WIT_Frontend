@@ -42,6 +42,16 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const artificialLift = {
+    rodpump: "Rod Pump",
+    elec_sub: "Electric Submersible Pump",
+    pcp: "Progressive Cavity Pump",
+    gaslift: "Gas Lift",
+    jet: "Jet Pump",
+    plunger: "Plunger Lift",
+    pagl: "Plunger Assisted Gas"
+}
+
 const getInitialValue = (value) => {
     if (value) {
         value.eve_attr = Object.keys(value.eve_attributes).map(title => ({ name: title, label: title.replace(/\s/g, ' ') }));//add space in label title
@@ -144,6 +154,8 @@ const EntryForm2 = ({ onSubmit, value }) => {
         mutator.push({ name: title.replace(/\s/g, '_'), label: title })//remove space from title name
     };
 
+
+
     const handleFiles = files => {
         var reader = new FileReader();
         reader.onload = function (e) {
@@ -206,6 +218,7 @@ const EntryForm2 = ({ onSubmit, value }) => {
                                 handleSubmit,
                                 isSubmitting
                             }) => {
+                                const artificialLiftKeys = Object.keys(artificialLift)
                                 return (
                                     <>
                                         <form
@@ -300,13 +313,13 @@ const EntryForm2 = ({ onSubmit, value }) => {
                                                         <FormControl component="fieldset" className={classes.formControl}>
                                                             <FormLabel component="legend">On Artificial Lift</FormLabel>
                                                             <FormGroup aria-label="position" row>
-                                                                <CustomCheckBox name="artificial_lift" value="rodpump" label="Rod Pump"/>
-                                                                <CustomCheckBox name="artificial_lift" value="elec_sub" label="Electric Submersible Pump"/>
+                                                                {artificialLiftKeys.map((a, index) => <CustomCheckBox key={index} issingle="true" name="artificial_lift" value={a} label={artificialLift[a]}/>)}
+                                                                {/* <CustomCheckBox name="artificial_lift" value="elec_sub" label="Electric Submersible Pump"/>
                                                                 <CustomCheckBox name="artificial_lift" value="pcp" label="Progressive Cavity Pump"/>
                                                                 <CustomCheckBox name="artificial_lift" value="gaslift" label="Gas Lift"/>
                                                                 <CustomCheckBox name="artificial_lift" value="jet" label="Jet Pump"/>
                                                                 <CustomCheckBox name="artificial_lift" value="plunger" label="Plunger Lift"/>
-                                                                <CustomCheckBox name="artificial_lift" value="pagl" label="Plunger Assisted Gas"/>
+                                                                <CustomCheckBox name="artificial_lift" value="pagl" label="Plunger Assisted Gas"/> */}
                                                             </FormGroup>
                                                         </FormControl>
                                                     </Grid>
