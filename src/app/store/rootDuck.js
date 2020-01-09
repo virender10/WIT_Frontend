@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 
 import * as auth from "./ducks/auth.duck";
 import * as users from "./ducks/user.duck";
+import * as roles from "./ducks/role.duck";
 import { metronic } from "../../_metronic";
 
 export const rootReducer = combineReducers({
@@ -13,5 +14,5 @@ export const rootReducer = combineReducers({
 });
 
 export function* rootSaga() {
-  yield all([auth.saga(), users.saga()]);
+  yield all([auth.saga(), users.saga(), roles.saga()]);
 }

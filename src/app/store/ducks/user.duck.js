@@ -4,6 +4,7 @@ import { put, takeLatest } from "redux-saga/effects";
 import { getUserByToken } from "../../services/authService";
 import { createUser, getUsersList, deleteUserById, updateUser } from "../../services/userManagementService";
 import * as routerHelpers from "../../router/RouterHelpers";
+import { userRoleActions, roleActions } from "./role.duck";
 
 export const actionTypes = {
   CreateUser: "[Create User] Action",
@@ -15,16 +16,18 @@ export const actionTypes = {
   DeleteUserSuccess: "[Delete User Success] Action",
   GetUserList: "[Get User List] Action",
   GetUserListSuccess: "[Get User List Success] Action",
-  GetUserRoles: "[Get User Roles] Action"
+  GetUserRoles: "[Get User Roles] Action",
+  ...userRoleActions
 };
 
 const initialAuthState = {
   userList: [],
-  currentUser: undefined
+  currentUser: undefined,
+  roles: []
 };;
 
 export const reducer = persistReducer(
-  { storage, key: "welltech- users", whitelist: ["userList", "currentUser"] },
+  { storage, key: "welltech- users", whitelist: ["userList", "currentUser", "role"] },
   (state = initialAuthState, action) => {
     switch (action.type) {
       case actionTypes.CreateUserSuccess: {
@@ -66,6 +69,40 @@ export const reducer = persistReducer(
         const { users } = action.payload;
         return { ...state, userList: users };
       }
+      case actionTypes.AddRoleSuccess: {
+        const { role } = action.payload;
+        const roles = [...state.roles];
+        roles.push(role)
+        return { ...state, roles };
+      }
+
+      case actionTypes.EditRoleSuccess: {
+        const { id, ...restData } = action.payload;
+        const roles = [...state.roles];
+            const selectedRoleIndex = roles.findIndex(role => role.id === id);
+            if (selectedRoleIndex > -1) {
+                roles.splice(selectedRoleIndex, 1, {
+                    ...roles[selectedRoleIndex],
+                    ...restData
+                })
+            }
+            return { ...state, roles };
+      }
+
+      case actionTypes.DeleteRoleSuccess: {
+        const { id } = action.payload;
+        const roles = [...state.roles];
+            const selectedRoleIndex = roles.findIndex(role => role.id === id);
+            if (selectedRoleIndex > -1) {
+                roles.splice(selectedRoleIndex, 1)
+            }
+            return { ...state, roles };
+      }
+
+      case actionTypes.GetUserRolesSuccess: {
+        const { roles } = action.payload;
+        return { ...state, roles };
+      }
 
       default:
         return state
@@ -89,7 +126,8 @@ export const actions = {
   deleteUserSuccess: userid => ({ type: actionTypes.DeleteUserSuccess, payload: { userid } }),
   getUserList: () => ({ type: actionTypes.GetUserList, payload: { } }),
   getUserListSuccess: (users) => ({ type: actionTypes.GetUserListSuccess, payload: users }),
-  fulfillUser: user => ({ type: actionTypes.UserLoaded, payload: { user } })
+  fulfillUser: user => ({ type: actionTypes.UserLoaded, payload: { user } }),
+  ...roleActions
 };
 
 export function* saga() {
