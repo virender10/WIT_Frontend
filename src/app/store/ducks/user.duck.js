@@ -72,6 +72,10 @@ export const reducer = persistReducer(
       case actionTypes.AddRoleSuccess: {
         const { role } = action.payload;
         const roles = [...state.roles];
+        if (roles && roles.length > 0) {
+          const sortedRoles = roles.slice().sort((a, b) => b.id - a.id)
+          role.id = sortedRoles[0].id + 1;
+        }
         roles.push(role)
         return { ...state, roles };
       }
@@ -80,10 +84,11 @@ export const reducer = persistReducer(
         const { id, ...restData } = action.payload;
         const roles = [...state.roles];
             const selectedRoleIndex = roles.findIndex(role => role.id === id);
-            if (selectedRoleIndex > -1) {
-                roles.splice(selectedRoleIndex, 1, {
-                    ...roles[selectedRoleIndex],
-                    ...restData
+        if (selectedRoleIndex > -1) {
+                roles.splice(selectedRoleIndex, 1)
+                roles.splice(selectedRoleIndex, 0, {
+                  id,
+                  ...restData,
                 })
             }
             return { ...state, roles };
