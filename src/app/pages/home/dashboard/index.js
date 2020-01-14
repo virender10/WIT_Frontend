@@ -5,13 +5,13 @@ import {
   PortletBody,
   PortletHeader,
   PortletHeaderToolbar
-} from "../../partials/content/Portlet";
-import { metronic } from "../../../_metronic";
-import QuickStatsChart from "../../widgets/QuickStatsChart";
-import OrderStatisticsChart from "../../widgets/OrderStatisticsChart";
-import OrdersWidget from "../../widgets/OrdersWidget";
-import SalesBarChart from "../../widgets/SalesBarChart";
-import PortletHeaderDropdown from "../../partials/content/CustomDropdowns/PortletHeaderDropdown";
+} from "../../../partials/content/Portlet";
+import { metronic } from "../../../../_metronic";
+import QuickStatsChart from "../../../widgets/QuickStatsChart";
+import OrderStatisticsChart from "../../../widgets/OrderStatisticsChart";
+import OrdersWidget from "../../../widgets/OrdersWidget";
+import SalesBarChart from "../../../widgets/SalesBarChart";
+import PortletHeaderDropdown from "../../../partials/content/CustomDropdowns/PortletHeaderDropdown";
 
 export default function Dashboard() {
   const { brandColor, dangerColor, successColor, primaryColor, user } = useSelector(

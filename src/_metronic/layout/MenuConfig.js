@@ -15,7 +15,69 @@ export default {
         page: "dashboard",
         translate: "MENU.DASHBOARD",
         bullet: "dot",
-        isShownTo: []
+        isShownTo: [],
+        submenu: [
+          {
+            title: "Well Section",
+            allowedToPermission: 'canViewUsers',
+            page: "dashboard/wellSelection"
+          },
+        ],
+      },
+      {
+        title: "Well Information",
+        root: true,
+        icon: "flaticon2-architecture-and-city",
+        page: "dashboard",
+        bullet: "dot",
+        isShownTo: [],
+        submenu: [
+          {
+            title: "Edit Header",
+            allowedToPermission: 'canViewUsers',
+            page: "wellInformation/editHeader"
+          },
+        ],
+      },
+      {
+        title: "Status / Events",
+        root: true,
+        icon: "flaticon2-architecture-and-city",
+        page: "dashboard",
+        bullet: "dot",
+        isShownTo: [],
+        submenu: [
+          {
+            title: "Edit Event",
+            allowedToPermission: 'canViewUsers',
+            page: "status/editEvent"
+          },
+          {
+            title: "New Event",
+            allowedToPermission: 'canViewUsers',
+            page: "status/newEvent"
+          },
+        ],
+      },
+      {
+        title: "Jobs",
+        root: true,
+        icon: "flaticon2-architecture-and-city",
+        page: "jobs",
+        bullet: "dot",
+        isShownTo: [],
+        submenu: [
+          {
+            title: "Open Jobs",
+            allowedToPermission: 'canViewUsers',
+            page: "jobs/openJobs"
+          },
+          {
+            title: "Create New",
+            allowedToPermission: 'canViewUsers',
+            page: "jobs/createNew"
+          },
+        ],
       },
       {
         title: "Companies",
@@ -47,7 +109,7 @@ export default {
           {
             title: "Users",
             allowedToPermission: 'canViewUsers',
-            page: "user-management/Users/UserList"
+            page: "user-management/Users/UserList",
           },
           {
             title: "Roles",

@@ -4,12 +4,22 @@ import MenuItemSeparator from "./MenuItemSeparator";
 import MenuItem from "./MenuItem";
 
 export default class MenuSubmenu extends React.Component {
+
+  showSubMenu = (item) => {
+    const { userRole } = this.props;
+    if (!item.isShownTo || !userRole) return true;
+    return item.isShownTo.length === 0 || item.isShownTo.includes(userRole.toLowerCase());
+  }
+
   render() {
     const { item, currentUrl, layoutConfig } = this.props;
 
     return (
       <ul className="kt-menu__subnav">
-        {item.submenu.map((child, index) => (
+        {item.submenu.map((child, index) => {
+          const showSubMenu = this.showSubMenu(child);
+          if (!showSubMenu) return null
+          return (
           <React.Fragment key={index}>
             {child.section && (
               <MenuSection
@@ -36,7 +46,7 @@ export default class MenuSubmenu extends React.Component {
               />
             )}
           </React.Fragment>
-        ))}
+        )})}
       </ul>
     );
   }

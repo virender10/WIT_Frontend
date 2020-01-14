@@ -1,7 +1,10 @@
 import React, { Suspense, lazy } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Builder from "./Builder";
-import Dashboard from "./Dashboard";
+import DashboardRoutes from "./dashboard/dashboardRoutes";
+import WellInformationRoutes from "./well-information/wellInformationRoutes";
+import StatusRoutes from "./status-events/statusRoutes";
+import JobRoutes from "./jobs/jobsRoutes";
 import DocsPage from "./docs/DocsPage";
 import { LayoutSplashScreen } from "../../../_metronic";
 import RoleRoutes from './user-management/Roles/RoleRoutes';
@@ -26,7 +29,10 @@ export default function HomePage() {
           <Redirect exact from="/" to="/dashboard" />
         }
         <Route path="/builder" component={Builder} />
-        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/dashboard" component={DashboardRoutes} />
+        <Route path="/wellInformation" component={WellInformationRoutes} />
+        <Route path="/status" component={StatusRoutes} />
+        <Route path="/jobs" component={JobRoutes} />
         <Route path="/google-material" component={GoogleMaterialPage} />
         <Route path="/react-bootstrap" component={ReactBootstrapPage} />
         <Route path="/docs" component={DocsPage} />
