@@ -18,6 +18,26 @@ export default {
         isShownTo: []
       },
       {
+        title: "Companies",
+        allowedToPermission: 'canAccessUserManagment',
+        root: true,
+        bullet: "dot",
+        icon: "flaticon2-user-outline-symbol",
+        submenu: [
+          {
+            title: "Create Company",
+            allowedToPermission: 'canViewUsers',
+            page: "company/create"
+          },
+          {
+            title: "List of Companies",
+            allowedToPermission: 'canViewRoles',
+            page: "company/companyList"
+          }
+        ],
+        isShownTo: ["superadmin"]
+      },
+      {
         title: "User Management",
         allowedToPermission: 'canAccessUserManagment',
         root: true,

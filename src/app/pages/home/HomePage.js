@@ -6,6 +6,7 @@ import DocsPage from "./docs/DocsPage";
 import { LayoutSplashScreen } from "../../../_metronic";
 import RoleRoutes from './user-management/Roles/RoleRoutes';
 import UserRoutes from './user-management/Users/UserManagementRoutes';
+import CompanyRoutes from "./companies/CompaniesRoutes"
 import AdminProfile from "./admin-management/adminProfile";
 import DataRoutes from "./data-management/DataRoutes";
 
@@ -30,6 +31,7 @@ export default function HomePage() {
         <Route path="/react-bootstrap" component={ReactBootstrapPage} />
         <Route path="/docs" component={DocsPage} />
         <Route path="/user-management/Users" component={UserRoutes} />
+        <Route path="/company" component={CompanyRoutes} />
         <Route path="/user-management/Roles" component={RoleRoutes} />
         <Route path="/admin-management/" component={AdminProfile}/>
         <Route path="/data-management/UserForm" component={DataRoutes}/>
