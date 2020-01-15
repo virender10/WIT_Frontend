@@ -81,7 +81,6 @@ export function saveUser(user){
   user["phone_code"] = "91"
 
   const createUserData = convertToFormData(user)
-  console.log(createUserData, "jgdsahfshaf")
   // return axios.post(API_URL + "/user/create",createUserData);
 }
 

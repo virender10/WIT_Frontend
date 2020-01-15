@@ -14,13 +14,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import { TextField } from "@material-ui/core";
 import _ from "lodash";
-import {
-  saveUser,
-  updateUser,
-  getRoles
-} from "../../../services/authService";
-import { actions } from "../../../store/ducks/user.duck"
+import { actions } from "../../../store/ducks/company.duck"
 import { withRouter } from "react-router";
+import Thumb from "../../customs/ImageUploader"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,54 +42,33 @@ const useStyles = makeStyles(theme => ({
 const getInitialValue = value => {
   if (value) return value;
   return {
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    companyName: "",
-    phone: "",
-    filename: "",
-    role: "",
+    name: "",
+    description: "",
     file: null,
-    user_management:[],
-    data_management:[]
   };
 };
 
 
-const CreateNewUser = ({
+const CreateNewCompany = ({
   history,
   match: {
     params: { id }
   },
-  users,
-  currentUser
+  companies,
+  currentCompany
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(null);
   const [error] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [roles, setRoles] = React.useState([]);
-
-  React.useEffect(() => {
-    //console.log('useEffect has been called!');
-    getRoles()
-      .then(response => {
-        const roleArray = response.data.data;
-        setRoles(roleArray);
-      })
-      .catch(() => {
-        console.log("error");
-      });
-  }, []);
 
   useEffect(() => {
     if (id) {
-      const selectedUser = users.find(user => user.userid === Number(id));
-        if (selectedUser) setValue({...selectedUser, role: selectedUser.role_id, file: { data: selectedUser.image } })
-    } else if (currentUser) {
-      setValue(currentUser)
+      const selectedCompany = companies.find(c => c.id === Number(id));
+        if (selectedCompany) setValue({...selectedCompany, file: { data: selectedCompany.file && selectedCompany.file.data } })
+    } else if (currentCompany) {
+      setValue(currentCompany)
     }
 
       // getUserById(id)
@@ -106,7 +81,7 @@ const CreateNewUser = ({
       //   })
       //   .catch(error => setError(error));
 
-  }, [id, currentUser]);
+  }, [id, currentCompany]);
 
 
   const handleClose = (event, reason) => {
@@ -117,6 +92,7 @@ const CreateNewUser = ({
   };
 
   if (error) return null;
+
   return (
     <>
       <div className="kt-portlet kt-portlet--height-fluid">
@@ -126,7 +102,7 @@ const CreateNewUser = ({
               {id ? "Update" : "Create"}
             </h3>
           </div>
-          <div className="kt-portlet__head-toolbar">
+          {/* <div className="kt-portlet__head-toolbar">
             <Link to="/user-management/Users/UserList">
               <Tooltip
                 TransitionComponent={Zoom}
@@ -142,7 +118,7 @@ const CreateNewUser = ({
                 </Button>
               </Tooltip>
             </Link>
-          </div>
+          </div> */}
         </div>
         <div className="kt-portlet__body">
           <div className="kt-widget4">
@@ -151,28 +127,21 @@ const CreateNewUser = ({
               enableReinitialize
               validate={values => {
                 const errors = {};
-                if (!id) dispatch(actions.setCurrentUser(values));
-                if (!values.first_name) {
-                  errors.first_name = "Required Field";
+                if (!id) dispatch(actions.setCurrentCompany(values));
+                if (!values.name) {
+                  errors.name = "Required Field";
                 }
-                if (!values.last_name) {
-                  errors.last_name = "Required Field";
-                }
-                if (!values.email) {
-                  errors.email = "Required Field";
-                } else if (
-                  !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                ) {
-                  errors.email = "Invalid Field";
+                if (!values.description) {
+                  errors.description = "Required Field";
                 }
                 return errors;
               }}
               onSubmit={values => {
-                const functionToCall = id ? "editUser" : "createUser";
+                const functionToCall = id ? "editCompany" : "createCompany";
                 if (id) {
-                  values["userid"] = id
+                  values["companyId"] = id;
                 }
-                dispatch(actions[functionToCall]({ values, callback: () => history.push('/user-management/Users/UserList')}));
+                dispatch(actions[functionToCall]({ values, callback: () => history.push('/company/companyList')}));
               }}
             >
               {({
@@ -182,7 +151,9 @@ const CreateNewUser = ({
                 handleChange,
                 handleBlur,
                 handleSubmit,
-                isSubmitting              }) => {
+                isSubmitting,
+                setFieldValue
+              }) => {
                 return (
                   <form
                     noValidate={true}
@@ -193,99 +164,43 @@ const CreateNewUser = ({
                     <Grid container spacing={3}>
                       <Grid item xs={6} sm={3}>
                         <TextField
-                          label="First Name"
+                          label="Name"
                           margin="normal"
-                          name="first_name"
+                          name="name"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          value={values.first_name}
-                          helperText={touched.first_name && errors.first_name}
-                          error={Boolean(touched.first_name && errors.first_name)}
+                          value={values.name}
+                          helperText={touched.name && errors.name}
+                          error={Boolean(touched.name && errors.name)}
                         />
                       </Grid>
                       <Grid item xs={6} sm={3}>
                         <TextField
-                          label="Last Name"
+                          label="Description"
                           margin="normal"
-                          name="last_name"
+                          name="description"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          value={values.last_name}
-                          helperText={touched.last_name && errors.last_name}
-                          error={Boolean(touched.last_name && errors.last_name)}
+                          value={values.description}
+                          helperText={touched.description && errors.description}
+                          error={Boolean(touched.description && errors.description)}
                         />
                       </Grid>
                       <Grid item xs={6} sm={3}>
-                        <TextField
-                          type="email"
-                          label="Email"
-                          margin="normal"
-                          name="email"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.email}
-                          helperText={touched.email && errors.email}
-                          error={Boolean(touched.email && errors.email)}
-                        />
-                      </Grid>
-                      {!id && <Grid item xs={6} sm={3}>
-                        <TextField
-                          type="password"
-                          label="Password"
-                          margin="normal"
-                          name="password"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.password}
-                          helperText={touched.password && errors.password}
-                          error={Boolean(touched.password && errors.password)}
-                        />
-                      </Grid>}
-                      <Grid item xs={6} sm={3}>
-                        <TextField
-                          id="select-role"
-                          select
-                          label="Select Role"
-                          value={values.role || ""}
-                          className={classes.textField}
-                          name="role"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          SelectProps={{
-                            MenuProps: {
-                              className: classes.menu
-                            }
-                          }}
-                          helperText="Please select user role"
-                          margin="normal"
-                        >
-                          {roles.map(option => (
-                            <MenuItem key={option.id} value={option.id}>
-                              {option.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </Grid>
-                      <Grid item xs={6} sm={3}>
-                        <TextField
-                          label="Phone"
-                          margin="normal"
-                          className="kt-width-full"
-                          name="phone"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.phone}
-                          helperText={touched.phone && errors.phone}
-                          error={Boolean(touched.phone && errors.phone)}
-                        />
-                      </Grid>
-                      {/* <Grid item xs={6} sm={3}>
                         <input id="file" name="file" type="file" onChange={(event) => {
                           const filename = event.target.value;
                           setFieldValue("file", { data: event.currentTarget.files[0], filename });
                         }} className="form-control" />
-                        <Thumb id={id} actions={actions} values={values} filename={values.file && values.file.filename} currentUser={currentUser || {}} file={values.file && values.file.data} />
-                      </Grid> */}
+                        <Thumb
+                          id={id}
+                          actions={actions}
+                          values={values}
+                          callAction={(data) => dispatch(actions.setCurrentCompany(data))}
+                          filename={values.file && values.file.filename}
+                          currentInProgress={currentCompany || {}}
+                          file={values.file && values.file.data}
+                        />
+                      </Grid>
                     </Grid>
                     <Grid item xs={6} sm={3}></Grid>
                     <Grid item xs={6} sm={3}></Grid>
@@ -298,7 +213,7 @@ const CreateNewUser = ({
                         disabled={isSubmitting}
                         className="btn btn-primary btn-elevate kt-login__btn-primary"
                       >
-                        {id ? ('Update') : ('Register')}
+                        {id ? ('Update') : ('Create')}
                       </button>
                     </div>
                   </form>
@@ -330,8 +245,8 @@ const CreateNewUser = ({
 };
 
 const mapStateToProps = store => ({
-  users: store.users.userList,
-  currentUser: store.users.currentUser
+  companies: store.companies.companyList,
+  currentCompany: store.companies.currentCompany
 });
 
-export default compose(connect( mapStateToProps), withRouter)(CreateNewUser);
+export default compose(connect( mapStateToProps), withRouter)(CreateNewCompany);

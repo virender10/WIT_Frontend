@@ -7,9 +7,9 @@ export default function CompanyRoutes() {
     return (
         <div className="kt-portlet kt-portlet--height-fluid">
             <Router><Switch>
-                <Redirect from="/company" exact to="company/create" />
+                <Redirect from="/company" exact to="/company/create" />
                 <Route path="/company/companyList" component={CompanyList} />
-                <Route path="company/create" component={CreateCompany} />
+                <Route path="/company/create/:id?" component={CreateCompany} />
             </Switch></Router>
         </div>
 

@@ -6,7 +6,7 @@ const Thumb = (nextProps) => {
   const [loading, setLoading] = useState(false)
   const [thumb, setThumb] = useState(undefined)
   const dispatch = useDispatch();
-  const { currentUser, values, filename, id } = nextProps;
+  const { values, filename, id, file, currentInProgress, callAction } = nextProps;
 
   /**
    * This method returns the file converted from the object URL
@@ -25,13 +25,14 @@ const Thumb = (nextProps) => {
   // This method called when the image has loaded
   const onLoadEnded = (reader) => {
     if (!id) {
-      const name = currentUser && currentUser.file && (currentUser.file.name || filename);
-      let currentEditedUser = {
-        ...currentUser,
+      const name = currentInProgress && currentInProgress.file && (currentInProgress.file.name || filename);
+      let currentEdited = {
+        ...currentInProgress,
         ...values
       }
-      currentEditedUser.file = { data: reader.result, name };
-      dispatch(nextProps.actions.setCurrentUser(currentEditedUser));
+      currentEdited.file = { data: reader.result, name };
+
+      callAction(currentEdited);
     }
     setLoading(false)
     setThumb(reader.result)
@@ -40,26 +41,26 @@ const Thumb = (nextProps) => {
   useEffect(() => {
     setLoading(true)
     let reader = new FileReader();
-    const name = currentUser && currentUser.file && (currentUser.file.name || filename);
+    const name = currentInProgress && currentInProgress.file && (currentInProgress.file.name || filename);
     reader.onloadend = () => onLoadEnded(reader);
-    if (nextProps.file) {
-      if (!_.isObject(nextProps.file)) {
+
+    if (file) {
+      if (!_.isObject(file)) {
         const filename = name && name.split("\\");
-        if (filename && !nextProps.file.includes("http://")) {
-          const file = dataURLtoFile(nextProps.file, filename[filename.length - 1])
+        if (filename && !file.includes("http://")) {
+          const file = dataURLtoFile(file, filename[filename.length - 1])
           reader.readAsDataURL(file);
         } else {
           setLoading(false)
-          setThumb(nextProps.file);
+          setThumb(file);
         }
       } else {
-        reader.readAsDataURL(nextProps.file);
+        reader.readAsDataURL(file);
       }
     }
   }, [values.file]);
 
-  const { file } = nextProps;
-  const name = currentUser && currentUser.file && (currentUser.file.name || filename);
+  const name = currentInProgress && currentInProgress.file && (currentInProgress.file.name || filename);
   if (!file) { return null; }
   if (loading) { return <p>loading...</p>; }  
   return (<img src={thumb}

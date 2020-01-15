@@ -284,8 +284,16 @@ const CreateNewUser = ({
                           const filename = event.target.value;
                           setFieldValue("file", { data: event.currentTarget.files[0], filename });
                         }} className="form-control" />
-                        <Thumb id={id} actions={actions} values={values} filename={values.file && values.file.filename} currentUser={currentUser || {}} file={values.file && values.file.data} />
-                      </Grid> */}
+                        <Thumb
+                          id={id}
+                          actions={actions}
+                          values={values}
+                          callAction={(data) => dispatch(actions.setCurrentUser(data))}
+                          filename={values.file && values.file.filename}
+                          currentInProgress={currentCompany || {}}
+                          file={values.file && values.file.data}
+                        />                      
+                        </Grid> */}
                     </Grid>
                     <Grid item xs={6} sm={3}></Grid>
                     <Grid item xs={6} sm={3}></Grid>
