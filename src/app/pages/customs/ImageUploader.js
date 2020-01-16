@@ -14,12 +14,14 @@ const Thumb = (nextProps) => {
    * @param {Name of the file} filename 
    */
   const dataURLtoFile = (dataurl, filename) => {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
+    if (dataurl) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
     }
-    return new File([u8arr], filename, { type: mime });
   };
   
   // This method called when the image has loaded
@@ -43,13 +45,12 @@ const Thumb = (nextProps) => {
     let reader = new FileReader();
     const name = currentInProgress && currentInProgress.file && (currentInProgress.file.name || filename);
     reader.onloadend = () => onLoadEnded(reader);
-
     if (file) {
       if (!_.isObject(file)) {
         const filename = name && name.split("\\");
-        if (filename && !file.includes("http://")) {
+        if (filename && !file.includes("http://") && !file.includes("base64")) {
           const file = dataURLtoFile(file, filename[filename.length - 1])
-          reader.readAsDataURL(file);
+          file && reader.readAsDataURL(file);
         } else {
           setLoading(false)
           setThumb(file);
@@ -58,8 +59,7 @@ const Thumb = (nextProps) => {
         reader.readAsDataURL(file);
       }
     }
-  }, [values.file]);
-
+  }, [file]);
   const name = currentInProgress && currentInProgress.file && (currentInProgress.file.name || filename);
   if (!file) { return null; }
   if (loading) { return <p>loading...</p>; }  

@@ -1,7 +1,7 @@
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { put, takeLatest } from "redux-saga/effects";
-import { createCompany } from "../../services/companyManagementService";
+import { createCompany, getCompaniesList } from "../../services/companyManagementService";
 
 export const actionTypes = {
   CreateCompany: "[Create Company] Action",
@@ -99,10 +99,11 @@ export function* saga() {
   yield takeLatest(actionTypes.CreateCompany, function* createCompanySaga({payload}) {
     const { data } = payload;
     const { values: company, callback } = data;
-    const { name, description } = company;
+    const { name, description, logo } = company;
     const companyData = {
         name,
-        description
+      description,
+      logo
     }
       const response = yield createCompany(companyData);
     callback();
@@ -123,8 +124,8 @@ export function* saga() {
   });
 
   yield takeLatest(actionTypes.GetCompanyList, function* getCompanyListSaga() {
-    // const response = yield getCompanysList();
-    // yield put(actions.getCompanyListSuccess({users: response.data.data.items}));
+    const response = yield getCompaniesList();
+    yield put(actions.getCompanyListSuccess({companies: response.data.data.items}));
   });
 
   yield takeLatest(actionTypes.DeleteCompany, function* getCompanyListSaga({ payload }) {

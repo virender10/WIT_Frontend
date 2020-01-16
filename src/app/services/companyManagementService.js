@@ -30,10 +30,10 @@ function convertToFormData(data){
 //   return axios.put(API_URL+`admin/editUser?userid=${userid}`, createUserData);
 // }
 
-// export function getUsersList(offset, limit) {
-// //  const userList = convertToFormData({offset,limit} )
-//   return axios.get(API_URL+`admin/listing?limit=${100}&offset=${0}`);
-// }
+export function getCompaniesList(offset, limit) {
+//  const userList = convertToFormData({offset,limit} )
+  return axios.get(API_URL+`company/listing?limit=${limit}&offset=${offset}`);
+}
 
 // export function getUserById(id){
 //   console.log("id: ", id);

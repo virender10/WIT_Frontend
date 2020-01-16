@@ -44,7 +44,7 @@ const getInitialValue = value => {
   return {
     name: "",
     description: "",
-    file: null,
+    logo: null,
   };
 };
 
@@ -66,9 +66,9 @@ const CreateNewCompany = ({
   useEffect(() => {
     if (id) {
       const selectedCompany = companies.find(c => c.id === Number(id));
-        if (selectedCompany) setValue({...selectedCompany, file: { data: selectedCompany.file && selectedCompany.file.data } })
+        if (selectedCompany) setValue({...selectedCompany, logo: { data: selectedCompany.file && selectedCompany.file.data } })
     } else if (currentCompany) {
-      setValue(currentCompany)
+      setValue({...currentCompany, logo: { data: currentCompany.file && currentCompany.file.data } })
     }
 
       // getUserById(id)
@@ -187,18 +187,43 @@ const CreateNewCompany = ({
                         />
                       </Grid>
                       <Grid item xs={6} sm={3}>
-                        <input id="file" name="file" type="file" onChange={(event) => {
+                        <TextField
+                          label="Username"
+                          margin="normal"
+                          name="username"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.username}
+                          helperText={touched.username && errors.username}
+                          error={Boolean(touched.username && errors.username)}
+                        />
+                      </Grid>
+                      <Grid item xs={6} sm={3}>
+                        <TextField
+                          label="Password"
+                          margin="normal"
+                          type="password"
+                          name="password"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.password}
+                          helperText={touched.password && errors.password}
+                          error={Boolean(touched.password && errors.password)}
+                        />
+                      </Grid>
+                      <Grid item xs={6} sm={3}>
+                        <input id="logo" name="logo" type="file" onChange={(event) => {
                           const filename = event.target.value;
-                          setFieldValue("file", { data: event.currentTarget.files[0], filename });
+                          setFieldValue("logo", { data: event.currentTarget.files[0], filename });
                         }} className="form-control" />
                         <Thumb
                           id={id}
                           actions={actions}
                           values={values}
                           callAction={(data) => dispatch(actions.setCurrentCompany(data))}
-                          filename={values.file && values.file.filename}
+                          filename={values.logo && values.logo.filename}
                           currentInProgress={currentCompany || {}}
-                          file={values.file && values.file.data}
+                          file={values.logo && values.logo.data}
                         />
                       </Grid>
                     </Grid>

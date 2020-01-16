@@ -216,6 +216,7 @@ function EnhancedTable(props) {
     
 
     React.useEffect(() => {
+        getDataList();
             // getUsersList(page,rowsPerPage).then((data) => {
             //     if(data.status == 200){
             //         if(data.data.data.total_count > 0){
