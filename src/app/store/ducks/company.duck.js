@@ -101,9 +101,9 @@ export function* saga() {
     const { values: company, callback } = data;
     const { name, description, logo } = company;
     const companyData = {
-        name,
+      name,
       description,
-      logo
+      image: logo
     }
       const response = yield createCompany(companyData);
     callback();

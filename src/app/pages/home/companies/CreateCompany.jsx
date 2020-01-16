@@ -45,6 +45,8 @@ const getInitialValue = value => {
     name: "",
     description: "",
     logo: null,
+    username: "",
+    password: ""
   };
 };
 
