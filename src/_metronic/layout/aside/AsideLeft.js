@@ -5,6 +5,7 @@ import Brand from "../brand/Brand";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Menu from "./Menu";
 import KTOffcanvas from "../../_assets/js/offcanvas";
+import { toAbsoluteUrl } from "../../../_metronic";
 
 class AsideLeft extends React.Component {
   asideOffCanvasRef = React.createRef();
@@ -44,6 +45,17 @@ class AsideLeft extends React.Component {
               </PerfectScrollbar>
             )}
           </div>
+          <div style={{
+            position: "absolute",
+            bottom: 10,
+            left: 10
+          }}>
+            <img
+              height={50}
+              alt="Logo" 
+              src={toAbsoluteUrl("/media/logos/WIT-Logo2.png")}
+            />
+          </div>
         </div>
       </>
     );
@@ -60,6 +72,7 @@ const mapStateToProps = store => ({
     path: "aside",
     toString: true
   }),
+  headerLogo: builder.selectors.getLogo(store),
   menuCanvasOptions: {
     baseClass: "kt-aside",
     overlay: true,
