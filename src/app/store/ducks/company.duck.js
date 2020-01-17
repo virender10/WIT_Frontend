@@ -1,7 +1,7 @@
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { put, takeLatest } from "redux-saga/effects";
-import { createCompany, getCompaniesList } from "../../services/companyManagementService";
+import { put, takeLatest, select } from "redux-saga/effects";
+import { createCompany, getCompaniesList, updateCompany, updateCompanyLogo, changeCompanyStatus } from "../../services/companyManagementService";
 
 export const actionTypes = {
   CreateCompany: "[Create Company] Action",
@@ -13,6 +13,8 @@ export const actionTypes = {
   DeleteCompanySuccess: "[Delete Company Success] Action",
   GetCompanyList: "[Get Company List] Action",
   GetCompanyListSuccess: "[Get Company List Success] Action",
+  ChangeCompanyStatus: "[Change Company Status] Action",
+  ChangeCompanyStatusSuccess: "[Change Company Status Success] Action",
 };
 
 const initialAuthState = {
@@ -93,6 +95,8 @@ export const actions = {
   deleteCompanySuccess: companyid => ({ type: actionTypes.DeleteCompanySuccess, payload: companyid }),
   getCompanyList: () => ({ type: actionTypes.GetCompanyList, payload: { } }),
   getCompanyListSuccess: (companies) => ({ type: actionTypes.GetCompanyListSuccess, payload: companies }),
+  changeCompanyStatus: (company) => ({ type: actionTypes.ChangeCompanyStatus, payload: { company } }),
+  changeCompanyStatusSuccess: (company) => ({ type: actionTypes.ChangeCompanyStatusSuccess, payload: company }),
 };
 
 export function* saga() {
@@ -105,20 +109,17 @@ export function* saga() {
       description,
       image: logo
     }
-      const response = yield createCompany(companyData);
+    yield createCompany(companyData);
     callback();
     yield put(actions.createCompanySuccess(company));
   });
   yield takeLatest(actionTypes.EditCompany, function* createCompanySaga({payload}) {
     const { data } = payload;
     const { values: company, callback } = data;
-    // const { companyName, role, file, user_management, data_management, ...restCompanyData } = user;
-    // const userData = {
-    //   ...restUserData,
-    //   role_id: role,
-    //   image: file
-    // }
-    // yield updateUser(userData)
+    const { logo, isBlock, ...restData } = company;
+    yield updateCompanyLogo({ ctoken: company.id, image: logo });
+
+    yield updateCompany(restData);
     callback();
     yield put(actions.editCompanySuccess(company));
   });
@@ -126,6 +127,13 @@ export function* saga() {
   yield takeLatest(actionTypes.GetCompanyList, function* getCompanyListSaga() {
     const response = yield getCompaniesList();
     yield put(actions.getCompanyListSuccess({companies: response.data.data.items}));
+  });
+
+  yield takeLatest(actionTypes.ChangeCompanyStatus, function* changeCompanyStatusSaga({ payload }) {
+    const { company } = payload;
+    const { isBlock, id } = company;
+    yield changeCompanyStatus({ isBlock, ctoken: id });
+    yield put(actions.changeCompanyStatusSuccess(company));
   });
 
   yield takeLatest(actionTypes.DeleteCompany, function* getCompanyListSaga({ payload }) {

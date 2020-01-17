@@ -20,19 +20,25 @@ function convertToFormData(data){
   return formData;
 }
 
-// export function updateUser(user) {
-//   const { userid, ...restData } = user;
-//   restData["phone_code"] = "91"
-//   restData["phone"] = "1234567890"
-//   restData["password"] = "admin"
-//   restData["status"] = 1
-//   const createUserData = convertToFormData(restData)
-//   return axios.put(API_URL+`admin/editUser?userid=${userid}`, createUserData);
-// }
+export function updateCompany(company) {
+  const { id, ...restData } = company;
+  const updateCompanyData = convertToFormData(restData);
+  return axios.put(API_URL + `company/edit?ctoken=${id}`, updateCompanyData);
+}
 
 export function getCompaniesList(offset, limit) {
 //  const userList = convertToFormData({offset,limit} )
   return axios.get(API_URL+`company/listing?limit=${limit}&offset=${offset}`);
+}
+
+export function updateCompanyLogo(company) {
+  const updateCompanyData = convertToFormData(company)
+  return axios.post(API_URL+`company/change-logo`, updateCompanyData);
+}
+
+export function changeCompanyStatus(company) {
+  const changeCompanyData = convertToFormData(company)
+  return axios.post(API_URL+`company/block-unblock`, changeCompanyData);
 }
 
 // export function getUserById(id){
