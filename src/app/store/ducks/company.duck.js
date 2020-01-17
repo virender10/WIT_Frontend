@@ -59,13 +59,13 @@ export const reducer = persistReducer(
       }
 
       case actionTypes.DeleteCompanySuccess: {
-        const { companyid } = action.payload;
+        const { companyId } = action.payload;
         const companies = [...state.companyList];
-            const selectedCompanyIndex = companies.findIndex(c => c.companyid === companyid);
-            if (selectedCompanyIndex > -1) {
-                companies.splice(selectedCompanyIndex, 1)
-            }
-            return { ...state, companyList: companies };
+        const selectedCompanyIndex = companies.findIndex(c => c.id === Number(companyId));
+        if (selectedCompanyIndex > -1) {
+          companies.splice(selectedCompanyIndex, 1);
+        };
+        return { ...state, companyList: companies };
       }
 
       case actionTypes.GetCompanyListSuccess: {
@@ -92,7 +92,7 @@ export const actions = {
     payload: company
   }),
   deleteCompany: id => ({ type: actionTypes.DeleteCompany, payload: { id } }),
-  deleteCompanySuccess: companyid => ({ type: actionTypes.DeleteCompanySuccess, payload: companyid }),
+  deleteCompanySuccess: companyId => ({ type: actionTypes.DeleteCompanySuccess, payload: { companyId } }),
   getCompanyList: () => ({ type: actionTypes.GetCompanyList, payload: { } }),
   getCompanyListSuccess: (companies) => ({ type: actionTypes.GetCompanyListSuccess, payload: companies }),
   changeCompanyStatus: (company) => ({ type: actionTypes.ChangeCompanyStatus, payload: { company } }),
