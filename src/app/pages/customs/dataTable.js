@@ -19,6 +19,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import {getUsersList } from '../../services/userManagementService';
 import { deleteUserById } from "../../services/authService";
 import { actions } from "../../store/ducks/user.duck"
@@ -202,10 +204,11 @@ const useStyles = makeStyles(theme => ({
 
 function EnhancedTable(props) {
     const classes = useStyles();
-    const { getDataList, deleteData, editRouteLink, columns, headCells } = props;
+    const { getDataList, deleteData, editRouteLink, columns, headCells, changeCompanyStatus, companyStatus } = props;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('email');
     const [selected, setSelected] = React.useState([]);
+    const [selectedStatus, setSelectedStatus] = React.useState("");
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -261,6 +264,12 @@ function EnhancedTable(props) {
         }
         setSelected([]);
     };
+
+    const handleCompanyStatusChange = (event, company) => {
+        const value = event.target.value;
+        setSelectedStatus(value);
+        dispatch(changeCompanyStatus({ isblock: value === "1", ...company }));
+    }
 
     const handleClick = (event, id) => {
         const selectedIndex = selected.indexOf(id);
@@ -356,13 +365,25 @@ function EnhancedTable(props) {
                                         {/* <TableCell align="left">{}</TableCell> */}
                                         {/* <TableCell align="left">{row.role_name}</TableCell> */}
                                         {/* <TableCell align="left"><IconButton color="primary" aria-label="edit" onClick={event => handleClickEdit(event, row.userid)}> */}
-                                        <TableCell align="left"><IconButton color="primary" aria-label="edit">
-                                            <Link to={`${editRouteLink}/${row.id}`}>
-                                            <EditIcon />
-                                            </Link>
-                                        </IconButton><IconButton style={{ color: '#fd397a' }} aria-label="delete" onClick={event => handleClickDelete(event, row.id)}>
+                                        <TableCell align="left">
+                                            <IconButton color="primary" aria-label="edit">
+                                                <Link to={`${editRouteLink}/${row.id}`}>
+                                                    <EditIcon />
+                                                </Link>
+                                            </IconButton>
+                                            <IconButton style={{ color: '#fd397a' }} aria-label="delete" onClick={event => handleClickDelete(event, row.id)}>
                                                 <DeleteIcon />
-                                            </IconButton></TableCell>
+                                            </IconButton>
+                                            {companyStatus && <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={row.is_blocked}
+                                                onChange={(event) => handleCompanyStatusChange(event, row)}
+                                            >
+                                            <MenuItem value={""}>----</MenuItem>
+                                                {companyStatus.map((item) => <MenuItem value={item.value}>{item.name}</MenuItem>)}
+                                            </Select>}
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}

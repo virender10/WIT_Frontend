@@ -45,6 +45,20 @@ export const reducer = persistReducer(
         return { ...state, currentCompany: obj };
       }
 
+      case actionTypes.ChangeCompanyStatusSuccess: {
+        const { id, isblock, ...restData } = action.payload;
+        const companies = [...state.companyList];
+            const selectedCompanyIndex = companies.findIndex(c => c.id === Number(id));
+            if (selectedCompanyIndex > -1) {
+                companies.splice(selectedCompanyIndex, 1, {
+                    ...companies[selectedCompanyIndex],
+                  ...restData,
+                    is_blocked: isblock ? "1" : "0"
+                })
+            }
+            return { ...state,  companyList: companies };
+      }
+
       case actionTypes.EditCompanySuccess: {
         const { companyId, ...restData } = action.payload;
         const companies = [...state.companyList];
@@ -117,8 +131,9 @@ export function* saga() {
     const { data } = payload;
     const { values: company, callback } = data;
     const { logo, isBlock, ...restData } = company;
-    yield updateCompanyLogo({ ctoken: company.id, image: logo });
-
+    if (logo && logo.data) {
+      yield updateCompanyLogo({ ctoken: company.id, image: logo.data });
+    }
     yield updateCompany(restData);
     callback();
     yield put(actions.editCompanySuccess(company));
@@ -131,8 +146,8 @@ export function* saga() {
 
   yield takeLatest(actionTypes.ChangeCompanyStatus, function* changeCompanyStatusSaga({ payload }) {
     const { company } = payload;
-    const { isBlock, id } = company;
-    yield changeCompanyStatus({ isBlock, ctoken: id });
+    const { isblock, id } = company;
+    yield changeCompanyStatus({ isblock, ctoken: id });
     yield put(actions.changeCompanyStatusSuccess(company));
   });
 

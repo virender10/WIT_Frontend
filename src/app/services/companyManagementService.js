@@ -33,12 +33,12 @@ export function getCompaniesList(offset, limit) {
 
 export function updateCompanyLogo(company) {
   const updateCompanyData = convertToFormData(company)
-  return axios.post(API_URL+`company/change-logo`, updateCompanyData);
+  return axios.put(API_URL+`company/change-logo`, updateCompanyData);
 }
 
 export function changeCompanyStatus(company) {
   const changeCompanyData = convertToFormData(company)
-  return axios.post(API_URL+`company/block-unblock`, changeCompanyData);
+  return axios.put(API_URL+`company/block-unblock`, changeCompanyData);
 }
 
 // export function getUserById(id){

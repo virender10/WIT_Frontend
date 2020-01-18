@@ -31,8 +31,13 @@ export default function CompanyEdit() {
                         dataType="companies"
                         getDataList={actions.getCompanyList}
                         deleteData={actions.deleteCompany}
+                        changeCompanyStatus={actions.changeCompanyStatus}
                         editRouteLink="/company/create"
                         columns={["id", "name", "description"]}
+                        companyStatus={[
+                            { name: 'Blocked', value: "1" },
+                            { name: 'Unblocked', value: "0" },
+                        ]}
                         headCells={[
                                 { id: 'id', numeric: false, disablePadding: true, label: 'id' },
                                 { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
