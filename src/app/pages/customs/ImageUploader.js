@@ -52,8 +52,10 @@ const Thumb = (nextProps) => {
           const file = dataURLtoFile(file, filename[filename.length - 1])
           file && reader.readAsDataURL(file);
         } else {
-          setLoading(false)
-          setThumb(file);
+          setLoading(false);
+          let serverFile = file
+          if (id) serverFile = `http://23.96.87.60:3000/uploads/companies/${file}`
+          setThumb(serverFile)
         }
       } else {
         reader.readAsDataURL(file);

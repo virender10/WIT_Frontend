@@ -34,8 +34,9 @@ export const reducer = persistReducer(
           const sortedCompanies = companies.slice().sort((a, b) => b.id - a.id)
           company.id = (sortedCompanies[0].id || 0) + 1;
         } else {
-            company.id = 1;
+          company.id = 1;
         }
+        company.is_blocked = "0";
         companies.push(company)
         return { currentCompany: undefined, companyList: companies };
       }
@@ -121,8 +122,9 @@ export function* saga() {
     const companyData = {
       name,
       description,
-      image: logo
+      image: logo.data
     }
+
     yield createCompany(companyData);
     callback();
     yield put(actions.createCompanySuccess(company));

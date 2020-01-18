@@ -68,7 +68,9 @@ const CreateNewCompany = ({
   useEffect(() => {
     if (id) {
       const selectedCompany = companies.find(c => c.id === Number(id));
-        if (selectedCompany) setValue({...selectedCompany, logo: { data: selectedCompany.file && selectedCompany.file.data } })
+      if (selectedCompany) {        
+        setValue({ ...selectedCompany, logo: { data: selectedCompany.logo } })
+      }
     } else if (currentCompany) {
       setValue({...currentCompany, logo: { data: currentCompany.file && currentCompany.file.data } })
     }
@@ -93,6 +95,17 @@ const CreateNewCompany = ({
     setOpen(false);
   };
 
+  const dataURLtoFile = (dataurl, filename) => {
+    if (dataurl) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    }
+  };
+
   if (error) return null;
 
   return (
@@ -104,8 +117,8 @@ const CreateNewCompany = ({
               {id ? "Update" : "Create"}
             </h3>
           </div>
-          {/* <div className="kt-portlet__head-toolbar">
-            <Link to="/user-management/Users/UserList">
+          {id && <div className="kt-portlet__head-toolbar">
+            <Link to="/company/companyList">
               <Tooltip
                 TransitionComponent={Zoom}
                 title="Back to the users list"
@@ -120,7 +133,7 @@ const CreateNewCompany = ({
                 </Button>
               </Tooltip>
             </Link>
-          </div> */}
+          </div>}
         </div>
         <div className="kt-portlet__body">
           <div className="kt-widget4">
@@ -136,12 +149,19 @@ const CreateNewCompany = ({
                 if (!values.description) {
                   errors.description = "Required Field";
                 }
+                if (!values.logo) {
+                  errors.logo = "Required Field";
+                } 
                 return errors;
               }}
               onSubmit={values => {
                 const functionToCall = id ? "editCompany" : "createCompany";
                 if (id) {
                   values["companyId"] = id;
+                }
+                if (values && values.logo && values.logo.data && !_.isObject(values.logo.data) && values.logo.data.includes("base64")) {
+                  var blob = dataURLtoFile(values.logo.data, "test");
+                  values.logo = { data: blob };
                 }
                 dispatch(actions[functionToCall]({ values, callback: () => history.push('/company/companyList')}));
               }}
