@@ -233,7 +233,9 @@ const CreateNewCompany = ({
                           error={Boolean(touched.password && errors.password)}
                         />
                       </Grid>
-                      <Grid item xs={6} sm={3}>
+                      <Grid item xs={6} sm={3} style={{
+                        marginBottom: 20
+                      }}>
                         <input id="logo" name="logo" type="file" onChange={(event) => {
                           const filename = event.target.value;
                           setFieldValue("logo", { data: event.currentTarget.files[0], filename });
