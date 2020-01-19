@@ -147,6 +147,8 @@ class AsideLeft extends React.Component {
       location: { pathname },
       user
     } = this.props;
+    const logo = user && user.companyDetails && user.companyDetails.logo ? `http://23.96.87.60:3000/companies/${user.companyDetails.logo}` : this.props.headerLogo;
+
     return (
       <>
         <div
@@ -162,7 +164,7 @@ class AsideLeft extends React.Component {
           {this.props.disableAsideSelfDisplay && (
             <div className="kt-header-logo">
               <Link to="">
-                <img alt="logo" src={this.props.headerLogo} />
+                <img width="85px" alt="logo" src={logo} />
               </Link>
             </div>
           )}

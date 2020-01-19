@@ -18,6 +18,9 @@ class Brand extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
+    const logo = user && user.companyDetails && user.companyDetails.logo ? `http://23.96.87.60:3000/companies/${user.companyDetails.logo}` : this.props.headerLogo;
+
     return (
       <div
         className={`kt-aside__brand kt-grid__item ${this.props.brandClasses}`}
@@ -25,7 +28,7 @@ class Brand extends React.Component {
       >
         <div className="kt-aside__brand-logo">
           <Link to="">
-            <img alt="logo" src={this.props.headerLogo} />
+            <img width="85px" alt="logo" src={logo} />
           </Link>
         </div>
 
@@ -66,7 +69,8 @@ const mapStateToProps = store => {
       target: "body",
       targetState: "kt-aside--minimize",
       togglerState: "kt-aside__brand-aside-toggler--active"
-    }
+    },
+    user: store.auth.user
   };
 };
 

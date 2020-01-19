@@ -63,7 +63,7 @@ export const actions = {
 
 export function* saga() {
   yield takeLatest(actionTypes.Login, function* loginSaga(action) {
-    const { companyDetails: user } = action.payload;
+    const { user } = action.payload;
     yield put(actions.fulfillUser(user || {}));
   });
 
@@ -73,8 +73,6 @@ export function* saga() {
 
   yield takeLatest(actionTypes.UserRequested, function* userRequested() {
     const { data: user } = yield getUserByToken();
-    debugger
-    console.log(user.userdata);
     yield put(actions.fulfillUser(user.userdata));
   });
 }

@@ -17,7 +17,8 @@ class HeaderMobile extends React.Component {
   }
 
   render() {
-    const { headerLogo, asideDisplay, headerMenuSelfDisplay } = this.props;
+    const { headerLogo, asideDisplay, headerMenuSelfDisplay, user } = this.props;
+    const logo = user && user.companyDetails && user.companyDetails.logo ? `http://23.96.87.60:3000/companies/${user.companyDetails.logo}` : headerLogo;
     return (
       <div
         id="kt_header_mobile"
@@ -26,7 +27,7 @@ class HeaderMobile extends React.Component {
       >
         <div className="kt-header-mobile__logo">
           <Link to="/">
-            <img alt="logo" src={headerLogo} />
+            <img width="85px" alt="logo" src={logo} />
           </Link>
         </div>
 
@@ -75,7 +76,8 @@ const mapStateToProps = store => ({
     target: "body",
     targetState: "kt-header__topbar--mobile-on",
     togglerState: "kt-header-mobile__toolbar-topbar-toggler--active"
-  }
+  },
+  user: store.auth.user
 });
 
 export default connect(mapStateToProps)(HeaderMobile);
