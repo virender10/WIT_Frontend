@@ -1,3 +1,5 @@
+import { ROLES } from "../../app/constants"
+
 export default {
   header: {
     self: {},
@@ -97,7 +99,7 @@ export default {
             page: "company/companyList"
           }
         ],
-        isShownTo: ["superadmin"]
+        isShownTo: [ROLES.SUPERADMIN]
       },
       {
         title: "User Management",
@@ -117,7 +119,7 @@ export default {
             page: "user-management/Roles/RoleList"
           }
         ],
-        isShownTo: ["admin", "superadmin"]
+        isShownTo: [ROLES.SUPERADMIN, ROLES.ADMIN]
       },
       {
         title: "Data Management",

@@ -6,9 +6,9 @@ import MenuItem from "./MenuItem";
 export default class MenuSubmenu extends React.Component {
 
   showSubMenu = (item) => {
-    const { userRole } = this.props;
-    if (!item.isShownTo || !userRole) return true;
-    return item.isShownTo.length === 0 || item.isShownTo.includes(userRole.toLowerCase());
+    const { userRoleId } = this.props;
+    if (!item.isShownTo || !userRoleId) return true;
+    return item.isShownTo.length === 0 || item.isShownTo.includes(userRoleId);
   }
 
   render() {

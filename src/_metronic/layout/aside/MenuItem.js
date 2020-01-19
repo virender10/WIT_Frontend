@@ -72,7 +72,7 @@ export default class MenuItem extends React.Component {
   };
 
   render() {
-    const { item, currentUrl, parentItem, layoutConfig, userRole } = this.props;
+    const { item, currentUrl, parentItem, layoutConfig, userRoleId } = this.props;
     const isActive = this.isMenuItemIsActive(item);
     return (
       <li
@@ -117,7 +117,7 @@ export default class MenuItem extends React.Component {
                 <MenuSubmenu
                   item={item}
                   parentItem={item}
-                  userRole={userRole}
+                  userRoleId={userRoleId}
                   currentUrl={currentUrl}
                 />
               </div>
@@ -127,7 +127,7 @@ export default class MenuItem extends React.Component {
               <MenuSubmenu
                 item={item}
                 parentItem={item}
-                userRole={userRole}
+                userRoleId={userRoleId}
                 currentUrl={currentUrl}
                 layoutConfig={layoutConfig}
               />
