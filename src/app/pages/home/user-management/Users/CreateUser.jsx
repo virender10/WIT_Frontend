@@ -99,7 +99,8 @@ const CreateNewUser = ({
   useEffect(() => {
     if (id) {
       const selectedUser = users.find(user => user.userid === Number(id));
-        if (selectedUser) setValue({...selectedUser, role: selectedUser.role_id, file: { data: selectedUser.image } })
+      const userType = selectedUser && selectedUser.company_id ? "company" : "app";
+        if (selectedUser) setValue({...selectedUser, userType, company: selectedUser.company_id, role: selectedUser.role_id, file: { data: selectedUser.image } })
     } else if (currentUser) {
       setValue(currentUser)
     }
@@ -205,7 +206,13 @@ const CreateNewUser = ({
                 if (!values.last_name) {
                   errors.last_name = "Required Field";
                 }
-                if (!values.company) {
+                if (!values.phone) {
+                  errors.phone = "Required Field";
+                }
+                if (!values.role) {
+                  errors.role = "Required Field";
+                }
+                if (values.userType === "company" && !values.company) {
                   errors.company = "Required Field";
                 }
                 if (!values.email) {
@@ -215,6 +222,7 @@ const CreateNewUser = ({
                 ) {
                   errors.email = "Invalid Field";
                 }
+
                 return errors;
               }}
               onSubmit={values => {
@@ -222,6 +230,16 @@ const CreateNewUser = ({
                 if (id) {
                   values["userid"] = id
                 }
+                if (values.userType === "company") {
+                  values["ctoken"] = values.company;
+                  values["comp_role_token"] = values.role;
+                  values["role_id"] = "";
+                  delete values["company_id"];
+                  delete values["companies_role_id"];
+                } else {
+                  values["role_id"] = values.role;
+                }
+                values["role_type_id"] = values.role;
                 dispatch(actions[functionToCall]({ values, callback: () => history.push('/user-management/Users/UserList')}));
               }}
             >

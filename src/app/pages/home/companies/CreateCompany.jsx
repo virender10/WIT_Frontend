@@ -65,11 +65,25 @@ const CreateNewCompany = ({
   const [error] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
+  const getFileObj = async (selectedCompany) => {
+    if (selectedCompany.logo) {
+      const serverFile = `http://23.96.87.60:3000/companies/${selectedCompany.logo}`;
+      const ext = selectedCompany.logo.split(".");
+      const response = await fetch(serverFile);
+      const data = await response.blob();
+      let file = new File([data], selectedCompany.logo, {
+        type: `image/${ext[ext.length - 1]}`
+      });
+      setValue({ ...selectedCompany, logo: { data: file } })
+    }
+  }
+
   useEffect(() => {
     if (id) {
       const selectedCompany = companies.find(c => c.id === Number(id));
-      if (selectedCompany) {        
-        setValue({ ...selectedCompany, logo: { data: selectedCompany.logo } })
+      if (selectedCompany) {
+        getFileObj(selectedCompany);
+        setValue({ ...selectedCompany });
       }
     } else if (currentCompany) {
       setValue({...currentCompany, logo: { data: currentCompany.file && currentCompany.file.data } })

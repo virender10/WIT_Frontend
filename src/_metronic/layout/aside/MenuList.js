@@ -5,11 +5,11 @@ import MenuItem from './MenuItem';
 
 export default class MenuList extends React.Component {
   render() {
-    const { currentUrl, menuConfig, layoutConfig, userRole } = this.props;
+    const { currentUrl, menuConfig, layoutConfig, userRoleId } = this.props;
     return menuConfig.aside.items.map((child, index) => {
       if (
         child.isShownTo.length === 0 ||
-        child.isShownTo.includes(userRole.toLowerCase())
+        (userRoleId && child.isShownTo.includes(userRoleId))
       ) {
         return (
           <React.Fragment key={`menuList${index}`}>
@@ -17,7 +17,7 @@ export default class MenuList extends React.Component {
             {child.separator && <MenuItemSeparator item={child} />}
             {child.title && (
               <MenuItem
-                userRole={userRole}
+                userRoleId={userRoleId}
                 item={child}
                 currentUrl={currentUrl}
                 layoutConfig={layoutConfig}
