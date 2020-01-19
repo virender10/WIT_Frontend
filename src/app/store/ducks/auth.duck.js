@@ -22,7 +22,7 @@ export const reducer = persistReducer(
   (state = initialAuthState, action) => {
     switch (action.type) {
       case actionTypes.Login: {
-        const { authToken } = action.payload;
+        const { token: authToken } = action.payload;
 
         return { authToken, user: undefined };
       }
@@ -63,8 +63,8 @@ export const actions = {
 
 export function* saga() {
   yield takeLatest(actionTypes.Login, function* loginSaga(action) {
-    const { user } = action.payload;
-    yield put(actions.fulfillUser(user));
+    const { companyDetails: user } = action.payload;
+    yield put(actions.fulfillUser(user || {}));
   });
 
   yield takeLatest(actionTypes.Register, function* registerSaga() {

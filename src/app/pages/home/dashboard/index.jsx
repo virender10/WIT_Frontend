@@ -65,7 +65,7 @@ export default function Dashboard() {
     [brandColor, dangerColor, primaryColor, successColor]
   );
   const roles = ["admin", "superadmin"];
-  const isNotUser = roles.find(r => r === user.role_name.toLowerCase());
+  const isNotUser = roles.find(r => r === user.role_name && user.role_name.toLowerCase());
   if (!isNotUser) {
     return null;
   }

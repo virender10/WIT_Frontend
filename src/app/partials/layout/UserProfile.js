@@ -9,7 +9,6 @@ import HeaderDropdownToggle from "../content/CustomDropdowns/HeaderDropdownToggl
 class UserProfile extends React.Component {
   render() {
     const { user, showHi, showAvatar, showBadge } = this.props;
-    debugger
     return (
       <Dropdown className="kt-header__topbar-item kt-header__topbar-item--user" drop="down" alignRight>
         <Dropdown.Toggle
@@ -50,7 +49,7 @@ class UserProfile extends React.Component {
             <div className="kt-user-card__avatar">
               <img alt="Pic" className="kt-hidden" src={user.image} />
               <span className="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">
-              {user.first_name.match(/\b(\w)/g).join('')}
+              {user.first_name && user.first_name.match(/\b(\w)/g).join('')}
               </span>
             </div>
             {/* <div className="kt-user-card__name">{user.fullname}</div> */}

@@ -32,7 +32,7 @@ function convertToFormData(data){
 }
 
 export function login(email, password) {
-  return axios.post(API_URL + LOGIN_URL, { email, password });
+  return axios.post(API_URL + `/user/${LOGIN_URL}`, { email, password });
 }
 
 export function register(email, fullname, username, password) {

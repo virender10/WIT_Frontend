@@ -86,7 +86,7 @@ function init({ pathname, menuConfig, user }) {
   const state = { subheader: {}, splashScreen: { refs: {} } };
   if (pageConfig) {
     const roles = ["admin", "superadmin"];
-    if (user) {
+    if (user && user.role_name) {
       const isAdmin = roles.includes(user.role_name.toLowerCase());
       state.subheader.title = !isAdmin && pageConfig.title === "Dashboard" ? `${user.role_name} ${pageConfig.title}` : pageConfig.title ;
     }

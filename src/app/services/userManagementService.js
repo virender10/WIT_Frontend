@@ -37,6 +37,13 @@ export function getUsersList(offset, limit) {
   return axios.get(API_URL+`admin/listing?limit=${100}&offset=${0}`);
 }
 
+export function getUserCompaniesList() {
+    return axios.get(API_URL+`user/companies-list`);
+}
+export function getUserCompaniesRoleList() {
+  return axios.get(API_URL+`user/comp-roles-list`);
+}
+
 export function getUserById(id){
   console.log("id: ", id);
   

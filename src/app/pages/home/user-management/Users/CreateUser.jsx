@@ -7,6 +7,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { Formik } from "formik";
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackBarContentWrapper from "../../../customs/SnackBar";
 import { Link } from "react-router-dom";
@@ -19,6 +23,10 @@ import {
   updateUser,
   getRoles
 } from "../../../../services/authService";
+import {
+  getUserCompaniesList,
+  getUserCompaniesRoleList
+} from "../../../../services/userManagementService";
 import { actions } from "../../../../store/ducks/user.duck"
 import { withRouter } from "react-router";
 
@@ -51,11 +59,13 @@ const getInitialValue = value => {
     email: "",
     password: "",
     companyName: "",
+    company: "",
     phone: "",
     filename: "",
     role: "",
     file: null,
-    user_management:[],
+    user_management: [],
+    userType: "company",
     data_management:[]
   };
 };
@@ -67,7 +77,7 @@ const CreateNewUser = ({
     params: { id }
   },
   users,
-  currentUser
+  currentUser,
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -75,17 +85,15 @@ const CreateNewUser = ({
   const [error] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [roles, setRoles] = React.useState([]);
-
+  const [userCompanies, setUserCompanies] = React.useState([]);
   React.useEffect(() => {
     //console.log('useEffect has been called!');
-    getRoles()
-      .then(response => {
-        const roleArray = response.data.data;
-        setRoles(roleArray);
-      })
-      .catch(() => {
-        console.log("error");
-      });
+    getUserCompaniesRoleList()
+    .then(({ data, status }) => {
+      if (status === 200) {
+        setRoles(data.data.items)
+      }
+    })
   }, []);
 
   useEffect(() => {
@@ -108,6 +116,31 @@ const CreateNewUser = ({
 
   }, [id, currentUser]);
 
+  useEffect(() => {
+    if (userCompanies.length === 0) {
+      getRoleData("company");
+      getUserCompanyData();
+    }
+  }, []);
+
+  const getUserCompanyData = () => {
+    getUserCompaniesList()
+      .then(({ data, status }) => {
+        if (status === 200) {
+          setUserCompanies(data.data.items)
+        }
+      });
+  }
+  const getRoleData = (type) => {
+    const functionToCall = type === "company" ? getUserCompaniesRoleList : getRoles;
+    functionToCall()
+      .then(({ data, status }) => {
+        if (status === 200) {
+          setRoles(data.data.items)
+        }
+      });
+  }
+
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -115,7 +148,21 @@ const CreateNewUser = ({
     }
     setOpen(false);
   };
-
+  
+  const dropdownFields = {
+    company: {
+      data: userCompanies,
+      type: "company",
+      label: "Select Company"
+    },
+    role: {
+      data: roles,
+      type: "app",
+      label: "Select Role",
+      alwaysShow: true
+    }
+  }
+  const dropdownFieldsKeys = Object.keys(dropdownFields);
   if (error) return null;
   return (
     <>
@@ -158,6 +205,9 @@ const CreateNewUser = ({
                 if (!values.last_name) {
                   errors.last_name = "Required Field";
                 }
+                if (!values.company) {
+                  errors.company = "Required Field";
+                }
                 if (!values.email) {
                   errors.email = "Required Field";
                 } else if (
@@ -182,7 +232,9 @@ const CreateNewUser = ({
                 handleChange,
                 handleBlur,
                 handleSubmit,
-                isSubmitting              }) => {
+                isSubmitting,
+                setFieldValue
+              }) => {
                 return (
                   <form
                     noValidate={true}
@@ -242,13 +294,28 @@ const CreateNewUser = ({
                         />
                       </Grid>}
                       <Grid item xs={6} sm={3}>
+                      <FormControl component="fieldset" className={classes.formControl}>
+                          <RadioGroup aria-label="userType" name="userType" value={values.userType} onChange={(event) => {
+                            handleChange(event);
+                            setFieldValue("role", "");
+                            dispatch(actions.setCurrentUser({ ...values, role: "" }))
+                            getRoleData(event.target.value);
+                          }}>
+                          <FormControlLabel value="company" control={<Radio />} label="Company" />
+                          <FormControlLabel value="app" control={<Radio />} label="App" />
+                        </RadioGroup>
+                      </FormControl>
+                      </Grid>
+                      {dropdownFieldsKeys.map((key) => {
+                        const data = dropdownFields[key];
+                        return (data.type === values.userType || data.alwaysShow) && <Grid item xs={6} sm={3}>
                         <TextField
-                          id="select-role"
+                          id="select-company"
                           select
-                          label="Select Role"
-                          value={values.role || ""}
+                          label={data.label}
+                          value={values[key] || ""}
                           className={classes.textField}
-                          name="role"
+                          name={key}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           SelectProps={{
@@ -256,16 +323,18 @@ const CreateNewUser = ({
                               className: classes.menu
                             }
                           }}
-                          helperText="Please select user role"
+                          error={Boolean(touched[key] && errors[key])}
+                          helperText={`Please select user ${key}`}
                           margin="normal"
                         >
-                          {roles.map(option => (
+                          {dropdownFields[key].data.map(option => (
                             <MenuItem key={option.id} value={option.id}>
-                              {option.name}
+                              {option.name || option.type}
                             </MenuItem>
                           ))}
                         </TextField>
                       </Grid>
+                      })}
                       <Grid item xs={6} sm={3}>
                         <TextField
                           label="Phone"
@@ -339,6 +408,7 @@ const CreateNewUser = ({
 
 const mapStateToProps = store => ({
   users: store.users.userList,
+  companies: store.companies.companyList,
   currentUser: store.users.currentUser
 });
 
