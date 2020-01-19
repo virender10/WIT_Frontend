@@ -44,7 +44,6 @@ export default function QuickStatsChart({
             borderColor: color,
             borderWidth: border,
             pointHoverBackgroundColor,
-
             pointHoverRadius: 4,
             pointHoverBorderWidth: 12,
             pointBackgroundColor: Chart.helpers
@@ -53,15 +52,16 @@ export default function QuickStatsChart({
               .rgbString(),
             pointBorderColor: Chart.helpers
               .color("#000000")
-              .alpha(0)
+              .alpha(0.5)
               .rgbString(),
-
+            pointBorderWidth: 1,
             pointHoverBorderColor: Chart.helpers
               .color("#000000")
               .alpha(0.1)
               .rgbString(),
             fill: false,
-            data: data
+            lineTension: 0,
+            data,
           }
         ]
       },
@@ -70,8 +70,8 @@ export default function QuickStatsChart({
           display: false
         },
         tooltips: {
-          enabled: false,
-          intersect: false,
+          enabled: true,
+          intersect: true,
           mode: "nearest",
           xPadding: 10,
           yPadding: 10,
@@ -80,31 +80,31 @@ export default function QuickStatsChart({
         legend: {
           display: false,
           labels: {
-            usePointStyle: false
+            usePointStyle: true
           }
         },
         responsive: true,
         maintainAspectRatio: true,
-        hover: {
-          mode: "ErrorsPage.js"
-        },
+        // hover: {
+        //   mode: "ErrorsPage.js"
+        // },
         scales: {
           xAxes: [
             {
-              display: false,
-              gridLines: false,
+              // display: true,
+              // gridLines: true,
               scaleLabel: {
-                display: true,
+                display: false,
                 labelString: "Month"
               }
             }
           ],
           yAxes: [
             {
-              display: false,
-              gridLines: false,
+              // display: true,
+              // gridLines: true,
               scaleLabel: {
-                display: true,
+                display: false,
                 labelString: "Value"
               },
               ticks: {
@@ -123,9 +123,9 @@ export default function QuickStatsChart({
 
         layout: {
           padding: {
-            left: 0,
+            left: 10,
             right: 10,
-            top: 5,
+            top: 0,
             bottom: 0
           }
         }
@@ -142,13 +142,13 @@ export default function QuickStatsChart({
   return (
     <div className="kt-widget26">
       <div className="kt-widget26__content">
-        <span className="kt-widget26__number">{value}</span>
+        {/* <span className="kt-widget26__number">{value}</span> */}
         <span className="kt-widget26__desc">{desc}</span>
       </div>
 
       <div
         className="kt-widget26__chart"
-        style={{ width: "230px", height: "100px" }}
+        style={{ width: "430px", height: "200px" }}
       >
         <canvas ref={canvasRef} id="kt_chart_quick_stats_1" />
       </div>
