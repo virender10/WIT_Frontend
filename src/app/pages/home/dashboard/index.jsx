@@ -11,6 +11,7 @@ import QuickStatsChart from "../../../widgets/QuickStatsChart";
 import OrderStatisticsChart from "../../../widgets/OrderStatisticsChart";
 import OrdersWidget from "../../../widgets/OrdersWidget";
 import SalesBarChart from "../../../widgets/SalesBarChart";
+import { ROLES } from "../../../constants"
 import PortletHeaderDropdown from "../../../partials/content/CustomDropdowns/PortletHeaderDropdown";
 
 export default function Dashboard() {
@@ -64,8 +65,8 @@ export default function Dashboard() {
     }),
     [brandColor, dangerColor, primaryColor, successColor]
   );
-  const roles = ["admin", "superadmin"];
-  const isNotUser = roles.find(r => r === user.role_name && user.role_name.toLowerCase());
+  const roles = [ROLES.ADMIN, ROLES.SUPERADMIN];
+  const isNotUser = roles.includes(user && user.role_id);
   if (!isNotUser) {
     return null;
   }
