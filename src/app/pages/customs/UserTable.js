@@ -22,6 +22,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import {getUsersList } from '../../services/userManagementService';
 import { deleteUserById } from "../../services/authService";
 import { actions } from "../../store/ducks/user.duck"
+import { ROLES } from "../../constants"
 
 const deleteIdArray = [];
 
@@ -58,11 +59,15 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, user } = props;
     const createSortHandler = property => event => {
         onRequestSort(event, property);
     };
-
+    const isSuperAdmin = ROLES.SUPERADMIN === user.role_id;
+    let allHeadCells = headCells.slice();
+    if (isSuperAdmin) {
+        allHeadCells.splice(3, 0, { id: 'company', numeric: false, disablePadding: true, label: 'Company' })
+    }
     return (
         <TableHead>
             <TableRow>
@@ -74,7 +79,7 @@ function EnhancedTableHead(props) {
                         inputProps={{ 'aria-label': 'select all users' }}
                     />
                 </TableCell>
-                {headCells.map(headCell => (
+                {allHeadCells.map(headCell => (
                     <TableCell
                         key={headCell.id}
                         align={headCell.numeric ? 'right' : 'left'}
@@ -132,8 +137,7 @@ const useToolbarStyles = makeStyles(theme => ({
 
 const EnhancedTableToolbar = props => {
     const classes = useToolbarStyles();
-    const { numSelected } = props;
-
+    const { numSelected, user } = props;
     return (
         <Toolbar
             className={clsx(classes.root, {
@@ -201,7 +205,7 @@ const useStyles = makeStyles(theme => ({
 
 function EnhancedUserTable(props) {
     const classes = useStyles();
-    const { users } = props;
+    const { users, user, companyList } = props;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('email');
     const [selected, setSelected] = React.useState([]);
@@ -289,6 +293,7 @@ function EnhancedUserTable(props) {
 
     const isSelected = userid => selected.indexOf(userid) !== -1;
 
+
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, allUsers.length - page * rowsPerPage);
 
     return (
@@ -305,6 +310,8 @@ function EnhancedUserTable(props) {
                         classes={classes}
                         numSelected={selected.length}
                         order={order}
+                        companyList={companyList}
+                        user={user}
                         orderBy={orderBy}
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
@@ -316,7 +323,7 @@ function EnhancedUserTable(props) {
                             .map((row, index) => {
                                 const isItemSelected = isSelected(row.userid);
                                 const labelId = `enhanced-table-checkbox-${index}`;
-
+                                const companyName = companyList.find(c => c.id === row.company_id);
                                 return (
                                     <TableRow
                                         hover
@@ -339,6 +346,7 @@ function EnhancedUserTable(props) {
                                         <TableCell align="left">{row.first_name} {row.last_name}</TableCell>
                                         {/* <TableCell align="left">{}</TableCell> */}
                                         <TableCell align="left">{row.role_name}</TableCell>
+                                        <TableCell align="left">{companyName && companyName.name}</TableCell>
                                         {/* <TableCell align="left"><IconButton color="primary" aria-label="edit" onClick={event => handleClickEdit(event, row.userid)}> */}
                                         <TableCell align="left"><IconButton color="primary" aria-label="edit">
                                             <Link to={`/user-management/Users/CreateUser/${row.userid}`}>
@@ -372,7 +380,9 @@ function EnhancedUserTable(props) {
 }
 
 const mapStateToProps = store => ({
-    users: store.users.userList
+    users: store.users.userList,
+    companyList: store.companies.companyList,
+    user: store.auth.user
 });
 
 export default connect(mapStateToProps)(EnhancedUserTable);

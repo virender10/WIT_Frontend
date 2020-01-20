@@ -100,7 +100,14 @@ const CreateNewUser = ({
     if (id) {
       const selectedUser = users.find(user => user.userid === Number(id));
       const userType = selectedUser && selectedUser.company_id ? "company" : "app";
-        if (selectedUser) setValue({...selectedUser, userType, company: selectedUser.company_id, role: selectedUser.role_id, file: { data: selectedUser.image } })
+      if (selectedUser) setValue({
+        ...selectedUser,
+        userType,
+        company: selectedUser.company_id,
+        role: selectedUser.role_id,
+        file: { data: selectedUser.image },
+        phone: selectedUser.phone
+      })
     } else if (currentUser) {
       setValue(currentUser)
     }
@@ -222,7 +229,6 @@ const CreateNewUser = ({
                 ) {
                   errors.email = "Invalid Field";
                 }
-
                 return errors;
               }}
               onSubmit={values => {

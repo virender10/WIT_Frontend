@@ -147,7 +147,7 @@ const AdminProfile = (props) => {
                             }}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={3}>
+                        {/* <Grid item xs={6} sm={3}>
                           <TextField
                             label="Phone"
                             margin="normal"
@@ -170,7 +170,7 @@ const AdminProfile = (props) => {
                               readOnly: true,
                             }}
                           />
-                        </Grid>
+                        </Grid> */}
                       </Grid>
 
                       <div className="kt-login__actions">
