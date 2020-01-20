@@ -19,7 +19,7 @@
 //     //         );
 
 //     //         if (user) {
-//     //           debugger
+//     //           // debugger
 //     //           return [200, { ...user, password: undefined }];
 //     //         }
 //     //       }
@@ -81,24 +81,24 @@
 //             'title': 'Customers'
 //         }
 //         roleTableMock.push(obj);
-//         debugger
+//         // debugger
 //         return [200, { ...roleTableMock }]
 //     });
 
 //     // -----------------users--------------------
 
 //     mock.onGet("api/auth/getusers").reply(({ data }) => {
-//         debugger
+//         // debugger
 //         const users = userTableMock;
 //         return [200, { ...users }]
 //     });
 
 //     mock.onPost("api/auth/getusersById").reply(({ data }) => {
-//         debugger
+//         // debugger
 //         const { userId } = JSON.parse(data);
 //         const user = userTableMock.find(x => x.userid === userId);
 //         if (user) {
-//             debugger
+//             // debugger
 //             return [200, { ...user}];
 //         }
 //     });

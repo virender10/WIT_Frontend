@@ -255,7 +255,7 @@ export function LayoutSplashScreen({ visible = false }) {
     }
 
     const id = Math.random();
-debugger
+// debugger
     dispatch({ type: actionTypes.SHOW_SPLASH_SCREEN, payload: { id } });
 
     return () => {

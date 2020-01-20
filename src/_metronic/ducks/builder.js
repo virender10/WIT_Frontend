@@ -62,7 +62,7 @@ export const selectors = {
   },
   getPermissions: store => {
     const { auth: { user: permissions } } = store;
-    debugger
+    // debugger
     return permissions || [];
   }
 };
@@ -83,7 +83,7 @@ export const reducer = persistReducer(
     switch (type) {
       case actionTypes.SetMenuConfig:
         const { menuConfig, permissions } = payload;
-        debugger
+        // debugger
         // menuConfig.aside.items.map(m => {
         //   if (m.submenu) {
         //     m.submenu = m.submenu.filter(m => !m.allowedToPermission || permissions.filter(n => Object.keys(n).includes(m.allowedToPermission)).length);

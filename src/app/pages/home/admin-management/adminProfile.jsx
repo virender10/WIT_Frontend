@@ -64,21 +64,21 @@ const AdminProfile = (props) => {
                     errors.last_name = "Required Field";
                   }
                   // //Australian Phone Number Regex
-                  if (
-                    !/^(?:\+?(61))? ?(?:\((?=.*\)))?(0?[2-57-8])\)? ?(\d\d(?:[- ](?=\d{3})|(?!\d\d[- ]?\d[- ]))\d\d[- ]?\d[- ]?\d{3})$/i.test(
-                      values.phone
-                    )
-                  ) {
-                    errors.phone = "Invalid Phone Number";
-                  }
+                  // if (
+                  //   !/^(?:\+?(61))? ?(?:\((?=.*\)))?(0?[2-57-8])\)? ?(\d\d(?:[- ](?=\d{3})|(?!\d\d[- ]?\d[- ]))\d\d[- ]?\d[- ]?\d{3})$/i.test(
+                  //     values.phone
+                  //   )
+                  // ) {
+                  //   errors.phone = "Invalid Phone Number";
+                  // }
 
                   return errors;
                 }}
                 onSubmit={(values, { setStatus, setSubmitting }) => {
                   setTimeout(() => {
-                    updateUser(values.userid,values.first_name,values.last_name,values.phone)
+                    updateUser({userid: values.userid, first_name: values.first_name,last_name: values.last_name, email: values.email })
                       .then(({ data: { userdata }}) => {
-                        debugger
+                        // debugger
                         console.log(userdata);
                         // accessToken
                       })

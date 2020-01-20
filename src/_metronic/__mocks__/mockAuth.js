@@ -9,7 +9,7 @@ import roleTableMock from "../__mocks__/roleTableMock";
 
 export default function mockAuth(mock) {
   mock.onPost(LOGIN_URL).reply(({ data }) => {
-    debugger
+    // debugger
     const { email, password } = JSON.parse(data);
     if (email && password) {
       const user = userTableMock.find(

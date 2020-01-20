@@ -165,7 +165,7 @@ export function* saga() {
 
   yield takeLatest(actionTypes.GetUserList, function* getUserListSaga() {
     const response = yield getUsersList();
-    yield put(actions.getUserListSuccess({users: response.data.data.items}));
+    yield put(actions.getUserListSuccess({users: response.data.data ? response.data.data.items : [] }));
   });
 
   yield takeLatest(actionTypes.DeleteUser, function* getUserListSaga({ payload }) {
@@ -176,7 +176,7 @@ export function* saga() {
 
   // yield takeLatest(actionTypes.UserRequested, function* userRequested() {
   //   const { data: user } = yield getUserByToken();
-  //   debugger
+  //   // debugger
   //   console.log(user.userdata);
   //   yield put(actions.fulfillUser(user.userdata));
   // });

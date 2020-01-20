@@ -27,6 +27,7 @@ import {
   getUserCompaniesList,
   getUserCompaniesRoleList
 } from "../../../../services/userManagementService";
+import { ROLES } from "../../../../constants"
 import { actions } from "../../../../store/ducks/user.duck"
 import { withRouter } from "react-router";
 
@@ -51,15 +52,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const getInitialValue = value => {
-  if (value) return value;
+const getInitialValue = (value, user) => {
+  const isAdmin = ROLES.ADMIN === user.companies_role_id;
+  if (value) return { ...value, company: isAdmin ? user.company_id : "" };
   return {
     first_name: "",
     last_name: "",
     email: "",
     password: "",
     companyName: "",
-    company: "",
+    company: isAdmin ? user.company_id : "",
     phone: "",
     filename: "",
     role: "",
@@ -78,6 +80,7 @@ const CreateNewUser = ({
   },
   users,
   currentUser,
+  user
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -139,6 +142,7 @@ const CreateNewUser = ({
         }
       });
   }
+
   const getRoleData = (type) => {
     const functionToCall = type === "company" ? getUserCompaniesRoleList : getRoles;
     functionToCall()
@@ -156,18 +160,20 @@ const CreateNewUser = ({
     }
     setOpen(false);
   };
-  
+  const isAdmin = ROLES.ADMIN === user.companies_role_id;
   const dropdownFields = {
     company: {
       data: userCompanies,
       type: "company",
-      label: "Select Company"
+      label: "Select Company",
+      isDisabled: isAdmin
     },
     role: {
       data: roles,
       type: "app",
       label: "Select Role",
-      alwaysShow: true
+      alwaysShow: true,
+      isDisabled: false
     }
   }
   const dropdownFieldsKeys = Object.keys(dropdownFields);
@@ -202,7 +208,7 @@ const CreateNewUser = ({
         <div className="kt-portlet__body">
           <div className="kt-widget4">
             <Formik
-              initialValues={getInitialValue(value)}
+              initialValues={getInitialValue(value, user)}
               enableReinitialize
               validate={values => {
                 const errors = {};
@@ -259,6 +265,8 @@ const CreateNewUser = ({
                 isSubmitting,
                 setFieldValue
               }) => {
+                console.log(values, "valuesvalues");
+
                 return (
                   <form
                     noValidate={true}
@@ -346,7 +354,8 @@ const CreateNewUser = ({
                             MenuProps: {
                               className: classes.menu
                             }
-                          }}
+                            }}
+                          disabled={data.isDisabled}
                           error={Boolean(touched[key] && errors[key])}
                           helperText={`Please select user ${key}`}
                           margin="normal"
@@ -432,6 +441,7 @@ const CreateNewUser = ({
 
 const mapStateToProps = store => ({
   users: store.users.userList,
+  user: store.auth.user,
   companies: store.companies.companyList,
   currentUser: store.users.currentUser
 });

@@ -165,7 +165,7 @@ const EntryForm = ({ onSubmit, value }) => {
 
     const addRole = mutator => title => {
         mutator.push({ name: title.replace(/\s/g, '_'), label: title })//remove space from title name
-        debugger
+        // debugger
     };
 
     const handleFiles = files => {

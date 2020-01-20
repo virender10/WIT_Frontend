@@ -143,7 +143,7 @@ export function* saga() {
 
   yield takeLatest(actionTypes.GetCompanyList, function* getCompanyListSaga() {
     const response = yield getCompaniesList();
-    yield put(actions.getCompanyListSuccess({companies: response.data.data.items}));
+    yield put(actions.getCompanyListSuccess({companies: response.data.data ? response.data.data.items : [] }));
   });
 
   yield takeLatest(actionTypes.ChangeCompanyStatus, function* changeCompanyStatusSaga({ payload }) {
@@ -161,7 +161,7 @@ export function* saga() {
 
   // yield takeLatest(actionTypes.UserRequested, function* userRequested() {
   //   const { data: user } = yield getUserByToken();
-  //   debugger
+  //   // debugger
   //   console.log(user.userdata);
   //   yield put(actions.fulfillUser(user.userdata));
   // });

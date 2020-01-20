@@ -13,9 +13,9 @@ class ForgotPassword extends Component {
   render() {
     const { intl } = this.props;
     const { isRequested } = this.state;
-debugger
+// debugger
     if (isRequested) {
-      debugger
+      // debugger
        return <Redirect to="/auth" />;
     }
 

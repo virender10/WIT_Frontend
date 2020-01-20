@@ -14,10 +14,10 @@ function Checkbox(props) {
               onChange={() => {
                 const set = new Set(field.value);
                 if (set.has(props.value)) {
-                    debugger
+                    // debugger
                   set.delete(props.value);
                 } else {
-                    debugger
+                    // debugger
                   set.add(props.value);
                 }
                 field.onChange(field.name)(Array.from(set));

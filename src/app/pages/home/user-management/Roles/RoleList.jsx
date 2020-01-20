@@ -93,7 +93,7 @@ const RoleList = () => {
     getRoles()
       .then(data => {
         const roleArray = Object.keys(data.data).map(i => data.data[i]);
-        debugger
+        // debugger
         setRows(roleArray);
       })
       .catch(() => {

@@ -22,6 +22,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import {getUsersList } from '../../services/userManagementService';
 import { deleteUserById } from "../../services/authService";
 import { actions } from "../../store/ducks/user.duck"
+import { actions as companyActions } from "../../store/ducks/company.duck"
 import { ROLES } from "../../constants"
 
 const deleteIdArray = [];
@@ -216,8 +217,8 @@ function EnhancedUserTable(props) {
     const dispatch = useDispatch();
     React.useEffect(() => {
         dispatch(actions.getUserList());
-    }, [])
-    
+        dispatch(companyActions.getCompanyList());
+    }, []);
 
     React.useEffect(() => {
             // getUsersList(page,rowsPerPage).then((data) => {
@@ -295,6 +296,7 @@ function EnhancedUserTable(props) {
 
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, allUsers.length - page * rowsPerPage);
+    const isSuperAdmin = ROLES.SUPERADMIN === user.role_id;
 
     return (
         <div className={classes.root}>
@@ -346,7 +348,7 @@ function EnhancedUserTable(props) {
                                         <TableCell align="left">{row.first_name} {row.last_name}</TableCell>
                                         {/* <TableCell align="left">{}</TableCell> */}
                                         <TableCell align="left">{row.role_name}</TableCell>
-                                        <TableCell align="left">{companyName && companyName.name}</TableCell>
+                                        {isSuperAdmin && <TableCell align="left">{companyName && companyName.name}</TableCell>}
                                         {/* <TableCell align="left"><IconButton color="primary" aria-label="edit" onClick={event => handleClickEdit(event, row.userid)}> */}
                                         <TableCell align="left"><IconButton color="primary" aria-label="edit">
                                             <Link to={`/user-management/Users/CreateUser/${row.userid}`}>

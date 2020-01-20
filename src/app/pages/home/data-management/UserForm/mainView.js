@@ -30,7 +30,7 @@ function getSteps() {
 }
 
 function getStepContent(stepIndex, onSubmit, formData) {
-    debugger
+    // debugger
     let value = null;
     switch (stepIndex) {
         case 0:
@@ -68,7 +68,7 @@ const MainForm = () => {
     };
 
     const handleReset = () => {
-        debugger
+        // debugger
         console.log(formData);
         setActiveStep(0);
     };

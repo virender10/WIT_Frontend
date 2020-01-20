@@ -59,7 +59,7 @@ export function* saga() {
   
     yield takeLatest(userRoleActions.GetUserRoles, function* getUserRoleSaga() {
       const response = yield getRoles();
-      yield put(roleActions.getUserRoleSuccess({ roles: response.data.data }));
+      yield put(roleActions.getUserRoleSuccess({ roles: response.data ? response.data.data : [] }));
     });
   
     yield takeLatest(userRoleActions.DeleteRole, function* deleteRoleSaga({ payload }) {
