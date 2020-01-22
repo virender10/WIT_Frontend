@@ -8,7 +8,7 @@ import config from "./index"
 
 
 export function getRoles() {
-  return axios.get(config.baseUrl, "role/getroles");
+  return axios.get(config.baseUrl, "user/roles-list");
 }
 
 export function saveRole(roleTitle) {

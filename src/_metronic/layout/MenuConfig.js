@@ -40,6 +40,7 @@ export default {
             page: "wellInformation/editHeader"
           },
         ],
+        isShownTo: [ROLES.COMPANY_ADMIN, ROLES.COMPANY_SUPERADMIN]
       },
       {
         title: "Status / Events",
@@ -99,7 +100,7 @@ export default {
             page: "company/companyList"
           }
         ],
-        isShownTo: [ROLES.SUPERADMIN]
+        isShownTo: [ROLES.APP_SUPERADMIN]
       },
       {
         title: "User Management",
@@ -119,7 +120,7 @@ export default {
             page: "user-management/Roles/RoleList"
           }
         ],
-        isShownTo: [ROLES.SUPERADMIN, ROLES.ADMIN]
+        isShownTo: [ROLES.COMPANY_ADMIN, ROLES.COMPANY_SUPERADMIN, ROLES.APP_SUPERADMIN]
       },
       {
         title: "Data Management",

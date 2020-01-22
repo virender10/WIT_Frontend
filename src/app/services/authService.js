@@ -50,7 +50,7 @@ export function getUserByToken() {
 
 //API service
 export function getRoles() {
-  return axios.get(API_URL + "/role/getroles");
+  return axios.get(API_URL + "/user/roles-list");
 }
 
 // custom mock Services

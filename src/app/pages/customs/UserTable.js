@@ -64,9 +64,9 @@ function EnhancedTableHead(props) {
     const createSortHandler = property => event => {
         onRequestSort(event, property);
     };
-    const isSuperAdmin = ROLES.SUPERADMIN === user.role_id;
+    const isCompanySuperAdmin = ROLES.APP_SUPERADMIN === user.currentRoleId;
     let allHeadCells = headCells.slice();
-    if (isSuperAdmin) {
+    if (isCompanySuperAdmin) {
         allHeadCells.splice(3, 0, { id: 'company', numeric: false, disablePadding: true, label: 'Company' })
     }
     return (
@@ -206,17 +206,19 @@ const useStyles = makeStyles(theme => ({
 
 function EnhancedUserTable(props) {
     const classes = useStyles();
-    const { users, user, companyList } = props;
+    const { users, user, companyList, roles } = props;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('email');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const allUsers = users && users.length > 0 ? users : [];
+    const isCompanyAdmin = ROLES.COMPANY_ADMIN === user.currentRoleId || ROLES.COMPANY_SUPERADMIN === user.currentRoleId;
+    const allUsers = users && users.length > 0 ? isCompanyAdmin ? users.filter(u => u.company_id === user.company_id) : users : [];
     const dispatch = useDispatch();
     React.useEffect(() => {
         dispatch(actions.getUserList());
+        dispatch(actions.getUserRole());
         dispatch(companyActions.getCompanyList());
     }, []);
 
@@ -296,7 +298,7 @@ function EnhancedUserTable(props) {
 
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, allUsers.length - page * rowsPerPage);
-    const isSuperAdmin = ROLES.SUPERADMIN === user.role_id;
+    const isCompanySuperAdmin = ROLES.APP_SUPERADMIN === user.currentRoleId;
 
     return (
         <div className={classes.root}>
@@ -323,9 +325,11 @@ function EnhancedUserTable(props) {
                         {stableSort(allUsers, getSorting(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
+                                console.log(roles, "roles")
                                 const isItemSelected = isSelected(row.userid);
                                 const labelId = `enhanced-table-checkbox-${index}`;
                                 const companyName = companyList.find(c => c.id === row.company_id);
+                                const roleName = roles && roles.find(c => c.id === row.role_id);
                                 return (
                                     <TableRow
                                         hover
@@ -347,8 +351,8 @@ function EnhancedUserTable(props) {
                                         </TableCell>
                                         <TableCell align="left">{row.first_name} {row.last_name}</TableCell>
                                         {/* <TableCell align="left">{}</TableCell> */}
-                                        <TableCell align="left">{row.role_name}</TableCell>
-                                        {isSuperAdmin && <TableCell align="left">{companyName && companyName.name}</TableCell>}
+                                        <TableCell align="left">{roleName && roleName.name}</TableCell>
+                                        {isCompanySuperAdmin && <TableCell align="left">{companyName && companyName.name}</TableCell>}
                                         {/* <TableCell align="left"><IconButton color="primary" aria-label="edit" onClick={event => handleClickEdit(event, row.userid)}> */}
                                         <TableCell align="left"><IconButton color="primary" aria-label="edit">
                                             <Link to={`/user-management/Users/CreateUser/${row.userid}`}>
@@ -383,6 +387,7 @@ function EnhancedUserTable(props) {
 
 const mapStateToProps = store => ({
     users: store.users.userList,
+    roles: store.users.roles,
     companyList: store.companies.companyList,
     user: store.auth.user
 });

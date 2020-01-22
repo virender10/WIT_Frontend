@@ -3,6 +3,7 @@ import storage from "redux-persist/lib/storage";
 import { put, takeLatest } from "redux-saga/effects";
 import { getUserByToken } from "../../services/authService";
 import * as routerHelpers from "../../router/RouterHelpers";
+import { ROLES } from "../../constants";
 
 export const actionTypes = {
   Login: "[Login] Action",
@@ -11,6 +12,22 @@ export const actionTypes = {
   UserRequested: "[Request User] Action",
   UserLoaded: "[Load User] Auth API"
 };
+
+export const isAppAdmin = (user) => user && !user.company_id && `APP_${user.role_id}` === ROLES.APP_ADMIN
+export const isAppSuperAdmin = (user) => user && user.role_id && `APP_${user.role_id}` === ROLES.APP_SUPERADMIN
+export const isCompanySuperAdmin = (user) => user && user.companies_role_id && `COMPANY_${user.companies_role_id}` === ROLES.COMPANY_SUPERADMIN
+export const isCompanyAdmin = (user) => user && user.companies_role_id && `COMPANY_${user.companies_role_id}` === ROLES.COMPANY_ADMIN
+
+const getUserRole = (user) => {
+  if (user) {
+    if(isCompanyAdmin(user)) return ROLES.COMPANY_ADMIN;
+    if(isCompanySuperAdmin(user)) return ROLES.COMPANY_SUPERADMIN;
+    if(isAppSuperAdmin(user)) return ROLES.APP_SUPERADMIN;
+    if(isAppAdmin(user)) return ROLES.APP_ADMIN;
+    return ""
+  }
+}
+
 
 const initialAuthState = {
   user: undefined,
@@ -41,7 +58,9 @@ export const reducer = persistReducer(
       case actionTypes.UserLoaded: {
         const { user } = action.payload;
         const { token, ...restData } = user
-        return { ...state, authToken: user.token, user: restData };
+        const currentRoleId = getUserRole(user);
+        
+        return { ...state, authToken: user.token, user: { ...restData, currentRoleId} };
       }
 
       default:

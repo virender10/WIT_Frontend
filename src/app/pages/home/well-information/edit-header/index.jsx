@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Zoom from '@material-ui/core/Zoom';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import UpdateLogo from "./update-logo"
 
 export default function EditHeader() {
     
@@ -25,7 +25,7 @@ export default function EditHeader() {
             </div>
             <div className="kt-portlet__body">
                 <div className="kt-widget4">
-                    {/* <EnhancedUserTable /> */}
+                    <UpdateLogo />
                 </div>
             </div>
         </>

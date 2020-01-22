@@ -7,7 +7,7 @@ export default function WellInformationRoutes() {
         <div className="kt-portlet kt-portlet--height-fluid">
             <Router><Switch>
                 <Redirect from="/wellInformation" exact to="/wellInformation" />
-                <Route path="wellInformation/editHeader" component={EditHeader} />
+                <Route path="/wellInformation/editHeader" component={EditHeader} />
             </Switch></Router>
         </div>
 

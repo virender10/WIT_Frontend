@@ -170,7 +170,7 @@ class AsideLeft extends React.Component {
           )}
           <ul className={clsx("kt-menu__nav", ulClasses)}>
             <MenuList
-              userRoleId={!!user && user.role_id}
+              currentRoleId={!!user && user.currentRoleId}
               currentUrl={pathname}
               menuConfig={menuConfig}
               layoutConfig={layoutConfig}

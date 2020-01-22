@@ -53,21 +53,20 @@ const useStyles = makeStyles(theme => ({
 
 
 const getInitialValue = (value, user) => {
-  const isAdmin = ROLES.ADMIN === user.companies_role_id;
-  if (value) return { ...value, company: isAdmin ? user.company_id : "" };
+  if (value) return { ...value, company: user && (user.company_id || "") };
   return {
     first_name: "",
     last_name: "",
     email: "",
     password: "",
     companyName: "",
-    company: isAdmin ? user.company_id : "",
+    company: user && (user.company_id || ""),
     phone: "",
     filename: "",
     role: "",
     file: null,
     user_management: [],
-    userType: "company",
+    userType: "app",
     data_management:[]
   };
 };
@@ -153,23 +152,28 @@ const CreateNewUser = ({
       });
   }
 
-
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
     setOpen(false);
   };
-  const isAdmin = ROLES.ADMIN === user.companies_role_id;
+
+  const isAppSuperAdmin = user && ROLES.APP_SUPERADMIN === user.currentRoleId;
+  const isCompanySuperAdmin = user && ROLES.COMPANY_SUPERADMIN === user.currentRoleId;
+  const isAdmin = user && ROLES.COMPANY_ADMIN === user.currentRoleId;
   const dropdownFields = {
     company: {
       data: userCompanies,
       type: "company",
       label: "Select Company",
-      isDisabled: isAdmin
+      isDisabled: isAdmin,
     },
     role: {
-      data: roles,
+      data: roles.filter(r => {
+        const name = r.type || r.name;
+        return (isAdmin || isCompanySuperAdmin) ? name.toLowerCase() !== "superadmin" : true
+      }),
       type: "app",
       label: "Select Role",
       alwaysShow: true,
@@ -178,6 +182,7 @@ const CreateNewUser = ({
   }
   const dropdownFieldsKeys = Object.keys(dropdownFields);
   if (error) return null;
+  const selectedUser = users && users.find(u => u.userid === Number(id));
   return (
     <>
       <div className="kt-portlet kt-portlet--height-fluid">
@@ -208,7 +213,7 @@ const CreateNewUser = ({
         <div className="kt-portlet__body">
           <div className="kt-widget4">
             <Formik
-              initialValues={getInitialValue(value, user)}
+              initialValues={getInitialValue(value, selectedUser)}
               enableReinitialize
               validate={values => {
                 const errors = {};
@@ -242,16 +247,19 @@ const CreateNewUser = ({
                 if (id) {
                   values["userid"] = id
                 }
-                if (values.userType === "company") {
-                  values["ctoken"] = values.company;
+                if (values.userType === "company" || isCompanySuperAdmin) {
+                  values["ctoken"] = isCompanySuperAdmin ? user.company_id : values.company;
                   values["comp_role_token"] = values.role;
-                  values["role_id"] = "";
+                  values["role_id"] = null;
+                  values["role_type_id"] = null;
                   delete values["company_id"];
                   delete values["companies_role_id"];
                 } else {
                   values["role_id"] = values.role;
+                  values["role_type_id"] = values.role;
+                  values["ctoken"] = null;
+                  values["comp_role_token"] = null;
                 }
-                values["role_type_id"] = values.role;
                 dispatch(actions[functionToCall]({ values, callback: () => history.push('/user-management/Users/UserList')}));
               }}
             >
@@ -325,7 +333,7 @@ const CreateNewUser = ({
                           error={Boolean(touched.password && errors.password)}
                         />
                       </Grid>}
-                      <Grid item xs={6} sm={3}>
+                      {isAppSuperAdmin && <Grid item xs={6} sm={3}>
                       <FormControl component="fieldset" className={classes.formControl}>
                           <RadioGroup aria-label="userType" name="userType" value={values.userType} onChange={(event) => {
                             handleChange(event);
@@ -337,10 +345,11 @@ const CreateNewUser = ({
                           <FormControlLabel value="app" control={<Radio />} label="App" />
                         </RadioGroup>
                       </FormControl>
-                      </Grid>
+                      </Grid>}
                       {dropdownFieldsKeys.map((key) => {
                         const data = dropdownFields[key];
-                        return (data.type === values.userType || data.alwaysShow) && <Grid item xs={6} sm={3}>
+                        return (data.alwaysShow || (values.userType === "company" && isAppSuperAdmin)) &&
+                          <Grid item xs={6} sm={3}>
                         <TextField
                           id="select-company"
                           select
@@ -360,7 +369,7 @@ const CreateNewUser = ({
                           helperText={`Please select user ${key}`}
                           margin="normal"
                         >
-                          {dropdownFields[key].data.map(option => (
+                          {dropdownFields[key].data && dropdownFields[key].data.map(option => (
                             <MenuItem key={option.id} value={option.id}>
                               {option.name || option.type}
                             </MenuItem>

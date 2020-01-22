@@ -5,6 +5,7 @@ import { getUserByToken } from "../../services/authService";
 import { createUser, getUsersList, deleteUserById, updateUser } from "../../services/userManagementService";
 import * as routerHelpers from "../../router/RouterHelpers";
 import { userRoleActions, roleActions } from "./role.duck";
+import { ROLES } from "../../constants"
 
 export const actionTypes = {
   CreateUser: "[Create User] Action",
@@ -24,7 +25,7 @@ const initialAuthState = {
   userList: [],
   currentUser: undefined,
   roles: []
-};;
+};
 
 export const reducer = persistReducer(
   { storage, key: "welltech- users", whitelist: ["userList", "currentUser", "role"] },
@@ -34,7 +35,7 @@ export const reducer = persistReducer(
         const { user } = action.payload;
         const users = [...state.userList];
         users.push(user)
-        return { currentUser: undefined, userList: users };
+        return { ...state, currentUser: undefined, userList: users };
       }
       case actionTypes.SetCurrentUser: {
         const { values } = action.payload;

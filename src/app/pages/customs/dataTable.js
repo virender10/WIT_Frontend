@@ -371,9 +371,9 @@ function EnhancedTable(props) {
                                                     <EditIcon />
                                                 </Link>
                                             </IconButton>
-                                            <IconButton style={{ color: '#fd397a' }} aria-label="delete" onClick={event => handleClickDelete(event, row.id)}>
+                                            {/* <IconButton style={{ color: '#fd397a' }} aria-label="delete" onClick={event => handleClickDelete(event, row.id)}>
                                                 <DeleteIcon />
-                                            </IconButton>
+                                            </IconButton> */}
                                             {companyStatus && <Select
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"

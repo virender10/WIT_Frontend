@@ -1,6 +1,8 @@
 export const ROLES = {
     STAFF: 1,
-    ADMIN: 2,
-    SUPERADMIN: 3,
+    APP_ADMIN: "APP_2",
+    COMPANY_ADMIN: "COMPANY_2",
+    APP_SUPERADMIN: "APP_3",
+    COMPANY_SUPERADMIN: "COMPANY_3",
     MANAGER: 4
 }
