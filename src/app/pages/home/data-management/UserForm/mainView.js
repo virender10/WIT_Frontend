@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from "react-redux"
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
+import { connect } from "react-redux"
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
+import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography';
+import { actions } from "../../../../store/ducks/dataManagement.duck"
 import EntryForm from './Form1';
 import EntryForm2 from './Form2';
 import EntryForm3 from './Form3';
 import EntryForm4 from './Form4';
 import EntryForm5 from './Form5';
 import EntryForm7 from './Form7';
+import { AddFieldModal } from "../components/addFieldModal"
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -54,8 +59,12 @@ function getStepContent(stepIndex, onSubmit, formData) {
     }
 }
 
-const MainForm = () => {
+const MainForm = (props) => {
+    const { dataManagement } = props;
+    console.log(props, "propspropspropsprops");
     const classes = useStyles();
+    const [modalShow, setModalShow] = React.useState(false);
+    const dispatch = useDispatch();
     const [activeStep, setActiveStep] = React.useState(0);
     const [formData, setFormData] = React.useState({});
     const steps = getSteps();
@@ -68,49 +77,70 @@ const MainForm = () => {
     };
 
     const handleReset = () => {
-        // debugger
         console.log(formData);
         setActiveStep(0);
     };
 
+    useEffect(() => {
+        dispatch(actions.getFormSteps());
+        dispatch(actions.getFormField(1));
+    }, [])
+    const headersteps = dataManagement && Object.values(dataManagement);
     return (
         <div className={classes.root}>
             <Stepper activeStep={activeStep} alternativeLabel>
-                {steps.map(label => (
-                    <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
+                {headersteps && headersteps.map(label => (
+                    <Step key={label.name}>
+                        <StepLabel>{label.name}</StepLabel>
                     </Step>
                 ))}
             </Stepper>
             <div>
-                {activeStep === steps.length ? (
-                    <div>
-                        <Typography className={classes.instructions}>All steps completed</Typography>
-                        <Button onClick={handleReset}>Submit</Button>
-                    </div>
-                ) : (
-                        <div>
-                            <Typography className={classes.instructions} component={'span'}>
-                                {getStepContent(activeStep, onSubmit, formData)}
-                            </Typography>
-                            <div>
-                                <Button
-                                    disabled={activeStep === 0}
-                                    onClick={handleBack}
-                                    className={classes.backButton}
-                                >
-                                    Back
-                                </Button>
-                                {/* <Button variant="contained" color="primary" onClick={handleNext}>
-                                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                </Button> */}
-                            </div>
-                            <br />
-                        </div>
-                    )}
+            {/* <Typography className={classes.instructions} component={'span'}>
+                 {getStepContent(activeStep, onSubmit, formData)}
+             </Typography> */}
             </div>
+            <Grid item xs={12} sm={12}>
+                <Button color="primary" onClick={() => setModalShow(true)}>Add Additional Fields</Button>
+            </Grid>
+            <AddFieldModal
+                show={modalShow}
+                activeStep={activeStep}
+                actions={actions}
+                onHide={() => setModalShow(false)}
+                // onExit={addRole(dynamicArray)}
+            />
         </div>
     );
 }
 
-export default MainForm;
+const mapStateToProps = store => ({
+  dataManagement: store.dataManagement.steps,
+});
+
+export default connect( mapStateToProps)(MainForm);
+// {activeStep === steps.length ? (
+//     <div>
+//         <Typography className={classes.instructions}>All steps completed</Typography>
+//         <Button onClick={handleReset}>Submit</Button>
+//     </div>
+// ) : (
+//         <div>
+//             <Typography className={classes.instructions} component={'span'}>
+//                 {getStepContent(activeStep, onSubmit, formData)}
+//             </Typography>
+//             <div>
+//                 <Button
+//                     disabled={activeStep === 0}
+//                     onClick={handleBack}
+//                     className={classes.backButton}
+//                 >
+//                     Back
+//                 </Button>
+//                 {/* <Button variant="contained" color="primary" onClick={handleNext}>
+//                     {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+//                 </Button> */}
+//             </div>
+//             <br />
+//         </div>
+//     )}
