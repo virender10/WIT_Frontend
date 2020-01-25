@@ -37,3 +37,7 @@ export function saveFormData(formData) {
   const formFieldData = convertToFormData(formData)
   return axios.post(API_URL+'data_manage/save-formdata', formFieldData);
 }
+
+export function listingFillupForm() {
+  return axios.get(API_URL+'data_manage/listing-formdata');
+}

@@ -3,6 +3,9 @@ import { useDispatch } from 'react-redux';
 import Zoom from '@material-ui/core/Zoom';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import Fab from '@material-ui/core/Fab';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import {
   TextField,
   Select,
@@ -50,23 +53,103 @@ export const AddFieldModal = props => {
   const dispatch = useDispatch();
   const [change, setChange] = React.useState(true);
   const [field, setField] = React.useState({});
+  const [arrayFields, setArrayFields] = React.useState([]);
   const [modalText, setmodalText] = React.useState('');
+
+  const manageArrayField = (type, index) => {
+    switch (type) {
+      case 'add':
+        {
+          setArrayFields([
+            ...arrayFields,
+            arrayFields[arrayFields.length - 1] + 1
+          ]);
+        }
+        break;
+      case 'delete':
+        {
+          const fieldIndex = arrayFields.findIndex(af => af === index);
+          arrayFields.splice(fieldIndex, 1);
+          delete field.option[index];
+          setArrayFields([...arrayFields]);
+        }
+        break;
+    }
+  };
+
+  const getArrayFields = () => {
+    return arrayFields.map((a, index) => (
+      <div>
+        <TextField
+          id="dynamicField"
+          label="Option"
+          name="option"
+          value={field.option[a]}
+          defaultValue={modalText}
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+          onChange={event => changeOptions(event, a)}
+        />
+
+        <Fab
+          size="small"
+          color="secondary"
+          aria-label="add"
+          className={classes.margin}
+        >
+          <AddIcon
+            onClick={() => manageArrayField('add', a)}
+            fontSize="small"
+          />
+        </Fab>
+        <Fab
+          size="small"
+          color="secondary"
+          aria-label="add"
+          className={classes.margin}
+        >
+          <DeleteIcon
+            onClick={() => manageArrayField('delete', a)}
+            fontSize="small"
+          />
+        </Fab>
+      </div>
+    ));
+  };
 
   const handleChangeText = event => {
     if (!field[event.target.name])
       field[event.target.name] = event.target.value;
     else field[event.target.name] = event.target.value;
-    setField(field);
+
+    if (event.target.value !== DATA_TYPES.ARRAY) {
+      setArrayFields([]);
+    } else {
+      setArrayFields([...arrayFields, 0]);
+      field['option'] = { 0: '' };
+    }
+
+    setField({ ...field });
+  };
+
+  const changeOptions = (event, id) => {
+    const value = event.target.value;
+    const name = event.target.name;
+    field[name] = { ...field[name], [id]: value };
+    setField({ ...field });
   };
 
   const handleSubmitModal = () => {
+    const isArray = field.type === DATA_TYPES.ARRAY;
+
     dispatch(
       actions.addField({
         field_name: field.name,
         field_label: field.label,
         data_type: field.type,
         step_token: activeStep + 1,
-        options_list: null
+        options_list: isArray ? Object.values(field.option) : null
       })
     );
     setField({});
@@ -79,7 +162,6 @@ export const AddFieldModal = props => {
     onHide();
     setmodalText('');
   };
-
   return (
     <Modal
       {...rest}
@@ -131,11 +213,12 @@ export const AddFieldModal = props => {
               >
                 <MenuItem value={DATA_TYPES.TEXT}>Text</MenuItem>
                 <MenuItem value={DATA_TYPES.DATE}>Date</MenuItem>
-                <MenuItem value={DATA_TYPES.ARRAY}>Rrray</MenuItem>
+                <MenuItem value={DATA_TYPES.ARRAY}>Array</MenuItem>
                 <MenuItem value={DATA_TYPES.RADIO}>radio</MenuItem>
                 <MenuItem value={DATA_TYPES.CHECKBOX}>Checkbox</MenuItem>
               </Select>
             </FormControl>
+            {field.type === DATA_TYPES.ARRAY && getArrayFields()}
           </div>
         </form>
       </Modal.Body>

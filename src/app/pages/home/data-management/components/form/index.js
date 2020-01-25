@@ -3,6 +3,12 @@ import { useDispatch } from 'react-redux';
 import Zoom from '@material-ui/core/Zoom';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker
+} from '@material-ui/pickers';
 import {
   TextField,
   Select,
@@ -46,37 +52,64 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Form = props => {
-  const { name, label, data_type: type, actions, onHide, ...rest } = props;
+  const { name, formData, label, data_type: type, actions, onHide, handleChangeText, ...rest } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [change, setChange] = React.useState(true);
-  const [modalText, setmodalText] = React.useState('');
-
-  const handleChangeText = event => {
-    setmodalText(event.target.value);
-    if (event.target.value.length > 0) {
-      setChange(false);
-    } else {
-      setChange(true);
-    }
-  };
 
   const getField = () => {
-    const { field, actions, onHide, ...rest } = props;
-    const { name, label, data_type: type } = field || {};
+    const { field, actions, onHide, handleChangeText, ...rest } = props;
+    const { name, label, data_type: type, options_list } = field || {};
+    const fieldName = name && name.trim().toLowerCase().replace(" ", "_");
+    const data = {
+      name,
+      label,
+      value: formData[fieldName],
+      onChange: (value) => handleChangeText(value, fieldName)
+    };
     switch (type) {
       case DATA_TYPES.TEXT: {
         return (
           <TextField
             id="dynamicField"
-            label={label}
-            name={name}
-            type={type}
+            {...data}
             className={classes.textField}
             margin="normal"
             variant="outlined"
-            onChange={handleChangeText}
           />
+        );
+      }
+      case DATA_TYPES.DATE: {
+        return (
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="MM/dd/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            {...data}
+            KeyboardButtonProps={{
+              'aria-label': 'change date'
+            }}
+            />
+            </MuiPickersUtilsProvider>
+        );
+      }
+      case DATA_TYPES.ARRAY: {
+        return (
+          <FormControl className={classes.formControl}>
+            <FormHelperText style={{ fontSize: 12 }}>{name}</FormHelperText>
+            <Select
+              {...data}
+              inputProps={{
+                name: 'max-width',
+                id: 'max-width'
+              }}
+            >
+              {options_list && options_list.map(option => <MenuItem value={option}>{option}</MenuItem>)}
+            </Select>
+          </FormControl>
         );
       }
       default:
@@ -95,19 +128,19 @@ export const Form = props => {
     );
     // onExit(modalText);
     // onHide();
-    // setmodalText('');
   };
 
-  const handleClose = () => {
-    onHide();
-    setmodalText('');
-  };
   const inputfield = getField();
   return (
-      <Grid xs={6} sm={3} lg={6} style={{
-          marginLeft: 10,
-          maxWidth: "23%"
-    }}>
+    <Grid
+      xs={6}
+      sm={3}
+      lg={6}
+      style={{
+        marginLeft: 10,
+        maxWidth: '23%'
+      }}
+    >
       {inputfield}
     </Grid>
   );

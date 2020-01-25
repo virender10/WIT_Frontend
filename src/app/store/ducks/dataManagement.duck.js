@@ -5,11 +5,13 @@ import {
   getFormFieldList,
   getFormStepsList,
   saveFormData,
-  addField
+  addField,
+  listingFillupForm
 } from '../../services/dataManagementService';
 import { ROLES } from '../../constants';
 
 export const actionTypes = {
+  SetDataManagementSteps: "[Set Data Management Steps] Action",
   AddField: '[Add Field] Action',
   AddFieldSuccess: '[Add Field Success] Action',
   GetFormField: '[Get Form Field] Action',
@@ -17,17 +19,29 @@ export const actionTypes = {
   GetFormSteps: '[Get Form Steps] Action',
   GetFormStepsSuccess: '[Get Form Steps Success] Action',
   SaveFormData: '[Save Form Data] Action',
-  SaveFormDataSuccess: '[Save Form Data Success] Action'
+  SaveFormDataSuccess: '[Save Form Data Success] Action',
+  ListingFillupForm: '[Listing Fill Form] Action',
+  ListingFillupFormSuccess: '[Listing Fill Form Success] Action'
 };
 
 const initialAuthState = {
-  steps: {}
+  steps: {},
+  currentDataManagementSteps: {},
 };
 
 export const reducer = persistReducer(
-  { storage, key: 'welltech- data-management', whitelist: ['steps'] },
+  { storage, key: 'welltech- data-management', whitelist: ['steps', 'currentDataManagementSteps'] },
   (state = initialAuthState, action) => {
     switch (action.type) {
+      case actionTypes.SetDataManagementSteps: {
+        const { data } = action.payload;
+        return {
+          ...state,
+          currentDataManagementSteps: {
+            ...data
+          }
+        };
+      }
       case actionTypes.AddFieldSuccess: {
         const { data } = action.payload;
         const { step_token: activeStep, ...restData } = data;
@@ -43,7 +57,7 @@ export const reducer = persistReducer(
             fields: [restData]
           };
         }
-        return { steps };
+        return { ...state, steps };
       }
       case actionTypes.GetFormFieldSuccess: {
         const { fields } = action.payload;
@@ -64,7 +78,7 @@ export const reducer = persistReducer(
             };
           }
         });
-        return { steps };
+        return { ...state, steps };
       }
 
       case actionTypes.GetFormStepsSuccess: {
@@ -75,7 +89,7 @@ export const reducer = persistReducer(
             obj[s.id] = { name: s.name };
           }
         });
-        return { steps: obj };
+        return { ...state, steps: obj };
       }
 
       case actionTypes.SaveFormDataSuccess: {
@@ -97,6 +111,7 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
+  setDataManagementSteps: data => ({ type: actionTypes.SetDataManagementSteps, payload: { data } }),
   addField: data => ({ type: actionTypes.AddField, payload: { data } }),
   addFieldSuccess: data => ({
     type: actionTypes.AddFieldSuccess,
@@ -121,6 +136,14 @@ export const actions = {
   getFormStepSuccess: steps => ({
     type: actionTypes.GetFormStepsSuccess,
     payload: { steps }
+  }),
+  listingFormFields: () => ({
+    type: actionTypes.ListingFillupForm,
+    payload: {}
+  }),
+  listingFormFieldsSuccess: fields => ({
+    type: actionTypes.ListingFillupFormSuccess,
+    payload: { fields }
   })
 };
 
@@ -134,7 +157,6 @@ export function* saga() {
     //   role_id: role,
     //   image: file
     // }
-    yield addField(data);
     yield put(
       actions.addFieldSuccess({
         name: field_name,
@@ -147,8 +169,8 @@ export function* saga() {
     payload
   }) {
     const { step } = payload;
-    const response = yield getFormFieldList(step);
-    yield put(actions.getFormFieldSuccess(response.data.data.items));
+    // const response = yield getFormFieldList(step);
+    // yield put(actions.getFormFieldSuccess(response.data.data.items));
   });
 
   yield takeLatest(actionTypes.GetFormSteps, function* getUserListSaga() {
@@ -164,6 +186,11 @@ export function* saga() {
     yield put(actions.saveFormDataSuccess());
   });
 
+  yield takeLatest(actionTypes.ListingFillupForm, function* getUserListSaga() {
+    const response = yield listingFillupForm();
+    console.log(response, "responseresponseresponse");
+    // yield put(actions.listingFormFieldsSuccess());
+  });
   // yield takeLatest(actionTypes.UserRequested, function* userRequested() {
   //   const { data: user } = yield getUserByToken();
   //   // debugger
