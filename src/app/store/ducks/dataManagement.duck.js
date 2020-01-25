@@ -31,18 +31,18 @@ export const reducer = persistReducer(
       }
       case actionTypes.GetFormFieldSuccess: {
         const { fields } = action.payload;
-        // formstep_id
-        const steps = state.steps;
+        const steps = { ...state.steps };
         fields.forEach(f => {
           if (f.formstep_id && steps[f.formstep_id] && steps[f.formstep_id].fields) {
-            steps[f.formstep_id].fields.push(f)
+            const stepFields = steps[f.formstep_id].fields;
+            if (!stepFields.find(field => field.id === f.id)) stepFields.push(f)
           } else {
             steps[f.formstep_id] = {
               ...steps[f.formstep_id],
-              fields: f
+              fields: [f]
             }
           }
-        })
+        });
         return { steps };
       }
 

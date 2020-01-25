@@ -6,3 +6,11 @@ export const ROLES = {
     COMPANY_SUPERADMIN: "COMPANY_3",
     MANAGER: 4
 }
+
+export const DATA_TYPES = {
+    TEXT: "text",
+    DATE: "date",
+    RADIO: "radio",
+    CHECKBOX: "checkbox",
+    ARRAY: "array"
+}
