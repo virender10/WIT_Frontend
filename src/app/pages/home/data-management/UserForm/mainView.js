@@ -109,6 +109,7 @@ const MainForm = props => {
                   {fields &&
                     fields.map(f => (
                       <Form
+                      currentListing={currentListing}
                         formData={currentDataManagementSteps[activeStep + 1] || {}}
                         handleChangeText={handleChangeText}
                         field={f}
