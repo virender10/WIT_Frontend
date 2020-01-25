@@ -64,7 +64,6 @@ export const Form = props => {
   const getField = () => {
     const { field, actions, onHide, ...rest } = props;
     const { name, label, data_type: type } = field || {};
-    console.log(field);
     switch (type) {
       case DATA_TYPES.TEXT: {
         return (
@@ -73,7 +72,6 @@ export const Form = props => {
             label={label}
             name={name}
             type={type}
-            //   defaultValue={modalText}
             className={classes.textField}
             margin="normal"
             variant="outlined"
@@ -106,7 +104,10 @@ export const Form = props => {
   };
   const inputfield = getField();
   return (
-    <Grid xs={6} sm={3} lg={6}>
+      <Grid xs={6} sm={3} lg={6} style={{
+          marginLeft: 10,
+          maxWidth: "23%"
+    }}>
       {inputfield}
     </Grid>
   );

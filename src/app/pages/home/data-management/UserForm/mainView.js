@@ -71,13 +71,11 @@ function getStepContent(stepIndex, onSubmit, formData) {
 
 const MainForm = props => {
   const { dataManagement } = props;
-  console.log(props, 'propspropspropsprops');
   const classes = useStyles();
   const [modalShow, setModalShow] = React.useState(false);
   const dispatch = useDispatch();
-  const [activeStep, setActiveStep] = React.useState(5);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [formData, setFormData] = React.useState({});
-  const steps = getSteps();
   const onSubmit = formName => values => {
     setFormData(prev => ({ ...prev, [formName]: values }));
     setActiveStep(prev => prev + 1);
@@ -90,7 +88,6 @@ const MainForm = props => {
   };
 
   const handleReset = () => {
-    console.log(formData);
     setActiveStep(0);
   };
 
@@ -103,7 +100,10 @@ const MainForm = props => {
   }, [activeStep]);
 
   const headersteps = dataManagement && Object.values(dataManagement);
-  const fields = dataManagement && dataManagement[activeStep + 1] && dataManagement[activeStep + 1].fields;
+  const fields =
+    dataManagement &&
+    dataManagement[activeStep + 1] &&
+    dataManagement[activeStep + 1].fields;
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -116,25 +116,27 @@ const MainForm = props => {
       </Stepper>
       <div>
         {activeStep === headersteps.length ? (
-          <div style={{
-            margin: 20
-          }}>
-            {/* <Typography className={classes.instructions}> */}
-              All steps completed
-            {/* </Typography> */}
+          <div
+            style={{
+              margin: 30
+            }}
+          >
+            All steps completed
             <Button onClick={handleReset}>Submit</Button>
           </div>
         ) : (
           <>
             <Typography className={classes.instructions} component={'span'}>
-              {/* {getStepContent(activeStep, onSubmit, formData)} */}
               <form className={classes.container} noValidate autoComplete="off">
-                {fields && fields.map(f => <Form field={f} />)}
+                <Grid container spacing={3}>
+                  {fields && fields.map(f => <Form field={f} />)}
+                </Grid>
               </form>
             </Typography>
             <div
               style={{
-                marginBottom: 20
+                marginBottom: 20,
+                paddingTop: 20
               }}
             >
               <Button

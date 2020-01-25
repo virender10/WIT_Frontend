@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from "react-redux"
+import { useDispatch } from 'react-redux';
 import Zoom from '@material-ui/core/Zoom';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,6 +11,7 @@ import {
   FormHelperText
 } from '@material-ui/core';
 import Modal from 'react-bootstrap/Modal';
+import { DATA_TYPES } from '../../../../../constants';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,24 +46,32 @@ const useStyles = makeStyles(theme => ({
 
 export const AddFieldModal = props => {
   const { onHide, onExit, actions, activeStep, ...rest } = props;
-    const classes = useStyles();
-    const dispatch = useDispatch();
+  const classes = useStyles();
+  const dispatch = useDispatch();
   const [change, setChange] = React.useState(true);
+  const [field, setField] = React.useState({});
   const [modalText, setmodalText] = React.useState('');
 
   const handleChangeText = event => {
-    setmodalText(event.target.value);
-    if (event.target.value.length > 0) {
-      setChange(false);
-    } else {
-      setChange(true);
-    }
+    if (!field[event.target.name])
+      field[event.target.name] = event.target.value;
+    else field[event.target.name] = event.target.value;
+    setField(field);
   };
 
-    const handleSubmitModal = () => {
-    dispatch(actions.addField({ field_name: "Invoive To", field_label: "Invoive To", data_type: "text", step_token: 1 }))
+  const handleSubmitModal = () => {
+    dispatch(
+      actions.addField({
+        field_name: field.name,
+        field_label: field.label,
+        data_type: field.type,
+        step_token: activeStep + 1,
+        options_list: null
+      })
+    );
+    setField({});
     // onExit(modalText);
-    // onHide();
+    onHide();
     // setmodalText('');
   };
 
@@ -90,6 +99,8 @@ export const AddFieldModal = props => {
             <TextField
               id="dynamicField"
               label="Name"
+              name="name"
+              value={field.name}
               defaultValue={modalText}
               className={classes.textField}
               margin="normal"
@@ -99,6 +110,8 @@ export const AddFieldModal = props => {
             <TextField
               id="dynamicField"
               label="Label"
+              name="label"
+              value={field.label}
               defaultValue={modalText}
               className={classes.textField}
               margin="normal"
@@ -108,18 +121,19 @@ export const AddFieldModal = props => {
             <FormControl className={classes.formControl}>
               <FormHelperText style={{ fontSize: 12 }}>Type</FormHelperText>
               <Select
-                value="text"
-                onChange={() => {}}
+                name="type"
+                onChange={handleChangeText}
                 inputProps={{
-                  name: 'max-width',
-                  id: 'max-width'
+                  name: 'type',
+                  id: 'type'
                 }}
+                value={field.type}
               >
-                <MenuItem value="text">Text</MenuItem>
-                <MenuItem value="date">Date</MenuItem>
-                <MenuItem value="array">array</MenuItem>
-                <MenuItem value="radio">radio</MenuItem>
-                <MenuItem value="checkbox">checkbox</MenuItem>
+                <MenuItem value={DATA_TYPES.TEXT}>Text</MenuItem>
+                <MenuItem value={DATA_TYPES.DATE}>Date</MenuItem>
+                <MenuItem value={DATA_TYPES.ARRAY}>Rrray</MenuItem>
+                <MenuItem value={DATA_TYPES.RADIO}>radio</MenuItem>
+                <MenuItem value={DATA_TYPES.CHECKBOX}>Checkbox</MenuItem>
               </Select>
             </FormControl>
           </div>
