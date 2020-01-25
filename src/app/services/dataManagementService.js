@@ -7,7 +7,7 @@ function convertToFormData(data){
   const formData = new FormData();
   const keys = Object.keys(data);
   keys.forEach(key => {
-    formData.append(key, data[key]);
+    formData.append(`formvalue[${key}]`, data[key]);
   })
 
   return formData;
@@ -34,7 +34,7 @@ export function getFormFieldList(stepToken) {
 }
 
 export function saveFormData(formData) {
-  const formFieldData = convertToFormData(formData)
+  const formFieldData = convertToFormData(formData);
   return axios.post(API_URL+'data_manage/save-formdata', formFieldData);
 }
 

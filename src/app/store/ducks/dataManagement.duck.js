@@ -27,10 +27,11 @@ export const actionTypes = {
 const initialAuthState = {
   steps: {},
   currentDataManagementSteps: {},
+  currentListing: {}
 };
 
 export const reducer = persistReducer(
-  { storage, key: 'welltech- data-management', whitelist: ['steps', 'currentDataManagementSteps'] },
+  { storage, key: 'welltech- data-management', whitelist: ['steps', 'currentDataManagementSteps', 'currentListing'] },
   (state = initialAuthState, action) => {
     switch (action.type) {
       case actionTypes.SetDataManagementSteps: {
@@ -48,8 +49,7 @@ export const reducer = persistReducer(
         const steps = { ...state.steps };
         if (steps[activeStep] && steps[activeStep].fields) {
           const stepFields = steps[activeStep].fields;
-          if (!stepFields.find(field => field.name === data.name))
-            stepFields.push(restData);
+          if (!stepFields.find(field => field.name === data.name)) stepFields.push(restData);
           steps[activeStep].fields = stepFields;
         } else {
           steps[activeStep] = {
@@ -69,8 +69,7 @@ export const reducer = persistReducer(
             steps[f.formstep_id].fields
           ) {
             const stepFields = steps[f.formstep_id].fields;
-            if (!stepFields.find(field => field.name === f.name))
-              stepFields.push(f);
+            if (!stepFields.find(field => field.name === f.name)) stepFields.push(f);
           } else {
             steps[f.formstep_id] = {
               ...steps[f.formstep_id],
@@ -93,17 +92,25 @@ export const reducer = persistReducer(
       }
 
       case actionTypes.SaveFormDataSuccess: {
-        const { userid } = action.payload;
-        const users = [...state.userList];
-        const selectedUserIndex = users.findIndex(
-          user => user.userid === userid
-        );
-        if (selectedUserIndex > -1) {
-          users.splice(selectedUserIndex, 1);
-        }
-        return { ...state, userList: users };
+        const { data } = action.payload;
+        return {
+          ...state,
+          currentListing: { ...state.currentListing, ...data }
+        };
       }
 
+      case actionTypes.ListingFillupFormSuccess: {
+        const { fields } = action.payload;
+        let obj = {};
+        fields.forEach(d => obj = {
+          ...obj,
+          ...d.form_keys
+        });
+        return {
+          ...state,
+          currentListing: obj
+        };
+      }
       default:
         return state;
     }
@@ -122,12 +129,13 @@ export const actions = {
     type: actionTypes.GetFormFieldSuccess,
     payload: { fields }
   }),
-  saveFormData: () => ({
-    type: actionTypes.SaveFormData
+  saveFormData: (data) => ({
+    type: actionTypes.SaveFormData,
+    payload: { data }
   }),
-  saveFormDataSuccess: steps => ({
+  saveFormDataSuccess: data => ({
     type: actionTypes.SaveFormDataSuccess,
-    payload: { steps }
+    payload: { data }
   }),
   getFormSteps: userid => ({
     type: actionTypes.GetFormSteps,
@@ -157,6 +165,7 @@ export function* saga() {
     //   role_id: role,
     //   image: file
     // }
+    // yield addField(data);
     yield put(
       actions.addFieldSuccess({
         name: field_name,
@@ -169,8 +178,8 @@ export function* saga() {
     payload
   }) {
     const { step } = payload;
-    // const response = yield getFormFieldList(step);
-    // yield put(actions.getFormFieldSuccess(response.data.data.items));
+    const response = yield getFormFieldList(step);
+    yield put(actions.getFormFieldSuccess(response.data.data.items));
   });
 
   yield takeLatest(actionTypes.GetFormSteps, function* getUserListSaga() {
@@ -181,15 +190,16 @@ export function* saga() {
   yield takeLatest(actionTypes.SaveFormData, function* getUserListSaga({
     payload
   }) {
-    // const { id } = payload;
-    const response = yield saveFormData();
-    yield put(actions.saveFormDataSuccess());
+    const { data } = payload;
+    const response = yield saveFormData(data);
+    // console.log(response, "responseresponseresponse");
+    yield put(actions.saveFormDataSuccess(response.data.data.form_keys));
   });
 
   yield takeLatest(actionTypes.ListingFillupForm, function* getUserListSaga() {
     const response = yield listingFillupForm();
     console.log(response, "responseresponseresponse");
-    // yield put(actions.listingFormFieldsSuccess());
+    yield put(actions.listingFormFieldsSuccess(response.data.data.items));
   });
   // yield takeLatest(actionTypes.UserRequested, function* userRequested() {
   //   const { data: user } = yield getUserByToken();

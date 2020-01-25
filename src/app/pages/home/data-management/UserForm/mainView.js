@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const MainForm = props => {
-  const { dataManagement, currentDataManagementSteps } = props;
+  const { dataManagement, currentDataManagementSteps, currentListing } = props;
   const classes = useStyles();
   const [modalShow, setModalShow] = React.useState(false);
   const dispatch = useDispatch();
@@ -37,9 +37,9 @@ const MainForm = props => {
   const handleChangeText = (event, name) => {
     const stepValues = currentDataManagementSteps[activeStep + 1] || {};
     const enteredvalue =
-      event && event.target && event.target.value ? event.target.value : event;
+      event && event.target && event.target.name ? event.target.value : event;
     const data = {
-      ...currentDataManagementSteps
+      ...stepValues
     };
     data[activeStep + 1] = { ...stepValues, [name]: enteredvalue };
     dispatch(actions.setDataManagementSteps(data))
@@ -48,7 +48,19 @@ const MainForm = props => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    let obj = {};
+    const fields =
+      dataManagement &&
+      dataManagement[activeStep + 1] &&
+      dataManagement[activeStep + 1].fields;
+    fields.forEach(f => {
+      const { name } = f;
+      const fieldName = name && name.trim().toLowerCase().replace(" ", "_");
+      const data = currentDataManagementSteps[activeStep + 1];
+      obj[fieldName] = data[fieldName];
+    });
+    // setActiveStep(prevActiveStep => prevActiveStep + 1);
+    dispatch(actions.saveFormData(obj));
   };
 
   const handleReset = () => {
@@ -151,7 +163,8 @@ const MainForm = props => {
 
 const mapStateToProps = store => ({
   dataManagement: store.dataManagement.steps,
-  currentDataManagementSteps: store.dataManagement.currentDataManagementSteps
+  currentDataManagementSteps: store.dataManagement.currentDataManagementSteps,
+  currentListing: store.dataManagement.currentListing,
 });
 
 export default connect(mapStateToProps)(MainForm);

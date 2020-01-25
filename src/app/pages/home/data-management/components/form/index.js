@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Form = props => {
-  const { name, formData, label, data_type: type, actions, onHide, handleChangeText, ...rest } = props;
+  const { name, formData, currentListing, label, data_type: type, actions, onHide, handleChangeText, ...rest } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -63,7 +63,7 @@ export const Form = props => {
     const data = {
       name,
       label,
-      value: formData[fieldName],
+      value: currentListing[fieldName],
       onChange: (value) => handleChangeText(value, fieldName)
     };
     switch (type) {
