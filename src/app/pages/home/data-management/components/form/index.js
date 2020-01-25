@@ -74,7 +74,7 @@ export const Form = props => {
             {...data}
             className={classes.textField}
             margin="normal"
-            variant="outlined"
+            // variant="outlined"
           />
         );
       }

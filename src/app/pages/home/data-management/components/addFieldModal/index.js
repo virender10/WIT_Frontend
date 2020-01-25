@@ -56,67 +56,67 @@ export const AddFieldModal = props => {
   const [arrayFields, setArrayFields] = React.useState([]);
   const [modalText, setmodalText] = React.useState('');
 
-  const manageArrayField = (type, index) => {
-    switch (type) {
-      case 'add':
-        {
-          setArrayFields([
-            ...arrayFields,
-            arrayFields[arrayFields.length - 1] + 1
-          ]);
-        }
-        break;
-      case 'delete':
-        {
-          const fieldIndex = arrayFields.findIndex(af => af === index);
-          arrayFields.splice(fieldIndex, 1);
-          delete field.option[index];
-          setArrayFields([...arrayFields]);
-        }
-        break;
-    }
-  };
+  // const manageArrayField = (type, index) => {
+  //   switch (type) {
+  //     case 'add':
+  //       {
+  //         setArrayFields([
+  //           ...arrayFields,
+  //           arrayFields[arrayFields.length - 1] + 1
+  //         ]);
+  //       }
+  //       break;
+  //     case 'delete':
+  //       {
+  //         const fieldIndex = arrayFields.findIndex(af => af === index);
+  //         arrayFields.splice(fieldIndex, 1);
+  //         delete field.option[index];
+  //         setArrayFields([...arrayFields]);
+  //       }
+  //       break;
+  //   }
+  // };
 
-  const getArrayFields = () => {
-    return arrayFields.map((a, index) => (
-      <div>
-        <TextField
-          id="dynamicField"
-          label="Option"
-          name="option"
-          value={field.option[a]}
-          defaultValue={modalText}
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-          onChange={event => changeOptions(event, a)}
-        />
+  // const getArrayFields = () => {
+  //   return arrayFields.map((a, index) => (
+  //     <div>
+  //       <TextField
+  //         id="dynamicField"
+  //         label="Option"
+  //         name="option"
+  //         value={field.option[a]}
+  //         defaultValue={modalText}
+  //         className={classes.textField}
+  //         margin="normal"
+  //         variant="outlined"
+  //         onChange={event => changeOptions(event, a)}
+  //       />
 
-        <Fab
-          size="small"
-          color="secondary"
-          aria-label="add"
-          className={classes.margin}
-        >
-          <AddIcon
-            onClick={() => manageArrayField('add', a)}
-            fontSize="small"
-          />
-        </Fab>
-        <Fab
-          size="small"
-          color="secondary"
-          aria-label="add"
-          className={classes.margin}
-        >
-          <DeleteIcon
-            onClick={() => manageArrayField('delete', a)}
-            fontSize="small"
-          />
-        </Fab>
-      </div>
-    ));
-  };
+  //       <Fab
+  //         size="small"
+  //         color="secondary"
+  //         aria-label="add"
+  //         className={classes.margin}
+  //       >
+  //         <AddIcon
+  //           onClick={() => manageArrayField('add', a)}
+  //           fontSize="small"
+  //         />
+  //       </Fab>
+  //       <Fab
+  //         size="small"
+  //         color="secondary"
+  //         aria-label="add"
+  //         className={classes.margin}
+  //       >
+  //         <DeleteIcon
+  //           onClick={() => manageArrayField('delete', a)}
+  //           fontSize="small"
+  //         />
+  //       </Fab>
+  //     </div>
+  //   ));
+  // };
 
   const handleChangeText = event => {
     if (!field[event.target.name])
@@ -133,12 +133,12 @@ export const AddFieldModal = props => {
     setField({ ...field });
   };
 
-  const changeOptions = (event, id) => {
-    const value = event.target.value;
-    const name = event.target.name;
-    field[name] = { ...field[name], [id]: value };
-    setField({ ...field });
-  };
+  // const changeOptions = (event, id) => {
+  //   const value = event.target.value;
+  //   const name = event.target.name;
+  //   field[name] = { ...field[name], [id]: value };
+  //   setField({ ...field });
+  // };
 
   const handleSubmitModal = () => {
     const isArray = field.type === DATA_TYPES.ARRAY;
@@ -147,9 +147,11 @@ export const AddFieldModal = props => {
       actions.addField({
         field_name: field.name,
         field_label: field.label,
-        data_type: field.type,
+        // data_type: field.type,
+        data_type: DATA_TYPES.TEXT,
         step_token: activeStep + 1,
-        options_list: isArray ? Object.values(field.option) : null
+        // options_list: isArray ? Object.values(field.option) : null
+        options_list: null
       })
     );
     setField({});
@@ -200,7 +202,7 @@ export const AddFieldModal = props => {
               variant="outlined"
               onChange={handleChangeText}
             />
-            <FormControl className={classes.formControl}>
+            {/* <FormControl className={classes.formControl}>
               <FormHelperText style={{ fontSize: 12 }}>Type</FormHelperText>
               <Select
                 name="type"
@@ -217,8 +219,8 @@ export const AddFieldModal = props => {
                 <MenuItem value={DATA_TYPES.RADIO}>radio</MenuItem>
                 <MenuItem value={DATA_TYPES.CHECKBOX}>Checkbox</MenuItem>
               </Select>
-            </FormControl>
-            {field.type === DATA_TYPES.ARRAY && getArrayFields()}
+            </FormControl> */}
+            {/* {field.type === DATA_TYPES.ARRAY && getArrayFields()} */}
           </div>
         </form>
       </Modal.Body>

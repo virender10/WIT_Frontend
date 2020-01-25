@@ -375,7 +375,7 @@ const EntryForm3 = ({value, onSubmit}) => {
                                                             
                                                             {values.job_BHA ==='BHAout' ? <CustomCheckBox name="job_BHA_check" value="preBHA" label="should be previous BHA in"/> : null}
                                                     </Grid>
-                                                    <FieldArray
+                                                    {/* <FieldArray
                                                         name="job_attr"
                                                         render={dynamicJobArray => (
                                                             <>
@@ -407,16 +407,16 @@ const EntryForm3 = ({value, onSubmit}) => {
                                                                 />
                                                             </>
                                                         )}
-                                                    />
+                                                    /> */}
                                                 </Grid>
                                             </div>
-                                            <br />
+                                            {/* <br />
                                             <div className="kt-login__actions">
                                                 <Grid item xs={6} sm={3}>
                                                     <Button type="submit"
                                                         disabled={isSubmitting} color="primary" variant="contained">Go</Button>
                                                 </Grid>
-                                            </div>
+                                            </div> */}
                                         </form>
                                     </>
                                 );

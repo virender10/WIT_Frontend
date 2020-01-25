@@ -159,13 +159,7 @@ export function* saga() {
   yield takeLatest(actionTypes.AddField, function* addFieldSaga({ payload }) {
     const { data } = payload;
     const { field_name, field_label, ...restData } = data;
-    // const { companyName, role, file, user_management, data_management, ...restUserData } = user;
-    // const userData = {
-    //   ...restUserData,
-    //   role_id: role,
-    //   image: file
-    // }
-    // yield addField(data);
+    yield addField(data);
     yield put(
       actions.addFieldSuccess({
         name: field_name,
@@ -198,13 +192,6 @@ export function* saga() {
 
   yield takeLatest(actionTypes.ListingFillupForm, function* getUserListSaga() {
     const response = yield listingFillupForm();
-    console.log(response, "responseresponseresponse");
     yield put(actions.listingFormFieldsSuccess(response.data.data.items));
   });
-  // yield takeLatest(actionTypes.UserRequested, function* userRequested() {
-  //   const { data: user } = yield getUserByToken();
-  //   // debugger
-  //   console.log(user.userdata);
-  //   yield put(actions.fulfillUser(user.userdata));
-  // });
 }

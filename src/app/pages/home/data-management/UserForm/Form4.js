@@ -465,7 +465,7 @@ const EntryForm4 = ({ value, onSubmit }) => {
                                                             error={Boolean(touched.prod_mays && errors.prod_mays)}
                                                         />
                                                     </Grid>
-                                                    <FieldArray
+                                                    {/* <FieldArray
                                                         name="prod_attr"
                                                         render={dynamicProd => (
                                                             <>
@@ -497,16 +497,16 @@ const EntryForm4 = ({ value, onSubmit }) => {
                                                                 />
                                                             </>
                                                         )}
-                                                    />
+                                                    /> */}
                                                 </Grid>
                                             </div>
-                                            <br />
+                                            {/* <br />
                                             <div className="kt-login__actions">
                                                 <Grid item xs={6} sm={3}>
                                                     <Button type="submit"
                                                         disabled={isSubmitting} color="primary" variant="contained">Go</Button>
                                                 </Grid>
-                                            </div>
+                                            </div> */}
                                         </form>
                                     </>
                                 );

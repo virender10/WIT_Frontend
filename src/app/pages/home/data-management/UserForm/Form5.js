@@ -853,7 +853,7 @@ const EntryForm5 = ({ value, onSubmit }) => {
                                                             <CustomCheckBox name="DHE_ds" value="ds_other" label="Other Specs" />
                                                         </div> : null}
 
-                                                <FieldArray
+                                                {/* <FieldArray
                                                     name="DHE_attr"
                                                     render={dynamicProd => (
                                                         <>
@@ -887,16 +887,16 @@ const EntryForm5 = ({ value, onSubmit }) => {
                                                             />
                                                         </>
                                                     )}
-                                                />
+                                                /> */}
                                             </Grid>
                                         </div>
-                                        <br />
+                                        {/* <br />
                                         <div className="kt-login__actions">
                                             <Grid item xs={6} sm={3}>
                                                 <Button type="submit"
                                                     disabled={isSubmitting} color="primary" variant="contained">Go</Button>
                                             </Grid>
-                                        </div>
+                                        </div> */}
                                     </form>
                                 </>
                             );

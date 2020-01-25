@@ -311,7 +311,7 @@ const EntryForm2 = ({ onSubmit, value }) => {
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item xs={6} sm={3}></Grid>
-                                                    <FieldArray
+                                                    {/* <FieldArray
                                                         name="eve_attr"
                                                         render={renderArray => (
                                                             <>
@@ -343,16 +343,16 @@ const EntryForm2 = ({ onSubmit, value }) => {
                                                                 />
                                                             </>
                                                         )}
-                                                    />
+                                                    /> */}
                                                 </Grid>
                                             </div>
-                                            <br />
+                                            {/* <br />
                                             <div className="kt-login__actions">
                                                 <Grid item xs={6} sm={3}>
                                                     <Button type="submit"
                                                         disabled={isSubmitting} color="primary" variant="contained">Go</Button>
                                                 </Grid>
-                                            </div>
+                                            </div> */}
                                         </form>
                                     </>
                                 );

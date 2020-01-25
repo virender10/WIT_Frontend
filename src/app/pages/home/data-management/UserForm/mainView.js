@@ -11,6 +11,12 @@ import Typography from '@material-ui/core/Typography';
 import { actions } from '../../../../store/ducks/dataManagement.duck';
 import { AddFieldModal } from '../components/addFieldModal';
 import { Form } from '../components/form';
+import EntryForm from './Form1';
+import EntryForm2 from './Form2';
+import EntryForm3 from './Form3';
+import EntryForm4 from './Form4';
+import EntryForm5 from './Form5';
+import EntryForm7 from './Form7';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,12 +34,39 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function getStepContent(stepIndex, onSubmit, formData, handleChangeText) {
+  // debugger
+  let value = null;
+  switch (stepIndex) {
+    case 0:
+      // return <EntryForm7/>
+      value = formData['form1'];
+      return <EntryForm handleChangeText={handleChangeText} onSubmit={onSubmit('form1')} value={value} />;
+    case 1:
+      value = formData['form2'];
+      return <EntryForm2 handleChangeText={handleChangeText} onSubmit={onSubmit('form2')} value={value} />;
+    case 2:
+      value = formData['form3'];
+      return <EntryForm3 handleChangeText={handleChangeText} onSubmit={onSubmit('form3')} value={value} />;
+    case 3:
+      value = formData['form4'];
+      return <EntryForm4 handleChangeText={handleChangeText} onSubmit={onSubmit('form4')} value={value} />;
+    case 4:
+      value = formData['form5'];
+      return <EntryForm5 handleChangeText={handleChangeText} onSubmit={onSubmit('form5')} value={value} />;
+    default:
+      return null;
+  }
+}
+
 const MainForm = props => {
   const { dataManagement, currentDataManagementSteps, currentListing } = props;
   const classes = useStyles();
   const [modalShow, setModalShow] = React.useState(false);
+  const [formData, setFormData] = React.useState({});
   const dispatch = useDispatch();
   const [activeStep, setActiveStep] = React.useState(0);
+
   const handleChangeText = (event, name) => {
     const stepValues = currentDataManagementSteps[activeStep + 1] || {};
     const enteredvalue =
@@ -59,12 +92,17 @@ const MainForm = props => {
       const data = currentDataManagementSteps[activeStep + 1];
       obj[fieldName] = data[fieldName];
     });
-    // setActiveStep(prevActiveStep => prevActiveStep + 1);
-    dispatch(actions.saveFormData(obj));
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    // dispatch(actions.saveFormData(obj));
   };
 
   const handleReset = () => {
     setActiveStep(0);
+  };
+
+  const onSubmit = formName => values => {
+    setFormData(prev => ({ ...prev, [formName]: values }));
+    setActiveStep(prev => prev + 1);
   };
 
   useEffect(() => {
@@ -103,7 +141,8 @@ const MainForm = props => {
           </div>
         ) : (
           <>
-            <Typography className={classes.instructions} component={'span'}>
+              <Typography className={classes.instructions} component={'span'}>
+                {getStepContent(activeStep, onSubmit, formData, handleChangeText)}
               <form className={classes.container} noValidate autoComplete="off">
                 <Grid container spacing={3}>
                   {fields &&

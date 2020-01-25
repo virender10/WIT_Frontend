@@ -84,72 +84,6 @@ const dummy = {
     well_attr: [],
 }
 
-const MyVerticallyCenteredModal = ({ onHide, onExit, ...rest }) => {
-    const classes = useStyles();
-    const [change, setChange] = React.useState(true);
-    const [modalText, setmodalText] = React.useState("");
-
-    const handleChangeText = event => {
-        setmodalText(event.target.value);
-        if (event.target.value.length > 0) {
-            setChange(false);
-        } else {
-            setChange(true);
-        }
-    };
-
-    const handleSubmitModal = () => {
-        onExit(modalText);
-        onHide();
-        setmodalText("");
-    };
-
-    const handleClose = () => {
-        onHide();
-        setmodalText("");
-    };
-
-    return (
-        <Modal
-            {...rest}
-            onHide={onHide}
-            size="md"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Please name your field.....</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <form className={classes.container} noValidate autoComplete="off">
-                    <div>
-                        <TextField
-                            id="dynamicField"
-                            label="Field"
-                            defaultValue={modalText}
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            onChange={handleChangeText}
-                        />
-                    </div>
-                </form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmitModal}
-                    disabled={change}
-                >
-                    Save
-          </Button>
-                <Button onClick={handleClose}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
-};
-
 const cleanInput = values => {
     const data = values;
     // data.well_attributes = data.well_attr;
@@ -158,7 +92,7 @@ const cleanInput = values => {
     return data;
 }
 
-const EntryForm = ({ onSubmit, value }) => {
+const EntryForm = ({ onSubmit, value, handleChangeText }) => {
     const classes = useStyles();
     var csvFields = [];
     const [modalShow, setModalShow] = React.useState(false);
@@ -221,6 +155,11 @@ const EntryForm = ({ onSubmit, value }) => {
                                     isSubmitting,
                                     setFieldValue
                                 }) => {
+                                    const onChange = (event, name) => {
+                                        handleChangeText(event, name)
+                                        handleChange(event)
+                                    }
+
                                     return (
                                         <>
                                             <form
@@ -234,11 +173,12 @@ const EntryForm = ({ onSubmit, value }) => {
                                                         <Grid item xs={12} sm={6}>
                                                             <TextField
                                                                 id="invoiceto"
+                                                                name="invoiceto"
                                                                 label="Invoive To"
                                                                 multiline
                                                                 className={classes.textField}
                                                                 onBlur={handleBlur}
-                                                                onChange={handleChange}
+                                                                onChange={(event) => onChange(event, "invoiceto")}
                                                                 value={values.invoiceto}
                                                                 margin="normal"
                                                                 helperText={touched.invoiceto && errors.invoiceto}
@@ -254,7 +194,7 @@ const EntryForm = ({ onSubmit, value }) => {
                                                                 margin="normal"
                                                                 name="field"
                                                                 onBlur={handleBlur}
-                                                                onChange={handleChange}
+                                                                onChange={(event) => onChange(event, "field")}
                                                                 value={values.field}
                                                                 className={classes.textField}
                                                                 helperText={touched.field && errors.field}
@@ -534,7 +474,7 @@ const EntryForm = ({ onSubmit, value }) => {
                                                             />Range</label>
                                                         </Grid>
 
-                                                        <FieldArray
+                                                        {/* <FieldArray
                                                             name="well_attr"
                                                             render={dynamicArray => (
                                                                 <>
@@ -566,16 +506,16 @@ const EntryForm = ({ onSubmit, value }) => {
                                                                     />
                                                                 </>
                                                             )}
-                                                        />
+                                                        /> */}
                                                     </Grid>
                                                 </div>
-                                                <br />
-                                                <div className="kt-login__actions">
+                                                {/* <br /> */}
+                                                {/* <div className="kt-login__actions">
                                                     <Grid item xs={6} sm={3}>
                                                         <Button type="submit"
                                                             disabled={isSubmitting} color="primary" variant="contained">Go</Button>
                                                     </Grid>
-                                                </div>
+                                                </div> */}
                                             </form>
                                         </>
                                     );
