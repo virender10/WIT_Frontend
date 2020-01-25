@@ -186,7 +186,6 @@ export function* saga() {
   }) {
     const { data } = payload;
     const response = yield saveFormData(data);
-    // console.log(response, "responseresponseresponse");
     yield put(actions.saveFormDataSuccess(response.data.data.form_keys));
   });
 

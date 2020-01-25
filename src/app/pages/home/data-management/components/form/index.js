@@ -133,7 +133,8 @@ export const Form = props => {
   const inputfield = getField();
   return (
     <Grid
-      xs={6}
+      item
+      xs={12}
       sm={3}
       lg={6}
       style={{

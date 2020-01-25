@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { actions } from '../../../../store/ducks/dataManagement.duck';
 import { AddFieldModal } from '../components/addFieldModal';
 import { Form } from '../components/form';
+import FormOneFields from "../formFields/form-one.json";
 import EntryForm from './Form1';
 import EntryForm2 from './Form2';
 import EntryForm3 from './Form3';
@@ -77,23 +78,23 @@ const MainForm = props => {
     data[activeStep + 1] = { ...stepValues, [name]: enteredvalue };
     dispatch(actions.setDataManagementSteps(data))
   };
+
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
+
   const handleNext = () => {
     let obj = {};
-    const fields =
-      dataManagement &&
-      dataManagement[activeStep + 1] &&
-      dataManagement[activeStep + 1].fields;
+    const fields = getFields();
     fields.forEach(f => {
       const { name } = f;
       const fieldName = name && name.trim().toLowerCase().replace(" ", "_");
       const data = currentDataManagementSteps[activeStep + 1];
-      obj[fieldName] = data[fieldName];
+      if (!!data[fieldName]) obj[fieldName] = data[fieldName];
     });
     setActiveStep(prevActiveStep => prevActiveStep + 1);
-    // dispatch(actions.saveFormData(obj));
+    dispatch(actions.saveFormData(obj));
+    dispatch(actions.getFormField(activeStep + 1));
   };
 
   const handleReset = () => {
@@ -105,20 +106,37 @@ const MainForm = props => {
     setActiveStep(prev => prev + 1);
   };
 
+  const getFields = () => {
+    let fields =
+      dataManagement &&
+      dataManagement[  + 1] &&
+      dataManagement[activeStep + 1].fields;
+
+    const formOneFields = Object.keys(FormOneFields);
+    let updatedFields = formOneFields.map((fOne) => ({
+      ...FormOneFields[fOne],
+      data_type: FormOneFields[fOne].type,
+      options_list: FormOneFields[fOne].options || null,
+      name: fOne
+    }));
+    if (fields) {
+      updatedFields = updatedFields.concat(fields);
+
+    }
+    return updatedFields;
+  }
+
   useEffect(() => {
     dispatch(actions.getFormSteps());
     dispatch(actions.listingFormFields());
+    dispatch(actions.getFormField(activeStep + 1));
   }, []);
 
-  useEffect(() => {
-    dispatch(actions.getFormField(activeStep + 1));
-  }, [activeStep]);
+  // useEffect(() => {
+  // }, [activeStep]);
 
   const headersteps = dataManagement && Object.values(dataManagement);
-  const fields =
-    dataManagement &&
-    dataManagement[activeStep + 1] &&
-    dataManagement[activeStep + 1].fields;
+  const fields = getFields();
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -142,13 +160,13 @@ const MainForm = props => {
         ) : (
           <>
               <Typography className={classes.instructions} component={'span'}>
-                {getStepContent(activeStep, onSubmit, formData, handleChangeText)}
+                {/* {getStepContent(activeStep, onSubmit, formData, handleChangeText)} */}
               <form className={classes.container} noValidate autoComplete="off">
                 <Grid container spacing={3}>
                   {fields &&
                     fields.map(f => (
                       <Form
-                      currentListing={currentListing}
+                        currentListing={currentListing}
                         formData={currentDataManagementSteps[activeStep + 1] || {}}
                         handleChangeText={handleChangeText}
                         field={f}
