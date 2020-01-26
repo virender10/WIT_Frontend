@@ -80,7 +80,7 @@ export const Form = props => {
         const fieldName = k.toLowerCase()
           const dataObj = {
             ...data,
-            value: currentListing[fieldName] || formData[fieldName] || '',
+            selectedValue: currentListing[fieldName] || formData[fieldName] || '',
             name: fieldName,
             label: k.label,
             onChange: value => handleChangeText(value, fieldName)
@@ -94,7 +94,17 @@ export const Form = props => {
   const renderCheckbox = (options_list, data) => {
     const { field, actions, onHide, handleChangeText, ...rest } = props;
     const { name, label, data_type: type, suboptions_list } = field || {};
+    const fieldName =
+      name &&
+      name
+        .trim()
+        .toLowerCase()
+        .replace(' ', '_');
     const options = Object.keys(options_list);
+    const dataObj = {
+      ...data,
+      selectedValue: currentListing[fieldName] || formData[fieldName] || '',
+    }
     return (
       <FormControl component="fieldset" className={classes.formControl}>
         <FormLabel component="legend">{label}</FormLabel>
@@ -106,7 +116,7 @@ export const Form = props => {
                   className="checkBoxClass"
                   key={index}
                   issingle="true"
-                  {...data}
+                  {...dataObj}
                   value={a}
                 />
                 <label
@@ -138,9 +148,10 @@ export const Form = props => {
     const data = {
       name,
       label,
-      value: currentListing[fieldName] || formData[fieldName] || '',
+      value: formData[fieldName] || '',
       onChange: value => handleChangeText(value, fieldName)
     };
+
     switch (type) {
       case DATA_TYPES.TEXT: {
         return (
@@ -160,7 +171,7 @@ export const Form = props => {
               paddingTop: 10
             }}
           >
-            <DatePickerEx {...data} />
+            <DatePickerEx value={data.value} {...data} />
           </div>
         );
       }
