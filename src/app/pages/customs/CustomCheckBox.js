@@ -1,28 +1,30 @@
-import React from "react";
-import { render } from "react-dom";
-import { Formik, Field } from "formik";
+import React from 'react';
+import { render } from 'react-dom';
+import { Formik, Field } from 'formik';
 
-const CustomCheckBox = (props) => {
+const CustomCheckBox = props => {
+  const { onChange } = props;
   const singleSelect = (field, form) => {
     if (field.value === props.value) {
-      form.setFieldValue(props.name, "");
+      form.setFieldValue(props.name, '');
+      onChange("", props.name, );
     } else {
       form.setFieldValue(props.name, props.value);
-    }
-  }
-
-  const multiSelect = (field, form) => {
-    if (field.value.includes(props.value)) {
-      const nextValue = field.value.filter(
-        value => value !== props.value
-      );
-      form.setFieldValue(props.name, nextValue);
-    } else {
-      const nextValue = field.value.concat(props.value);
-      form.setFieldValue(props.name, nextValue);
+      onChange(props.value, props.name);
     }
   };
 
+  const multiSelect = (field, form) => {
+    if (field.value.includes(props.value)) {
+      const nextValue = field.value.filter(value => value !== props.value);
+      form.setFieldValue(props.name, nextValue);
+      onChange(nextValue, props.name);
+    } else {
+      const nextValue = field.value.concat(props.value);
+      onChange(nextValue, props.name);
+      form.setFieldValue(props.name, nextValue);
+    }
+  };
   return (
     <>
       <Field name={props.name}>
@@ -30,14 +32,18 @@ const CustomCheckBox = (props) => {
           return (
             <label>
               <input
-                type="checkbox"
                 {...props}
+                type="checkbox"
                 checked={field.value.includes(props.value)}
-                onChange={props.issingle === "true" ? () => singleSelect(field, form) : () => multiSelect(field, form)}
+                onChange={
+                  props.issingle === 'true'
+                    ? () => singleSelect(field, form)
+                    : () => multiSelect(field, form)
+                }
               />
               {props.label}
             </label>
-          )
+          );
         }}
       </Field>
     </>

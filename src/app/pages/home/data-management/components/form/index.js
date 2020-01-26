@@ -5,6 +5,8 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import DatePickerEx from '../../../../customs/CustomDatePicker';
+import Radio from '@material-ui/core/Radio';
+import FormLabel from '@material-ui/core/FormLabel';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -15,10 +17,12 @@ import {
   Select,
   MenuItem,
   FormControl,
-  FormHelperText
+  FormHelperText,
+  FormGroup
 } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { DATA_TYPES } from '../../../../../constants';
+import CustomCheckBox from '../../../../customs/CustomCheckBox';
 import Modal from 'react-bootstrap/Modal';
 
 const useStyles = makeStyles(theme => ({
@@ -96,27 +100,67 @@ export const Form = props => {
       }
       case DATA_TYPES.DATE: {
         return (
-          <div style={{
-            paddingTop: 10
-          }}>
-            <DatePickerEx   {...data}
-          /> 
-
+          <div
+            style={{
+              paddingTop: 10
+            }}
+          >
+            <DatePickerEx {...data} />
           </div>
-          // <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          //   <KeyboardDatePicker
-          //     disableToolbar
-          //     variant="inline"
-          //     format="MM/dd/yyyy"
-          //     margin="normal"
-          //     id="date-picker-inline"
-          //     {...data}
-          //     defaultValue={new Date()}
-          //     KeyboardButtonProps={{
-          //       'aria-label': 'change date'
-          //     }}
-          //   />
-          // </MuiPickersUtilsProvider>
+        );
+      }
+      case DATA_TYPES.RADIO: {
+        const options = Object.keys(options_list);
+        return (
+          <>
+            <FormLabel component="legend">{label}</FormLabel>
+            {options &&
+              options.map(o => (
+                <label>
+                  <Radio
+                    checked={data.value === o}
+                    {...data}
+                    value={o}
+                    inputProps={{ 'aria-label': options_list[o] }}
+                    label={options_list[o]}
+                  />
+                  {options_list[o]}
+                </label>
+              ))}
+          </>
+        );
+      }
+      case DATA_TYPES.CHECKBOX: {
+        const options = Object.keys(options_list);
+        return (
+          <FormControl component="fieldset" className={classes.formControl}>
+            <FormLabel component="legend">{label}</FormLabel>
+            <FormGroup aria-label="position" row>
+              <div>
+                {options.map((a, index) => (
+                  <>
+                    <CustomCheckBox
+                      className="checkBoxClass"
+                      key={index}
+                      issingle="true"
+                      name="artificial_lift"
+                      {...data}
+                      value={a}
+                    />
+                    <label
+                      style={{
+                        paddingRight: '20px',
+                        paddingLeft: '5px'
+                      }}
+                      className="label-class"
+                    >
+                      {options_list[a]}
+                    </label>
+                  </>
+                ))}
+              </div>
+            </FormGroup>
+          </FormControl>
         );
       }
       case DATA_TYPES.ARRAY: {
@@ -165,7 +209,7 @@ export const Form = props => {
       lg={6}
       style={{
         marginLeft: 10,
-        maxWidth: '23%',
+        maxWidth: '23%'
       }}
     >
       {inputfield}

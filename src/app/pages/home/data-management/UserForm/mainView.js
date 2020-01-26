@@ -16,6 +16,8 @@ import FormOneFields from '../formFields/form-one.js';
 import FormTwoFields from '../formFields/form-two.js';
 import FormThreeFields from '../formFields/form-three.js';
 import FormFourFields from '../formFields/form-four.js';
+import { DATA_TYPES } from '../../../../constants';
+import { Formik, Field } from 'formik';
 import FormFiveFields from '../formFields/form-five.js';
 import EntryForm from './Form1';
 import EntryForm2 from './Form2';
@@ -136,7 +138,7 @@ const MainForm = props => {
       });
     });
     setActiveStep(prevActiveStep => prevActiveStep + 1);
-    dispatch(actions.saveFormData(obj));
+    // dispatch(actions.saveFormData(obj));
     dispatch(actions.getFormField(activeStep + 1));
   };
 
@@ -155,7 +157,7 @@ const MainForm = props => {
   };
 
   const getFormObject = () => {
-    switch (activeStep + 1) {
+    switch (1 + 1) {
       case 1:
         return FormOneFields;
       case 2:
@@ -187,6 +189,22 @@ const MainForm = props => {
       });
     });
     return stepFields;
+  };
+
+  const getInitialValue = () => {
+    const obj = {};
+    const previousValues = currentDataManagementSteps[
+      activeStep + 1
+    ];
+
+    let updatedFields = Object.keys(stepFields);
+    updatedFields.forEach(fOne => {
+      const fields = stepFields[fOne].fields;
+      fields.forEach(field => {
+        obj[field.name] = "" || previousValues[field.name];
+      });
+    });
+    return obj;
   };
 
   useEffect(() => {
@@ -223,32 +241,62 @@ const MainForm = props => {
           </div>
         ) : (
           <>
-            <Typography className={classes.instructions} component={'span'}>
-              {/* {getStepContent(activeStep, onSubmit, formData, handleChangeText)} */}
+            {stepKeys && stepKeys.length > 0 && <Typography className={classes.instructions} component={'span'}>
               <form className={classes.container} noValidate autoComplete="off">
                 <Grid container spacing={3}>
-                  {stepKeys &&
-                    stepKeys.map(key => {
-                      const step = stepFields[key];
+                  <Formik
+                    initialValues={getInitialValue()}
+                    validate={values => {
+                      const errors = {};
+                      return errors;
+                    }}
+                    onSubmit={values => {
+                      // onSubmit(cleanInput(values));
+                    }}
+                  >
+                    {({
+                      values,
+                      status,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      isSubmitting
+                    }) => {
+                        console.log(values, "values");
                       return (
-                        <>
-                          <Grid item xs={12}>
-                            {key !== 'NO_HEADING' && <h5>{key}</h5>}
-                            {step.subHeading}
-                          </Grid>
-                          {step.fields.map(f => (
-                            <Form
-                              currentListing={currentListing}
-                              formData={
-                                currentDataManagementSteps[activeStep + 1] || {}
-                              }
-                              handleChangeText={handleChangeText}
-                              field={f}
-                            />
-                          ))}
-                        </>
+                        stepKeys &&
+                        stepKeys.map(key => {
+                          const step = stepFields[key];
+                          return (
+                            <>
+                              <Grid item xs={12}>
+                                {key !== 'NO_HEADING' && <h5>{key}</h5>}
+                                {step.subHeading}
+                              </Grid>
+                              {step.fields.map(f => (
+                                <Form
+                                  currentListing={currentListing}
+                                  formData={
+                                    currentDataManagementSteps[
+                                      activeStep + 1
+                                    ] || {}
+                                  }
+                                  handleChangeText={(event, name) => {
+                                    handleChange(event)
+                                    handleChangeText(event, name)
+                                  }}
+                                  field={f}
+                                />
+                              ))}
+                            </>
+                          );
+                        })
                       );
-                    })}
+                    }}
+                  </Formik>
+
                   {fields &&
                     fields.map(f => (
                       <Form
@@ -262,7 +310,7 @@ const MainForm = props => {
                     ))}
                 </Grid>
               </form>
-            </Typography>
+            </Typography>}
             <div
               style={{
                 marginBottom: 20,
@@ -293,9 +341,6 @@ const MainForm = props => {
           </>
         )}
       </div>
-      {/* <Grid item xs={12} sm={12}>
-                <Button color="primary" onClick={() => setModalShow(true)}>Add Additional Fields</Button>
-            </Grid> */}
       <AddFieldModal
         show={modalShow}
         activeStep={activeStep}
