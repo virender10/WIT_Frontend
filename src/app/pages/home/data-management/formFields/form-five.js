@@ -163,24 +163,47 @@ export default {
           "pump_radio4": "Electric Submersible Pump (ESP)"
         },
         "suboptions": {
-          "type": "checkbox",
           "pump_radio1": {
-            "specs_list": "Jet Pump specs list"
+            "DHE_jetCheck": {
+                "label": "",
+                "type": "checkbox",
+                "options": {
+                  "specs_list": "Jet Pump specs list",
+                },
+            }
           },
           "pump_radio2": {
-            "rod_insert": "Rod Insert Pump specs list"
+            "DHE_rodInsert": {
+                "label": "",
+                "type": "radio",
+                "options": {
+                  "rod_insert": "Rod Insert Pump specs list",
+                },
+            }
           },
           "pump_radio3": {
-            "mandrel_count": "Mandrel Count",
-            "mandrel_size": "Mandrel Size",
-            "mandrel_ap": "Mandrel actuating pressure",
-            "mandrel_depths": "Mandrel depths"
+            "DHE_gasListCheck": {
+                "label": "",
+                "type": "radio",
+                "options": {
+                  "mandrel_count": "Mandrel Count",
+                  "mandrel_size": "Mandrel Size",
+                  "mandrel_ap": "Mandrel actuating pressure",
+                  "mandrel_depths": "Mandrel depths"
+                },
+            }
           },
           "pump_radio4": {
-            "esp_manufacturer": "Manufacturer",
-            "esp_model": "Model",
-            "esp_count": "Stage Count",
-            "esp_other": "Other Specs"
+            "DHE_ESP": {
+                "label": "",
+                "type": "radio",
+                "options": {
+                  "esp_manufacturer": "Manufacturer",
+                  "esp_model": "Model",
+                  "esp_count": "Stage Count",
+                  "esp_other": "Other Specs"
+                },
+            }
           }
         }
       },
@@ -242,29 +265,46 @@ export default {
           "BHA_radio3": "De-sander"
         },
         "suboptions": {
-          "type": "checkbox",
           "BHA_radio1": {
-            "ss_manufacturer": "Manufacturer",
-            "ss_model": "Model",
-            "ss_od": "Outer Diameter",
-            "ss_id": "Inner Diameter",
-            "ss_other": "Other Specs"
+            "DHE_ss": {
+                "label": "",
+                "type": "radio",
+                "options": {
+                  "ss_manufacturer": "Manufacturer",
+                  "ss_model": "Model",
+                  "ss_od": "Outer Diameter",
+                  "ss_id": "Inner Diameter",
+                  "ss_other": "Other Specs"
+                },
+            }
           },
           "BHA_radio2": {
-            "gs_manufacturer": "Manufacturer",
-            "gs_model": "Model",
-            "gs_od": "Outer Diameter",
-            "gs_id": "Inner Diameter",
-            "gs_dtsize": "Dip Tube Size",
-            "gs_dtlength": "Dip Tube Length",
-            "gs_other": "Other Specs"
+            "DHE_gs": {
+                "label": "",
+                "type": "radio",
+                "options": {
+                  "gs_manufacturer": "Manufacturer",
+                  "gs_model": "Model",
+                  "gs_od": "Outer Diameter",
+                  "gs_id": "Inner Diameter",
+                  "gs_dtsize": "Dip Tube Size",
+                  "gs_dtlength": "Dip Tube Length",
+                  "gs_other": "Other Specs"
+                },
+            }
           },
           "BHA_radio3": {
-            "ds_manufacturer": "Manufacturer",
-            "ds_model": "Model",
-            "ds_od": "Outer Diameter",
-            "ds_size": "De-sander size",
-            "ds_other": "Other Specs"
+            "DHE_ds": {
+                "label": "",
+                "type": "radio",
+                "options": {
+                  "ds_manufacturer": "Manufacturer",
+                  "ds_model": "Model",
+                  "ds_od": "Outer Diameter",
+                  "ds_size": "De-sander size",
+                  "ds_other": "Other Specs"
+                },
+            }
           }
         }
       }

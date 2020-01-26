@@ -7,7 +7,7 @@ const CustomCheckBox = props => {
   const singleSelect = (field, form) => {
     if (field.value === props.value) {
       form.setFieldValue(props.name, '');
-      onChange("", props.name, );
+      onChange("", props.name);
     } else {
       form.setFieldValue(props.name, props.value);
       onChange(props.value, props.name);
@@ -21,20 +21,20 @@ const CustomCheckBox = props => {
       onChange(nextValue, props.name);
     } else {
       const nextValue = field.value.concat(props.value);
+      form.setFieldValue(nextValue, props.name);
       onChange(nextValue, props.name);
-      form.setFieldValue(props.name, nextValue);
     }
   };
   return (
     <>
       <Field name={props.name}>
-        {({ field, form }) => {
+        {({ field, form }) => {          
           return (
             <label>
               <input
                 {...props}
                 type="checkbox"
-                checked={field.value.includes(props.value)}
+                checked={field.value && field.value.includes(props.value)}
                 onChange={
                   props.issingle === 'true'
                     ? () => singleSelect(field, form)

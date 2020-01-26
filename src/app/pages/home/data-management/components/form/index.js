@@ -66,14 +66,69 @@ export const Form = props => {
     actions,
     onHide,
     handleChangeText,
+    field,
     ...rest
   } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  const renderSubOptions = (suboptionsObj, data) => {
+    if (!!suboptionsObj) {
+      const keys = Object.keys(suboptionsObj);
+      for (let k of keys) {
+        const options = suboptionsObj[k].options;
+        const fieldName = k.toLowerCase()
+          const dataObj = {
+            ...data,
+            value: currentListing[fieldName] || formData[fieldName] || '',
+            name: fieldName,
+            label: k.label,
+            onChange: value => handleChangeText(value, fieldName)
+          }
+        return renderCheckbox(options, dataObj)
+      }
+    }
+    return null;
+  }
+
+  const renderCheckbox = (options_list, data) => {
+    const { field, actions, onHide, handleChangeText, ...rest } = props;
+    const { name, label, data_type: type, suboptions_list } = field || {};
+    const options = Object.keys(options_list);
+    return (
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">{label}</FormLabel>
+        <FormGroup aria-label="position" row>
+          <div>
+            {options.map((a, index) => (
+              <>
+                <CustomCheckBox
+                  className="checkBoxClass"
+                  key={index}
+                  issingle="true"
+                  {...data}
+                  value={a}
+                />
+                <label
+                  style={{
+                    paddingRight: '20px',
+                    paddingLeft: '5px'
+                  }}
+                  className="label-class"
+                >
+                  {options_list[a]}
+                </label>
+              </>
+            ))}
+          </div>
+        </FormGroup>
+      </FormControl>
+    );
+  }
+
   const getField = () => {
     const { field, actions, onHide, handleChangeText, ...rest } = props;
-    const { name, label, data_type: type, options_list } = field || {};
+    const { name, label, data_type: type, options_list, suboptions_list } = field || {};
     const fieldName =
       name &&
       name
@@ -111,6 +166,7 @@ export const Form = props => {
       }
       case DATA_TYPES.RADIO: {
         const options = Object.keys(options_list);
+        const suboptionsObj = data.value && suboptions_list && suboptions_list[data.value];
         return (
           <>
             <FormLabel component="legend">{label}</FormLabel>
@@ -127,42 +183,11 @@ export const Form = props => {
                   {options_list[o]}
                 </label>
               ))}
+            {data.value && suboptionsObj && renderSubOptions(suboptionsObj, data)}
           </>
         );
       }
-      case DATA_TYPES.CHECKBOX: {
-        const options = Object.keys(options_list);
-        return (
-          <FormControl component="fieldset" className={classes.formControl}>
-            <FormLabel component="legend">{label}</FormLabel>
-            <FormGroup aria-label="position" row>
-              <div>
-                {options.map((a, index) => (
-                  <>
-                    <CustomCheckBox
-                      className="checkBoxClass"
-                      key={index}
-                      issingle="true"
-                      name="artificial_lift"
-                      {...data}
-                      value={a}
-                    />
-                    <label
-                      style={{
-                        paddingRight: '20px',
-                        paddingLeft: '5px'
-                      }}
-                      className="label-class"
-                    >
-                      {options_list[a]}
-                    </label>
-                  </>
-                ))}
-              </div>
-            </FormGroup>
-          </FormControl>
-        );
-      }
+      case DATA_TYPES.CHECKBOX: return renderCheckbox(options_list, data)
       case DATA_TYPES.ARRAY: {
         return (
           <FormControl className={classes.formControl}>

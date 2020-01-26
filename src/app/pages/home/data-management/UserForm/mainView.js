@@ -107,19 +107,35 @@ const MainForm = props => {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleChangeText = (event, name) => {
-    const stepValues = currentDataManagementSteps[activeStep + 1] || {};
+    let stepValues = currentDataManagementSteps[activeStep + 1] || {};
     const enteredvalue =
       event && event.target && event.target.name ? event.target.value : event;
-    const data = {
-      ...stepValues
-    };
-    data[activeStep + 1] = { ...stepValues, [name]: enteredvalue };
-    dispatch(actions.setDataManagementSteps(data));
+    const data = {};
+    data[activeStep + 1] = { ...stepValues,
+      [name]: enteredvalue };
+    dispatch(actions.setDataManagementSteps({ ...currentDataManagementSteps, ...data }));
   };
 
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
+
+  const getFormData = () => {
+    const data = currentDataManagementSteps;
+    let obj = {};
+    if (data) {
+      const steps = Object.keys(data);
+      steps.forEach(s => {
+        obj = {
+          ...obj,
+          ...data[s]
+        }
+      })
+    }
+
+    return obj;
+
+  }
 
   const handleNext = () => {
     let obj = {};
@@ -137,18 +153,19 @@ const MainForm = props => {
         if (data && !!data[fieldName]) obj[fieldName] = data[fieldName];
       });
     });
+
     setActiveStep(prevActiveStep => prevActiveStep + 1);
-    // dispatch(actions.saveFormData(obj));
-    dispatch(actions.getFormField(activeStep + 1));
   };
 
   const handleReset = () => {
     setActiveStep(0);
+    // dispatch(actions.saveFormData(getFormData()))
   };
 
   useEffect(() => {
     const stepFields = getFields();
     setStepFields(stepFields);
+    dispatch(actions.getFormField(activeStep + 1));
   }, [activeStep]);
 
   const onSubmit = formName => values => {
@@ -157,7 +174,7 @@ const MainForm = props => {
   };
 
   const getFormObject = () => {
-    switch (1 + 1) {
+    switch (activeStep + 1) {
       case 1:
         return FormOneFields;
       case 2:
@@ -173,35 +190,67 @@ const MainForm = props => {
 
   const getFields = () => {
     const formFields = getFormObject();
-    const stepFields = _.cloneDeep(formFields);
-    let updatedFields = Object.keys(stepFields);
-    updatedFields.forEach(fOne => {
-      const fields = stepFields[fOne].fields;
-      const fieldsObjKeys = Object.keys(fields);
-      stepFields[fOne]['fields'] = fieldsObjKeys.map(key => {
-        return {
-          ...fields[key],
-          data_type: fields[key].type,
-          options_list: fields[key].options || null,
-          suboptions_list: fields[key].suboptions || null,
-          name: key
-        };
+    const stepFieldsClone = _.cloneDeep(formFields);
+    if (stepFieldsClone) {
+      let updatedFields = Object.keys(stepFieldsClone);
+      updatedFields.forEach(fOne => {
+        const fields = stepFieldsClone[fOne].fields;
+        const fieldsObjKeys = Object.keys(fields);
+        stepFieldsClone[fOne]['fields'] = fieldsObjKeys.map(key => {
+          return {
+            ...fields[key],
+            data_type: fields[key].type,
+            options_list: fields[key].options || null,
+            suboptions_list: fields[key].suboptions || null,
+            name: key.toLowerCase()
+          };
+        });
       });
-    });
-    return stepFields;
+    }
+    return stepFieldsClone;
+  };
+
+  const getSubOptions = field => {
+    const options = field.options;
+    let keys = {};
+    if (options) {
+      const subOptions = field.suboptions;
+      const optionKeys = Object.keys(options);
+      const previousValues = currentDataManagementSteps[activeStep + 1];
+      if (optionKeys && optionKeys.length > 0) {
+        optionKeys.forEach(ok => {
+          if (subOptions) {
+            const suboptionsObj = subOptions[ok];
+            const suboptionKeys = Object.keys(suboptionsObj);
+            suboptionKeys.forEach(sk => {
+              keys[sk.toLowerCase()] =
+                previousValues && previousValues[sk.toLowerCase()]
+                  ? previousValues[sk.toLowerCase()]
+                  : '';
+            });
+          }
+        });
+      }
+    }
+
+    return keys;
   };
 
   const getInitialValue = () => {
-    const obj = {};
-    const previousValues = currentDataManagementSteps[
-      activeStep + 1
-    ];
-
+    let obj = {};
+    const previousValues = currentDataManagementSteps[activeStep + 1];
     let updatedFields = Object.keys(stepFields);
     updatedFields.forEach(fOne => {
       const fields = stepFields[fOne].fields;
       fields.forEach(field => {
-        obj[field.name] = "" || previousValues[field.name];
+        const keys = getSubOptions(field);
+        const value =
+          previousValues && previousValues[field.name.toLowerCase()];
+        obj = {
+          ...obj,
+          [field.name]: value ? value : '',
+          ...keys
+        };
       });
     });
     return obj;
@@ -218,7 +267,7 @@ const MainForm = props => {
     dataManagement &&
     dataManagement[activeStep + 1] &&
     dataManagement[activeStep + 1].fields;
-  const stepKeys = Object.keys(stepFields);
+  const stepKeys = stepFields && Object.keys(stepFields);
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -241,41 +290,66 @@ const MainForm = props => {
           </div>
         ) : (
           <>
-            {stepKeys && stepKeys.length > 0 && <Typography className={classes.instructions} component={'span'}>
-              <form className={classes.container} noValidate autoComplete="off">
-                <Grid container spacing={3}>
-                  <Formik
-                    initialValues={getInitialValue()}
-                    validate={values => {
-                      const errors = {};
-                      return errors;
-                    }}
-                    onSubmit={values => {
-                      // onSubmit(cleanInput(values));
-                    }}
-                  >
-                    {({
-                      values,
-                      status,
-                      errors,
-                      touched,
-                      handleChange,
-                      handleBlur,
-                      handleSubmit,
-                      isSubmitting
-                    }) => {
-                        console.log(values, "values");
-                      return (
-                        stepKeys &&
-                        stepKeys.map(key => {
-                          const step = stepFields[key];
-                          return (
-                            <>
-                              <Grid item xs={12}>
-                                {key !== 'NO_HEADING' && <h5>{key}</h5>}
-                                {step.subHeading}
-                              </Grid>
-                              {step.fields.map(f => (
+            {stepKeys && stepKeys.length > 0 && (
+              <Typography className={classes.instructions} component={'span'}>
+                <form
+                  className={classes.container}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Grid container spacing={3}>
+                      <Formik
+                      initialValues={getInitialValue()}
+                      validate={values => {
+                        const errors = {};
+                        return errors;
+                        }}
+                      onSubmit={values => {
+                        // onSubmit(cleanInput(values));
+                        }}
+                      enablenableReinitialize={true}
+                    >
+                      {({
+                        values,
+                        status,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting
+                        }) => {
+                        return (
+                          <>
+                            {stepKeys &&
+                              stepKeys.map(key => {
+                                const step = stepFields[key];
+                                return (
+                                  <>
+                                    <Grid item xs={12}>
+                                      {key !== 'NO_HEADING' && <h5>{key}</h5>}
+                                      {step.subHeading}
+                                    </Grid>
+                                    {step.fields.map(f => (
+                                      <Form
+                                        currentListing={currentListing}
+                                        formData={
+                                          currentDataManagementSteps[
+                                            activeStep + 1
+                                          ] || {}
+                                        }
+                                        handleChangeText={(event, name) => {
+                                          handleChange(event);
+                                          handleChangeText(event, name);
+                                        }}
+                                        field={f}
+                                      />
+                                    ))}
+                                  </>
+                                );
+                              })}
+                            {fields &&
+                              fields.map(f => (
                                 <Form
                                   currentListing={currentListing}
                                   formData={
@@ -283,34 +357,18 @@ const MainForm = props => {
                                       activeStep + 1
                                     ] || {}
                                   }
-                                  handleChangeText={(event, name) => {
-                                    handleChange(event)
-                                    handleChangeText(event, name)
-                                  }}
+                                  handleChangeText={handleChangeText}
                                   field={f}
                                 />
                               ))}
-                            </>
-                          );
-                        })
-                      );
-                    }}
-                  </Formik>
-
-                  {fields &&
-                    fields.map(f => (
-                      <Form
-                        currentListing={currentListing}
-                        formData={
-                          currentDataManagementSteps[activeStep + 1] || {}
-                        }
-                        handleChangeText={handleChangeText}
-                        field={f}
-                      />
-                    ))}
-                </Grid>
-              </form>
-            </Typography>}
+                          </>
+                        );
+                      }}
+                    </Formik>
+                  </Grid>
+                </form>
+              </Typography>
+            )}
             <div
               style={{
                 marginBottom: 20,
