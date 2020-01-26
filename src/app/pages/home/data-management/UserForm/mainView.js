@@ -106,7 +106,7 @@ const MainForm = props => {
   const [formData, setFormData] = React.useState({});
   const [stepFields, setStepFields] = React.useState({});
   const dispatch = useDispatch();
-  const [activeStep, setActiveStep] = React.useState(4);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [open, setOpen] = React.useState(false);
 
   const handleChangeText = (event, name) => {
