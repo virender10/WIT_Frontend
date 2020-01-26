@@ -79,8 +79,8 @@ export const Form = props => {
         const options = suboptionsObj[k].options;
         const fieldName = k.toLowerCase()
           const dataObj = {
-            ...data,
-            selectedValue: currentListing[fieldName] || formData[fieldName] || '',
+            selectedValue: formData[fieldName] || '',
+            value: formData[fieldName] || '',
             name: fieldName,
             label: k.label,
             onChange: value => handleChangeText(value, fieldName)
@@ -102,8 +102,9 @@ export const Form = props => {
         .replace(' ', '_');
     const options = Object.keys(options_list);
     const dataObj = {
+      name,
+      selectedValue: formData[fieldName] || '',
       ...data,
-      selectedValue: currentListing[fieldName] || formData[fieldName] || '',
     }
     return (
       <FormControl component="fieldset" className={classes.formControl}>

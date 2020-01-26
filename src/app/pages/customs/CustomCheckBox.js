@@ -25,6 +25,7 @@ const CustomCheckBox = props => {
       onChange(nextValue, props.name);
     }
   };
+
   return (
     <>
       {/* <Field name={props.name}>
@@ -35,7 +36,7 @@ const CustomCheckBox = props => {
               <input
                 {...props}
                 type="checkbox"
-                checked={props.value && props.value.includes(props.selectedValue)}
+                checked={props.value && props.value === props.selectedValue}
                 onChange={
                   props.issingle === 'true'
                     ? () => singleSelect()

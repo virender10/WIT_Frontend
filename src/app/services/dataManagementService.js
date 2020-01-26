@@ -14,15 +14,7 @@ function convertToFormData(data){
 }
 
 export function addField(fieldData) {
-// field_name	Gender
-// step_token	1
-// field_label	Gender
-// data_type	array
-// option_list[0]	Male
-// option_list[1]	Female
-// option_list[2]	Other
-  const fieldFormData = convertToFormData(fieldData);
-  return axios.post(API_URL + `data_manage/add-field`, fieldFormData);
+  return axios.post(API_URL + `data_manage/add-field`, fieldData);
 }
 
 export function getFormStepsList() {

@@ -129,9 +129,9 @@ export const actions = {
     type: actionTypes.GetFormFieldSuccess,
     payload: { fields }
   }),
-  saveFormData: (data) => ({
+  saveFormData: (values) => ({
     type: actionTypes.SaveFormData,
-    payload: { data }
+    payload: { values }
   }),
   saveFormDataSuccess: data => ({
     type: actionTypes.SaveFormDataSuccess,
@@ -184,8 +184,10 @@ export function* saga() {
   yield takeLatest(actionTypes.SaveFormData, function* getUserListSaga({
     payload
   }) {
-    const { data } = payload;
+    const { values } = payload;
+    const { data, callback } = values;
     const response = yield saveFormData(data);
+    callback();
     yield put(actions.saveFormDataSuccess(response.data.data.form_keys));
   });
 

@@ -8,6 +8,8 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackBarContentWrapper from "../../../customs/SnackBar";
 import Typography from '@material-ui/core/Typography';
 import { actions } from '../../../../store/ducks/dataManagement.duck';
 import { AddFieldModal } from '../components/addFieldModal';
@@ -98,13 +100,14 @@ function getStepContent(stepIndex, onSubmit, formData, handleChangeText) {
 }
 
 const MainForm = props => {
-  const { dataManagement, currentDataManagementSteps, currentListing } = props;
+  const { dataManagement, currentDataManagementSteps, currentListing, history} = props;
   const classes = useStyles();
   const [modalShow, setModalShow] = React.useState(false);
   const [formData, setFormData] = React.useState({});
   const [stepFields, setStepFields] = React.useState({});
   const dispatch = useDispatch();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(4);
+  const [open, setOpen] = React.useState(false);
 
   const handleChangeText = (event, name) => {
     let stepValues = currentDataManagementSteps[activeStep + 1] || {};
@@ -158,8 +161,15 @@ const MainForm = props => {
   };
 
   const handleReset = () => {
-    setActiveStep(0);
-    // dispatch(actions.saveFormData(getFormData()))
+    dispatch(actions.saveFormData({
+      data: getFormData(), callback: () => {
+        setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+          window.location.href = "/dashboard"
+        }, 1000);
+      }
+    }))
   };
 
   useEffect(() => {
@@ -258,7 +268,7 @@ const MainForm = props => {
 
   useEffect(() => {
     dispatch(actions.getFormSteps());
-    dispatch(actions.listingFormFields());
+    // dispatch(actions.listingFormFields());
     dispatch(actions.getFormField(activeStep + 1));
   }, []);
 
@@ -268,9 +278,25 @@ const MainForm = props => {
     dataManagement[activeStep + 1] &&
     dataManagement[activeStep + 1].fields;
   const stepKeys = stepFields && Object.keys(stepFields);
+
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} alternativeLabel>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={open}
+        autoHideDuration={2000}
+        onClose={() => setOpen(false)}
+      >
+        <SnackBarContentWrapper
+          onClose={() => setOpen(false)}
+          variant="success"
+          message="Job Created Successfully"
+        />
+      </Snackbar>
         {headersteps &&
           headersteps.map(label => (
             <Step key={label.name}>

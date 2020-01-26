@@ -206,50 +206,6 @@ export default {
             }
           }
         }
-      },
-      "DHE_r_jobId": {
-        "label": "Job ID or Event ID",
-        "type": "text"
-      },
-      "DHE_r_comp": {
-        "label": "Component",
-        "type": "text"
-      },
-      "DHE_r_count": {
-        "label": "Count",
-        "type": "text"
-      },
-      "DHE_r_cl": {
-        "label": "Component Length (ft)",
-        "type": "text"
-      },
-      "DHE_r_tl": {
-        "label": "Total Length (ft)",
-        "type": "text"
-      },
-      "DHE_r_make": {
-        "label": "Make",
-        "type": "text"
-      },
-      "DHE_r_grade": {
-        "label": "Grade",
-        "type": "text"
-      },
-      "DHE_r_rodia": {
-        "label": "Rod Diameter",
-        "type": "text"
-      },
-      "DHE_r_weight": {
-        "label": "Weight",
-        "type": "text"
-      },
-      "DHE_r_ct": {
-        "label": "Coupling Type",
-        "type": "text"
-      },
-      "DHE_r_cd": {
-        "label": "Coupling Diameter",
-        "type": "text"
       }
     }
   },
