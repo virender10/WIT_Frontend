@@ -6,12 +6,17 @@ import Step from '@material-ui/core/Step';
 import { connect } from 'react-redux';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
+import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { actions } from '../../../../store/ducks/dataManagement.duck';
 import { AddFieldModal } from '../components/addFieldModal';
 import { Form } from '../components/form';
-import FormOneFields from "../formFields/form-one.json";
+import FormOneFields from '../formFields/form-one.js';
+import FormTwoFields from '../formFields/form-two.js';
+import FormThreeFields from '../formFields/form-three.js';
+import FormFourFields from '../formFields/form-four.js';
+import FormFiveFields from '../formFields/form-five.js';
 import EntryForm from './Form1';
 import EntryForm2 from './Form2';
 import EntryForm3 from './Form3';
@@ -42,19 +47,49 @@ function getStepContent(stepIndex, onSubmit, formData, handleChangeText) {
     case 0:
       // return <EntryForm7/>
       value = formData['form1'];
-      return <EntryForm handleChangeText={handleChangeText} onSubmit={onSubmit('form1')} value={value} />;
+      return (
+        <EntryForm
+          handleChangeText={handleChangeText}
+          onSubmit={onSubmit('form1')}
+          value={value}
+        />
+      );
     case 1:
       value = formData['form2'];
-      return <EntryForm2 handleChangeText={handleChangeText} onSubmit={onSubmit('form2')} value={value} />;
+      return (
+        <EntryForm2
+          handleChangeText={handleChangeText}
+          onSubmit={onSubmit('form2')}
+          value={value}
+        />
+      );
     case 2:
       value = formData['form3'];
-      return <EntryForm3 handleChangeText={handleChangeText} onSubmit={onSubmit('form3')} value={value} />;
+      return (
+        <EntryForm3
+          handleChangeText={handleChangeText}
+          onSubmit={onSubmit('form3')}
+          value={value}
+        />
+      );
     case 3:
       value = formData['form4'];
-      return <EntryForm4 handleChangeText={handleChangeText} onSubmit={onSubmit('form4')} value={value} />;
+      return (
+        <EntryForm4
+          handleChangeText={handleChangeText}
+          onSubmit={onSubmit('form4')}
+          value={value}
+        />
+      );
     case 4:
       value = formData['form5'];
-      return <EntryForm5 handleChangeText={handleChangeText} onSubmit={onSubmit('form5')} value={value} />;
+      return (
+        <EntryForm5
+          handleChangeText={handleChangeText}
+          onSubmit={onSubmit('form5')}
+          value={value}
+        />
+      );
     default:
       return null;
   }
@@ -65,6 +100,7 @@ const MainForm = props => {
   const classes = useStyles();
   const [modalShow, setModalShow] = React.useState(false);
   const [formData, setFormData] = React.useState({});
+  const [stepFields, setStepFields] = React.useState({});
   const dispatch = useDispatch();
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -76,7 +112,7 @@ const MainForm = props => {
       ...stepValues
     };
     data[activeStep + 1] = { ...stepValues, [name]: enteredvalue };
-    dispatch(actions.setDataManagementSteps(data))
+    dispatch(actions.setDataManagementSteps(data));
   };
 
   const handleBack = () => {
@@ -85,12 +121,19 @@ const MainForm = props => {
 
   const handleNext = () => {
     let obj = {};
-    const fields = getFields();
-    fields.forEach(f => {
-      const { name } = f;
-      const fieldName = name && name.trim().toLowerCase().replace(" ", "_");
-      const data = currentDataManagementSteps[activeStep + 1];
-      if (!!data[fieldName]) obj[fieldName] = data[fieldName];
+    const stepObj = Object.keys(stepFields);
+    stepObj.forEach(s => {
+      stepFields[s].fields.forEach(f => {
+        const { name } = f;
+        const fieldName =
+          name &&
+          name
+            .trim()
+            .toLowerCase()
+            .replace(' ', '_');
+        const data = currentDataManagementSteps[activeStep + 1];
+        if (data && !!data[fieldName]) obj[fieldName] = data[fieldName];
+      });
     });
     setActiveStep(prevActiveStep => prevActiveStep + 1);
     dispatch(actions.saveFormData(obj));
@@ -101,30 +144,50 @@ const MainForm = props => {
     setActiveStep(0);
   };
 
+  useEffect(() => {
+    const stepFields = getFields();
+    setStepFields(stepFields);
+  }, [activeStep]);
+
   const onSubmit = formName => values => {
     setFormData(prev => ({ ...prev, [formName]: values }));
     setActiveStep(prev => prev + 1);
   };
 
-  const getFields = () => {
-    let fields =
-      dataManagement &&
-      dataManagement[  + 1] &&
-      dataManagement[activeStep + 1].fields;
-
-    const formOneFields = Object.keys(FormOneFields);
-    let updatedFields = formOneFields.map((fOne) => ({
-      ...FormOneFields[fOne],
-      data_type: FormOneFields[fOne].type,
-      options_list: FormOneFields[fOne].options || null,
-      name: fOne
-    }));
-    if (fields) {
-      updatedFields = updatedFields.concat(fields);
-
+  const getFormObject = () => {
+    switch (activeStep + 1) {
+      case 1:
+        return FormOneFields;
+      case 2:
+        return FormTwoFields;
+      case 3:
+        return FormThreeFields;
+      case 4:
+        return FormFourFields;
+      case 5:
+        return FormFiveFields;
     }
-    return updatedFields;
-  }
+  };
+
+  const getFields = () => {
+    const formFields = getFormObject();
+    const stepFields = _.cloneDeep(formFields);
+    let updatedFields = Object.keys(stepFields);
+    updatedFields.forEach(fOne => {
+      const fields = stepFields[fOne].fields;
+      const fieldsObjKeys = Object.keys(fields);
+      stepFields[fOne]['fields'] = fieldsObjKeys.map(key => {
+        return {
+          ...fields[key],
+          data_type: fields[key].type,
+          options_list: fields[key].options || null,
+          suboptions_list: fields[key].suboptions || null,
+          name: key
+        };
+      });
+    });
+    return stepFields;
+  };
 
   useEffect(() => {
     dispatch(actions.getFormSteps());
@@ -132,11 +195,12 @@ const MainForm = props => {
     dispatch(actions.getFormField(activeStep + 1));
   }, []);
 
-  // useEffect(() => {
-  // }, [activeStep]);
-
   const headersteps = dataManagement && Object.values(dataManagement);
-  const fields = getFields();
+  let fields =
+    dataManagement &&
+    dataManagement[activeStep + 1] &&
+    dataManagement[activeStep + 1].fields;
+  const stepKeys = Object.keys(stepFields);
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -159,15 +223,39 @@ const MainForm = props => {
           </div>
         ) : (
           <>
-              <Typography className={classes.instructions} component={'span'}>
-                {/* {getStepContent(activeStep, onSubmit, formData, handleChangeText)} */}
+            <Typography className={classes.instructions} component={'span'}>
+              {/* {getStepContent(activeStep, onSubmit, formData, handleChangeText)} */}
               <form className={classes.container} noValidate autoComplete="off">
                 <Grid container spacing={3}>
+                  {stepKeys &&
+                    stepKeys.map(key => {
+                      const step = stepFields[key];
+                      return (
+                        <>
+                          <Grid item xs={12}>
+                            {key !== 'NO_HEADING' && <h5>{key}</h5>}
+                            {step.subHeading}
+                          </Grid>
+                          {step.fields.map(f => (
+                            <Form
+                              currentListing={currentListing}
+                              formData={
+                                currentDataManagementSteps[activeStep + 1] || {}
+                              }
+                              handleChangeText={handleChangeText}
+                              field={f}
+                            />
+                          ))}
+                        </>
+                      );
+                    })}
                   {fields &&
                     fields.map(f => (
                       <Form
                         currentListing={currentListing}
-                        formData={currentDataManagementSteps[activeStep + 1] || {}}
+                        formData={
+                          currentDataManagementSteps[activeStep + 1] || {}
+                        }
                         handleChangeText={handleChangeText}
                         field={f}
                       />
@@ -222,7 +310,7 @@ const MainForm = props => {
 const mapStateToProps = store => ({
   dataManagement: store.dataManagement.steps,
   currentDataManagementSteps: store.dataManagement.currentDataManagementSteps,
-  currentListing: store.dataManagement.currentListing,
+  currentListing: store.dataManagement.currentListing
 });
 
 export default connect(mapStateToProps)(MainForm);
